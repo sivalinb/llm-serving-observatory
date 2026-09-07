@@ -1,0 +1,168 @@
+# LLM Serving Observatory
+
+A working LLM serving laboratory for learning **TTFT, prefill, decode, KV-cache transfer, disaggregation, token accounting, and observability**. Run it on a laptop or an OCI CPU VM; connect a real llama.cpp or vLLM server when available.
+
+![System architecture](observatory/static/architecture.svg)
+
+## Start in two minutes
+
+Python 3.11+ (3.12 tested):
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.lock
+pip install -e '.[dev]'
+uvicorn observatory.app:app --host 127.0.0.1 --port 8000
+```
+
+Open [localhost:8000](http://localhost:8000). No cloud account, API key, model download, or GPU is needed for simulation.
+
+1. Run a request in **Disaggregated** mode and inspect the waterfall.
+2. Run it again to see prefix-cache reuse reduce prefill work.
+3. Set 8 reasoning tokens within 32 output tokens: visible output becomes 24, total remains input + 32.
+4. Lower transfer bandwidth or increase prompt length to expose the handoff cost.
+5. Open **Benchmarks** and compare combined versus disaggregated timing.
+6. Inject a transfer failure; inspect the retained error trace and metric counter.
+
+## What is implemented
+
+| Capability | Implementation | Evidence boundary |
+|---|---|---|
+| Combined serving | One simulated worker slot holds prefill + decode | Synthetic work; measured wall time |
+| Disaggregated serving | Independent prefill/decode queues; optional separate HTTP services | Modeled transfer, no KV tensors |
+| Prefix cache | Capacity-bounded LRU with hits, misses and eviction counters | Synthetic exact-prefix identity |
+| Real model inference | Configured OpenAI Chat Completions stream adapter | Provider-reported usage; gateway arrival timings |
+| Real GPU disaggregation | Finite vLLM/NIXL launcher using an explicit official source checkout | Requires two GPUs and hardware validation |
+| Observability | Prometheus, four Grafana dashboards, OTel collector, Tempo, JSON logs | Source labels keep simulated / upstream data distinct |
+| Experiment storage | SQLite WAL, bounded retention, JSON export | No prompts or generated text retained |
+| OCI integration | A1 Terraform, private Object Storage, optional budget, export to Monitoring/ADB | Credentials and an OCI apply are required |
+| Rich diagrams | Downloadable SVG architecture and lifecycle, live serving-path view | Diagrams document actual boundaries |
+
+**Simulation does not prove GPU speedup.** Combined uses one slot; disaggregated uses one prefill slot plus one decode slot. Continuous batching, PagedAttention, speculative decoding, GPU allocation, and real tensor transport are engine features, not implemented by the simulator.
+
+## Request flow
+
+![Request lifecycle](observatory/static/request-flow.svg)
+
+The main diagram is available as a [full-size SVG](observatory/static/architecture.svg), and the [request-flow SVG](observatory/static/request-flow.svg) explains the latency boundaries and token subsets. Both render in the application's Architecture view. [Architecture notes](docs/architecture.md) include editable Mermaid source and component responsibilities.
+
+## Separate workers + observability
+
+Docker Engine and the Compose v2 plugin are required:
+
+```bash
+cp .env.example .env
+# Set GRAFANA_PASSWORD in .env. Set LAB_API_KEY before exposing the API.
+docker compose up -d --build
+docker compose -f compose.yaml -f compose.observability.yaml up -d --build
+```
+
+The base Compose file runs gateway, prefill, and decode services. The second command adds the observability stack and OTel export. Ports bind to loopback:
+
+| Surface | Local URL |
+|---|---|
+| Lab | http://localhost:8000 |
+| API schema | http://localhost:8000/docs |
+| Prometheus | http://localhost:9090 |
+| Grafana | http://localhost:3000 — `admin` / your configured password |
+
+In Grafana, open the **LLM Serving** folder for User experience, Token ledger, KV cache and handoff, and Capacity and SLO. For a request trace, copy its full trace ID from exported JSON and search it in **Explore → Tempo**.
+
+Prometheus evaluates alert rules locally. Notification delivery requires adding Alertmanager and your chosen receiver, or configuring OCI Monitoring alarms; the repository does not send notifications automatically.
+
+## Real inference
+
+Run a llama.cpp server with a compatible small, licensed GGUF model:
+
+```bash
+llama-server --model /path/to/model.gguf --host 127.0.0.1 --port 8080 --ctx-size 4096 --metrics
+```
+
+In a second terminal with the Python environment active:
+
+```bash
+UPSTREAM_URL=http://127.0.0.1:8080/v1 \
+UPSTREAM_MODEL=your-model-alias \
+UPSTREAM_KIND=llama.cpp \
+uvicorn observatory.app:app --host 127.0.0.1 --port 8000
+```
+
+Use the exact model name returned by the engine's `/v1/models` endpoint, or configure its model alias. Choose **Real inference** in the UI. For a gateway inside Docker, localhost refers to the gateway container: use a reachable engine service name/private address instead.
+
+The adapter also accepts a vLLM endpoint or the official vLLM disaggregated proxy. [GPU runbook](docs/gpu-runbook.md) documents the two-GPU launcher, baseline comparison, engine metrics, and cleanup. The default UI remains usable when GPU resources are shut down.
+
+## Benchmark and export
+
+```bash
+python scripts/benchmark.py --requests 16 --concurrency 4 --input-tokens 2048 --prefix-tokens 1024
+python scripts/smoke.py --url http://localhost:8000
+```
+
+The benchmark CLI prints a JSON report to stdout, with progress on stderr. The UI has an **Export experiment** button. For reproducible trials, record output from several independent runs and use different load patterns. Prefix keys are namespaced per experiment so prior experiments do not silently warm a run. `--warmup 0 --no-cache` is a useful uncached trial.
+
+Each report contains configuration, environment, request records, p50/p95/p99 TTFT, p95 TPOT, successful requests/sec, generated tokens/sec, and goodput. This is **closed-loop load**: each worker submits its next request after completion. It does not establish open-loop saturation or avoid coordinated omission. Small sample p99 values are descriptive, not statistically reliable.
+
+Use `--mode upstream --prompt '...'` for real inference. Synthetic input-length and prefix settings do not alter real engine tokenization. Use actual prompt text of the desired length for real benchmarks.
+
+## Deploy on OCI
+
+Follow [the OCI deployment guide](docs/oci-deployment.md). Terraform creates an A1 VM, VCN, restricted SSH ingress, and private report bucket. It does **not** provision GPUs, Autonomous Database, or a paid monitoring service implicitly.
+
+Always Free eligibility and capacity must be checked in your tenancy's home region. The supplied A1 shape requests 2 OCPUs and 12 GB memory; those amounts are not a guarantee of free eligibility in every account. The optional budget is advisory, not a spending cap.
+
+Once an experiment is exported:
+
+```bash
+pip install -e '.[oci]'
+python scripts/export_oci.py experiment.json --bucket YOUR_PRIVATE_BUCKET --compartment YOUR_COMPARTMENT_OCID
+```
+
+`--adb` additionally stores aggregate results in an existing Autonomous Database using environment-provided connection details. No credentials are committed. See the deployment guide for configuration.
+
+## Measurement rules
+
+- **Gateway TTFT:** first nonempty visible content arrival minus gateway processing start. It excludes earlier HTTP middleware, client/network time before the gateway, and browser rendering.
+- **E2E:** gateway processing start to final stream completion, before telemetry persistence.
+- **Visible TPOT:** `(last visible arrival − first visible arrival) / (visible tokens − 1)`. Null for fewer than two visible tokens or unknown visible token count.
+- **ITL:** intervals between individual synthetic tokens. Real upstream chunk intervals have a separate name; a chunk is not necessarily a token.
+- **Reasoning/extended tokens:** a subset of output, not added twice. Missing provider details remain null, not zero. The app does not reconstruct or log hidden reasoning.
+- **KV transfer:** simulated byte volume uses a documented dense-attention formula. Effective modeled throughput includes configured setup delay; it is not a network benchmark.
+- **Cache capacity:** prefix metadata is retained up to a modeled byte budget. Active decode KV memory, allocator fragmentation, and GPU OOM are not modeled.
+
+The [observability guide](docs/observability.md) explains metric names, trace structure, queries, cardinality, and limitations.
+
+## Test and repository layout
+
+```bash
+ruff check .
+pytest -q
+node --check observatory/static/app.js
+terraform -chdir=infra/oci init -backend=false
+terraform -chdir=infra/oci validate
+```
+
+```text
+observatory/              FastAPI gateway, simulator, workers, upstream adapter
+  static/                Dashboard, architecture SVG, request-flow SVG
+observability/           Collector, Tempo, Prometheus, alerts, Grafana dashboards
+infra/oci/               Terraform and Ubuntu cloud-init
+scripts/                 Benchmark, smoke check, deployment, OCI export, GPU launcher
+tests/                   Accounting, failure, cancellation, API, trace and config checks
+docs/                    Architecture, measurement contract, OCI and GPU runbooks
+.github/workflows/       Python checks, Docker smoke test, Terraform validation
+```
+
+This is a learning system with one gateway replica. SQLite, local counters and simulator state are process-local; do not run multiple Uvicorn workers. Add a shared state store, tenant-aware cache isolation, request rate limits, and a real inference scheduler before treating it as a multi-user production service.
+
+## Sources
+
+- [vLLM disaggregated prefill](https://docs.vllm.ai/en/latest/features/disagg_prefill/)
+- [vLLM NIXL guide and metrics](https://docs.vllm.ai/en/v0.24.0/features/nixl_connector_usage/)
+- [vLLM production metrics](https://docs.vllm.ai/en/latest/usage/metrics/)
+- [llama.cpp server](https://github.com/ggml-org/llama.cpp/tree/master/tools/server)
+- [OpenTelemetry GenAI conventions](https://opentelemetry.io/docs/specs/semconv/registry/attributes/gen-ai/)
+- [OCI Always Free resources](https://docs.oracle.com/en-us/iaas/Content/FreeTier/freetier_topic-Always_Free_Resources.htm)
+- [OCI OpenTelemetry monitoring tutorial](https://docs.oracle.com/en/learn/oci-apm-with-opentelemetry/index.html)
+
+Documentation checked 2026-09-07. Engine APIs evolve; pin and record the exact versions used for hardware experiments.
