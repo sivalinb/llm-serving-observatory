@@ -1,0 +1,28 @@
+name: Validate observatory
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - run: pip install -r requirements.lock && pip install -e '.[dev]'
+      - run: ruff check . && pytest -q
+      - run: node --check observatory/static/app.js
+      - run: docker compose config --quiet
+      - run: GRAFANA_PASSWORD=ci-only docker compose -f compose.yaml -f compose.observability.yaml config --quiet
+      - run: docker compose up -d --build --wait
+      - run: python scripts/smoke.py --url http://127.0.0.1:8000
+      - run: docker compose down
+        if: always()
+  terraform:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+        with: {terraform_version: '1.9.8'}
+      - run: terraform -chdir=infra/oci init -backend=false
+      - run: terraform -chdir=infra/oci validate

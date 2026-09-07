@@ -1,0 +1,45 @@
+name: serving-observatory
+x-worker: &worker
+  build: .
+  restart: unless-stopped
+  command: [uvicorn, observatory.workers:app, --host, 0.0.0.0, --port, '8000', --workers, '1']
+  mem_limit: 256m
+  environment: &worker-env
+    WORKER_TOKEN: ${WORKER_TOKEN:-local-development-only}
+  logging: &logs
+    driver: json-file
+    options:
+      max-size: 10m
+      max-file: '3'
+services:
+  gateway:
+    build: .
+    restart: unless-stopped
+    ports: ['127.0.0.1:8000:8000']
+    mem_limit: 512m
+    environment:
+      LAB_API_KEY: ${LAB_API_KEY:-}
+      WORKER_TOKEN: ${WORKER_TOKEN:-local-development-only}
+      PREFILL_URL: http://prefill:8000
+      DECODE_URL: http://decode:8000
+      UPSTREAM_URL: ${UPSTREAM_URL:-}
+      UPSTREAM_MODEL: ${UPSTREAM_MODEL:-}
+      UPSTREAM_API_KEY: ${UPSTREAM_API_KEY:-}
+      UPSTREAM_KIND: ${UPSTREAM_KIND:-llama.cpp}
+    volumes: [lab-data:/app/data]
+    depends_on:
+      prefill: {condition: service_healthy}
+      decode: {condition: service_healthy}
+    logging: *logs
+  prefill:
+    <<: *worker
+    environment:
+      <<: *worker-env
+      OTEL_SERVICE_NAME: observatory-prefill
+  decode:
+    <<: *worker
+    environment:
+      <<: *worker-env
+      OTEL_SERVICE_NAME: observatory-decode
+volumes:
+  lab-data:

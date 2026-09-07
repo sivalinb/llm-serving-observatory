@@ -1,0 +1,7 @@
+apiVersion: 1
+providers:
+  - name: Observatory
+    folder: LLM Serving
+    type: file
+    options:
+      path: /var/lib/grafana/dashboards

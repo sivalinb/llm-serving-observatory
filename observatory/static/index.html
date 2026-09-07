@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Explore LLM prefill, decode, KV transfer, and token accounting with reproducible experiments.">
+  <title>LLM Serving Observatory</title>
+  <link rel="icon" href="/static/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/static/style.css">
+  <script src="/static/app.js" defer></script>
+</head>
+<body>
+<header class="topbar"><a class="brand" href="/"><img src="/static/icon.svg" alt="" width="32" height="32"><span>Serving<span class="brand-light"> / Observatory</span></span></a><div class="top-right"><span class="version">LAB 01 · OCI</span><span class="pill" id="connection">Connecting</span></div></header>
+<div class="shell">
+  <nav class="nav" aria-label="Workspace views">
+    <button class="nav-item active" data-view="lab" aria-current="page"><span>01</span> Live lab</button>
+    <button class="nav-item" data-view="architecture"><span>02</span> Architecture</button>
+    <button class="nav-item" data-view="benchmarks"><span>03</span> Benchmarks</button>
+    <button class="nav-item" data-view="learn"><span>04</span> Learning path</button>
+    <a href="/docs" class="api-link">API reference ↗</a>
+  </nav>
+  <main>
+    <div id="notice" role="status" aria-live="polite" hidden></div>
+    <section id="view-lab" class="view">
+      <div class="page-heading"><div><p class="eyebrow">INFERENCE, MADE VISIBLE</p><h1>Follow the first token.</h1><p>Change the workload. Watch the handoff. Measure the tradeoff.</p></div><span class="source-badge" id="source-badge">● SIMULATION</span></div>
+      <div class="lab-grid">
+        <form id="run-form" class="panel controls">
+          <div class="panel-heading"><h2>Workload</h2><span class="small-code">REQUEST CONFIG</span></div>
+          <label for="mode">Serving mode</label><select id="mode"><option value="disaggregated">Disaggregated · prefill → decode</option><option value="combined">Combined · one worker</option><option value="upstream" disabled>Real inference · configure upstream</option></select>
+          <p id="mode-note" class="hint">Two independent simulated service slots; KV transfer is modeled.</p>
+          <div class="two-fields"><div><label for="input-tokens">Input tokens</label><input id="input-tokens" type="number" value="512" min="1" max="8192" required></div><div><label for="output-tokens">Output tokens</label><input id="output-tokens" type="number" value="32" min="1" max="256" required></div></div>
+          <div class="two-fields"><div><label for="reasoning-tokens">Reasoning subset</label><input id="reasoning-tokens" type="number" value="0" min="0" max="128" required></div><div><label for="prefix-tokens">Shared prefix</label><input id="prefix-tokens" type="number" value="256" min="0" max="8192" required></div></div>
+          <label class="check"><input id="cache-enabled" type="checkbox" checked><span>Reuse prefix cache</span></label>
+          <details><summary>Timing &amp; failure controls</summary><div class="two-fields"><div><label for="prefill-tps">Prefill tokens/s</label><input id="prefill-tps" type="number" value="4000" min="250" max="100000"></div><div><label for="decode-tps">Decode tokens/s</label><input id="decode-tps" type="number" value="100" min="10" max="1000"></div></div><div class="two-fields"><div><label for="bandwidth">Transfer MB/s</label><input id="bandwidth" type="number" value="1000" min="10" max="100000"></div><div><label for="transfer-latency">Setup latency, ms</label><input id="transfer-latency" type="number" value="3" min="0" max="500"></div></div><label for="fault">Fault injection</label><select id="fault"><option value="none">None</option><option value="transfer_failure">Fail KV handoff</option></select></details>
+          <div id="prompt-control" hidden><label for="prompt">Prompt for real inference</label><textarea id="prompt" rows="4" maxlength="32000">Explain why long prompts affect TTFT and how KV caching helps.</textarea><label for="prompt-file">Load a UTF-8 prompt</label><input id="prompt-file" type="file" accept=".txt,.md"></div>
+          <div id="auth-control" hidden><label for="api-key">Lab API key</label><input id="api-key" type="password" autocomplete="off" placeholder="Kept in this page only"></div>
+          <div class="button-row"><button class="primary" type="submit" id="run-button">Run request <span>↗</span></button><button id="stop-button" class="secondary" type="button" disabled>Stop</button></div>
+          <p class="hint">Synthetic tokens are configured units. Real token counts come from the inference provider.</p>
+        </form>
+        <div class="lab-results">
+          <section class="panel topology"><div class="panel-heading"><h2>Serving path</h2><span class="small-code" id="worker-kind">LOCAL WORKERS</span></div>
+            <svg id="live-flow" viewBox="0 0 940 200" role="img" aria-label="Client to gateway to prefill, KV transfer, decode and streaming response">
+              <defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6" fill="#54657d"/></marker></defs>
+              <g class="flow-links" stroke="#54657d" stroke-width="2" fill="none" marker-end="url(#arrow)"><path d="M132 82H188"/><path d="M322 82H385"/><path d="M519 82H593"/><path d="M727 82H790"/><path d="M856 117V164H81V117"/></g>
+              <g class="flow-node"><rect x="16" y="42" width="116" height="76" rx="9"/><text x="74" y="70" class="node-kicker">01 / CLIENT</text><text x="74" y="96">Request</text></g>
+              <g class="flow-node"><rect x="188" y="42" width="134" height="76" rx="9"/><text x="255" y="70" class="node-kicker">02 / ROUTER</text><text x="255" y="96">Gateway</text></g>
+              <g class="flow-node prefill"><rect x="385" y="42" width="134" height="76" rx="9"/><text x="452" y="70" class="node-kicker">03 / COMPUTE</text><text x="452" y="96" id="p-label">Prefill</text></g>
+              <text x="555" y="61" class="link-label">KV</text><text x="555" y="132" class="link-label" id="kv-flow-label">handoff</text>
+              <g class="flow-node decode"><rect x="593" y="42" width="134" height="76" rx="9"/><text x="660" y="70" class="node-kicker">04 / GENERATE</text><text x="660" y="96">Decode</text></g>
+              <g class="flow-node"><rect x="790" y="42" width="134" height="76" rx="9"/><text x="857" y="70" class="node-kicker">05 / OUTPUT</text><text x="857" y="96">Stream</text></g>
+              <text x="470" y="188" class="link-label">VISIBLE CONTENT RETURNS TO CLIENT · SSE</text>
+            </svg>
+          </section>
+          <div class="stats"><article class="stat"><span>Time to first content</span><div id="stat-ttft">—</div><small>gateway TTFT · ms</small></article><article class="stat"><span>Time per visible token</span><div id="stat-tpot">—</div><small>TPOT · ms / token</small></article><article class="stat"><span>End-to-end</span><div id="stat-e2e">—</div><small>request duration · ms</small></article><article class="stat"><span>KV handoff</span><div id="stat-kv">—</div><small id="kv-stat-unit">modeled transfer · MiB</small></article></div>
+          <section class="panel output"><div class="panel-heading"><h2>Live response</h2><span class="small-code" id="run-state">READY</span></div><div id="response-text" class="response-text" aria-label="Streaming response">Run a request to see visible output arrive here.</div><div class="output-footer"><span id="token-progress">0 visible units received</span><span id="request-id">No request yet</span></div></section>
+          <section class="panel"><div class="panel-heading"><h2>Request waterfall</h2><button type="button" class="text-button" id="export-record" disabled>Export trace JSON ↓</button></div><div id="waterfall" class="waterfall"><p class="empty">Timing spans appear after the request completes.</p></div><p class="hint" id="measurement-note">TTFT includes queuing, prefill, handoff, and the work before the first visible token.</p></section>
+        </div>
+      </div>
+      <section class="panel token-panel"><div class="panel-heading"><h2>Token ledger</h2><span class="small-code" id="token-provenance">NO MEASUREMENT</span></div><div id="token-ledger" class="token-ledger"></div><p class="hint">Cached input is included in input. Reasoning is included in output. Total = input + output. Unavailable counts display “—”.</p></section>
+      <section class="panel history-panel"><div class="panel-heading"><h2>Recent requests</h2><button type="button" class="text-button" id="refresh-history">Refresh ↻</button></div><div class="table-scroll"><table><thead><tr><th>Request</th><th>Mode / source</th><th>Status</th><th>TTFT</th><th>TPOT</th><th>Input / output</th><th>Trace</th></tr></thead><tbody id="history"><tr><td colspan="7" class="empty">No retained requests yet.</td></tr></tbody></table></div></section>
+    </section>
+    <section id="view-architecture" class="view" hidden><div class="page-heading"><div><p class="eyebrow">SYSTEM MAP</p><h1>One request. Every handoff.</h1><p>Implementation boundaries, data paths, and the route from CPU learning to GPU serving.</p></div></div><div class="diagram-toolbar"><a href="/static/architecture.svg" target="_blank" rel="noopener">Open architecture at full size ↗</a><a href="/static/architecture.svg" download>Download SVG ↓</a></div><div class="panel diagram"><img src="/static/architecture.svg" alt="Detailed architecture: clients enter the FastAPI gateway, which routes to combined simulator, separate simulated workers, or a configured real inference server. Metrics go to Prometheus and Grafana, traces to OpenTelemetry and Tempo, records to SQLite and optional OCI exports."></div><div class="diagram-toolbar"><a href="/static/request-flow.svg" target="_blank" rel="noopener">Open request lifecycle ↗</a><a href="/static/request-flow.svg" download>Download SVG ↓</a></div><div class="panel diagram"><img src="/static/request-flow.svg" alt="Request lifecycle and measurement boundaries: admission, queue, prefix lookup, prefill, KV handoff, reasoning, visible decode, final usage and persisted trace. TTFT ends at first visible output; TPOT spans first to last visible token."></div></section>
+    <section id="view-benchmarks" class="view" hidden><div class="page-heading"><div><p class="eyebrow">CONTROLLED EXPERIMENTS</p><h1>Make the tradeoff measurable.</h1><p>Compare the same workload, inspect percentiles, and export every observation.</p></div></div><div class="benchmark-grid"><form id="benchmark-form" class="panel controls"><h2>Experiment</h2><label for="preset">Workload preset</label><select id="preset"><option value="short">Short chat · 128 → 32</option><option value="long">Long context · 4096 → 32</option><option value="generation">Generation heavy · 128 → 128</option><option value="prefix">Shared prefix · 2048 → 32</option></select><div class="two-fields"><div><label for="bench-requests">Requests / mode</label><input id="bench-requests" type="number" min="1" max="64" value="8" required></div><div><label for="concurrency">Concurrency</label><input id="concurrency" type="number" min="1" max="8" value="2" required></div></div><label for="warmup">Warmup requests / mode</label><input id="warmup" type="number" min="0" max="3" value="1" required><p class="hint">Warmups are excluded. Timing and cache settings come from Live lab. Combined has one service slot; disaggregated has two independent slots. These are not equal-cost GPU resources.</p><button class="primary" id="benchmark-button" type="submit">Compare serving modes ↗</button><p id="benchmark-progress" role="status">No experiment running.</p></form><div><section class="panel"><div class="panel-heading"><h2>Comparison</h2><button class="text-button" id="export-benchmark" disabled>Export experiment ↓</button></div><div id="comparison" class="comparison"><p class="empty">Run an experiment to compare TTFT, TPOT, goodput, and output throughput.</p></div></section><section class="panel methodology"><h2>Read the result honestly</h2><p>These are wall-clock measurements of a queue and timing simulator. More service slots can increase throughput independently of disaggregation.</p><p>For GPU conclusions, use the supplied vLLM recipe, compare equal total GPUs, record engine versions and network topology, and repeat both cold- and warm-cache runs.</p><p>Upstream stream chunks may contain several tokens. Chunk gaps are not token-level ITL. Unknown reasoning counts keep visible TPOT unavailable.</p></section></div></div></section>
+    <section id="view-learn" class="view" hidden><div class="page-heading"><div><p class="eyebrow">FROM TOKENS TO SYSTEMS</p><h1>Your learning path.</h1><p>Each step connects a concept to an experiment you can run.</p></div></div><div id="learning-path" class="learning-path"></div></section>
+    <footer><span>LLM Serving Observatory</span><span>Simulation · Instrumentation · Evidence</span><span>v0.1.0</span></footer>
+  </main>
+</div>
+</body>
+</html>

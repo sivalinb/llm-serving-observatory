@@ -1,0 +1,13 @@
+{
+  email {$ACME_EMAIL}
+}
+{$DOMAIN} {
+  @private path /metrics /docs /redoc /openapi.json
+  respond @private 404
+  request_body {
+    max_size 256KB
+  }
+  reverse_proxy gateway:8000 {
+    flush_interval -1
+  }
+}

@@ -1,0 +1,19 @@
+# Optional HTTPS front door. Terraform public_https must also be enabled.
+services:
+  gateway:
+    environment:
+      LAB_API_KEY: ${LAB_API_KEY:?Set a strong LAB_API_KEY before public deployment}
+  caddy:
+    image: caddy:2.9.1-alpine
+    ports: ['80:80', '443:443']
+    environment:
+      DOMAIN: ${DOMAIN:?Set a DNS name pointing to the VM}
+      ACME_EMAIL: ${ACME_EMAIL:?Set the certificate contact email}
+    volumes:
+      - ./infra/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+    restart: unless-stopped
+volumes:
+  caddy-data:
+  caddy-config:

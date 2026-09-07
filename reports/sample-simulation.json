@@ -1,0 +1,1802 @@
+{
+  "id": "2123360fc5db4a928926f14104dfbe9c",
+  "created_at": "2026-09-07T23:33:34.051628+00:00",
+  "config": {
+    "request": {
+      "mode": "combined",
+      "input_tokens": 128,
+      "output_tokens": 32,
+      "reasoning_tokens": 0,
+      "prefix_tokens": 64,
+      "cache_enabled": true,
+      "prefill_tps": 4000,
+      "decode_tps": 100,
+      "transfer_mb_s": 1000,
+      "transfer_latency_ms": 3,
+      "fault": "none",
+      "ttft_slo_ms": 750,
+      "tpot_slo_ms": 50
+    },
+    "requests": 8,
+    "concurrency": 2,
+    "compare": true,
+    "warmup": 1
+  },
+  "results": [
+    {
+      "mode": "combined",
+      "summary": {
+        "requests": 8,
+        "successes": 8,
+        "errors": 0,
+        "wall_seconds": 3.030531707976479,
+        "ttft_p50_ms": 403.2250419841148,
+        "ttft_p95_ms": 432.6388352288632,
+        "ttft_p99_ms": 439.64183345844503,
+        "tpot_p95_ms": 11.823457313397327,
+        "e2e_p95_ms": 790.8128289505839,
+        "requests_per_second": 2.639800791043923,
+        "output_tokens_per_second": 84.47362531340553,
+        "goodput_per_second": 2.639800791043923,
+        "slo_evaluable": 8
+      },
+      "records": [
+        {
+          "id": "81e911f3cce84c81866f6f6d497ef7e2",
+          "created_at": "2026-09-07T23:33:34.450751+00:00",
+          "mode": "combined",
+          "source": "simulated",
+          "model": "synthetic-v1",
+          "token_provenance": "synthetic",
+          "phases": [
+            {
+              "name": "combined.queue",
+              "offset_ms": 0.1171660260297358,
+              "duration_ms": 0.03858399577438831,
+              "clock": "gateway"
+            },
+            {
+              "name": "prefill.compute",
+              "offset_ms": 0.2247910015285015,
+              "duration_ms": 19.139875017572194,
+              "clock": "gateway"
+            },
+            {
+              "name": "decode.visible",
+              "offset_ms": 19.46379104629159,
+              "duration_ms": 352.5144589948468,
+              "clock": "gateway"
+            }
+          ],
+          "tokens": {
+            "input": 128,
+            "output": 32,
+            "cached_input": 64,
+            "reasoning": 0,
+            "visible_output": 32,
+            "total": 160,
+            "uncached_input": 64
+          },
+          "kv_transfer_bytes": 0,
+          "status": "ok",
+          "ttft_ms": 30.321124999318272,
+          "tpot_ms": 11.020418001158584,
+          "itl_ms": [
+            11.098458024207503,
+            11.082332988735288,
+            11.081417032983154,
+            11.076833005063236,
+            11.104333971161395,
+            11.086707992944866,
+            11.076958035118878,
+            11.07424998190254,
+            10.597208980470896,
+            11.087541002780199,
+            11.085167003329843,
+            11.092707980424166,
+            11.075875023379922,
+            11.096542002633214,
+            11.119875009171665,
+            11.095875001046807,
+            10.954041965305805,
+            10.317500040400773,
+            11.087457998655736,
+            11.087791994214058,
+            11.089125007856637,
+            11.082915996666998,
+            11.09779201215133,
+            11.131707986351103,
+            11.0985420178622,
+            11.110457999166101,
+            10.203666985034943,
+            11.115250003058463,
+            11.108124977909029,
+            11.103458004072309,
+            11.113042011857033
+          ],
+          "chunk_gaps_ms": [],
+          "finish_reason": "length",
+          "trace_id": "466297b33716b54b3546dbd6c2bcf950",
+          "kv": {
+            "cached_input": 64,
+            "kv_bytes": 8388608,
+            "kv_bytes_per_token": 65536,
+            "source": "simulated"
+          },
+          "slo_met": true,
+          "duration_ms": 372.0731250359677,
+          "kv_effective_mb_s": null,
+          "handoff_ttft_ratio": null,
+          "visible_chunks": 32,
+          "slo_targets": {
+            "ttft_ms": 750,
+            "tpot_ms": 50
+          },
+          "measurement_note": "Measured wall times of synthetic work. KV bytes are modeled; no model weights or tensors."
+        },
+        {
+          "id": "17a0a5c300bd415d9579fab8fe641718",
+          "created_at": "2026-09-07T23:33:34.451044+00:00",
+          "mode": "combined",
+          "source": "simulated",
+          "model": "synthetic-v1",
+          "token_provenance": "synthetic",
+          "phases": [
+            {
+              "name": "combined.queue",
+              "offset_ms": 0.04320894367992878,
+              "duration_ms": 373.2352500082925,
+              "clock": "gateway"
+            },
+            {
+              "name": "prefill.compute",
+              "offset_ms": 373.3352499548346,
+              "duration_ms": 19.147500046528876,
+              "clock": "gateway"
+            },
+            {
+              "name": "decode.visible",
+              "offset_ms": 392.59687496814877,
+              "duration_ms": 362.3842499800958,
+              "clock": "gateway"
+            }
+          ],
+          "tokens": {
+            "input": 128,
+            "output": 32,
+            "cached_input": 64,
+            "reasoning": 0,
+            "visible_output": 32,
+            "total": 160,
+            "uncached_input": 64
+          },
+          "kv_transfer_bytes": 0,
+          "status": "ok",
+          "ttft_ms": 403.83804199518636,
+          "tpot_ms": 11.326115580290676,
+          "itl_ms": [
+            11.144832998979837,
+            11.212874960619956,
+            11.129749997053295,
+            11.12266699783504,
+            11.115250003058463,
+            10.825958044733852,
+            11.213083984330297,
+            11.222166009247303,
+            11.877666984219104,
+            11.22904202202335,
+            11.25370798399672,
+            11.428124969825149,
+            10.253417014610022,
+            11.34041597833857,
+            12.256375048309565,
+            11.23441697563976,
+            11.301583028398454,
+            10.812999971676618,
+            11.263417021837085,
+            10.52262500161305,
+            11.819791980087757,
+            10.897791013121605,
+            12.885083968285471,
+            11.326875013764948,
+            11.220041022170335,
+            14.257958973757923,
+            11.17308298125863,
+            11.136042012367398,
+            10.35179098835215,
+            11.126709054224193,
+            11.15404098527506
+          ],
+          "chunk_gaps_ms": [],
+          "finish_reason": "length",
+          "trace_id": "756f31ab8f7cc6c33ed94df46074903e",
+          "kv": {
+            "cached_input": 64,
+            "kv_bytes": 8388608,
+            "kv_bytes_per_token": 65536,
+            "source": "simulated"
+          },
+          "slo_met": true,
+          "duration_ms": 755.0687089678831,
+          "kv_effective_mb_s": null,
+          "handoff_ttft_ratio": null,
+          "visible_chunks": 32,
+          "slo_targets": {
+            "ttft_ms": 750,
+            "tpot_ms": 50
+          },
+          "measurement_note": "Measured wall times of synthetic work. KV bytes are modeled; no model weights or tensors."
+        },
+        {
+          "id": "08893a8c42c5487b9e69b09a6bd507f1",
+          "created_at": "2026-09-07T23:33:34.824097+00:00",
+          "mode": "combined",
+          "source": "simulated",
+          "model": "synthetic-v1",
+          "token_provenance": "synthetic",
+          "phases": [
+            {
+              "name": "combined.queue",
+              "offset_ms": 0.1283750170841813,
+              "duration_ms": 383.4141250117682,
+              "clock": "gateway"
+            },
+            {
+              "name": "prefill.compute",
+              "offset_ms": 383.6062910268083,
+              "duration_ms": 19.23174998955801,
+              "clock": "gateway"
+            },
+            {
+              "name": "decode.visible",
+              "offset_ms": 402.98058302141726,
+              "duration_ms": 388.32008303143084,
+              "clock": "gateway"
+            }
+          ],
+          "tokens": {
+            "input": 128,
+            "output": 32,
+            "cached_input": 64,
+            "reasoning": 0,
+            "visible_output": 32,
+            "total": 160,
+            "uncached_input": 64
+          },
+          "kv_transfer_bytes": 0,
+          "status": "ok",
+          "ttft_ms": 416.38187505304813,
+          "tpot_ms": 12.091256708147064,
+          "itl_ms": [
+            11.174999992363155,
+            11.153707979246974,
+            11.235958023462445,
+            10.863250005058944,
+            14.323833980597556,
+            10.5820830212906,
+            14.032957958988845,
+            11.0275840270333,
+            10.689874994568527,
+            13.460832997225225,
+            11.226208007428795,
+            12.450459005776793,
+            11.031000001821667,
+            13.771165977232158,
+            11.434333981014788,
+            13.279583014082164,
+            10.505624988581985,
+            13.504500035196543,
+            11.299667006824166,
+            11.29533298080787,
+            12.087333016097546,
+            10.818833950906992,
+            15.71320800576359,
+            11.232500022742897,
+            11.997875000815839,
+            11.676082969643176,
+            14.335209038108587,
+            11.11650001257658,
+            13.211165962275118,
+            10.919750027824193,
+            13.377541967201978
+          ],
+          "chunk_gaps_ms": [],
+          "finish_reason": "length",
+          "trace_id": "99103bc592872a7231f17223cbc27dd0",
+          "kv": {
+            "cached_input": 64,
+            "kv_bytes": 8388608,
+            "kv_bytes_per_token": 65536,
+            "source": "simulated"
+          },
+          "slo_met": true,
+          "duration_ms": 791.6698330081999,
+          "kv_effective_mb_s": null,
+          "handoff_ttft_ratio": null,
+          "visible_chunks": 32,
+          "slo_targets": {
+            "ttft_ms": 750,
+            "tpot_ms": 50
+          },
+          "measurement_note": "Measured wall times of synthetic work. KV bytes are modeled; no model weights or tensors."
+        },
+        {
+          "id": "f0051c35c4714ba3874491b6edd64ed4",
+          "created_at": "2026-09-07T23:33:35.207426+00:00",
+          "mode": "combined",
+          "source": "simulated",
+          "model": "synthetic-v1",
+          "token_provenance": "synthetic",
+          "phases": [
+            {
+              "name": "combined.queue",
+              "offset_ms": 0.14245801139622927,
+              "duration_ms": 410.6362090096809,
+              "clock": "gateway"
+            },
+            {
+              "name": "prefill.compute",
+              "offset_ms": 410.84691701689735,
+              "duration_ms": 19.186540972441435,
+              "clock": "gateway"
+            },
+            {
+              "name": "decode.visible",
+              "offset_ms": 430.21216703346,
+              "duration_ms": 358.9570409967564,
+              "clock": "gateway"
+            }
+          ],
+          "tokens": {
+            "input": 128,
+            "output": 32,
+            "cached_input": 64,
+            "reasoning": 0,
+            "visible_output": 32,
+            "total": 160,
+            "uncached_input": 64
+          },
+          "kv_transfer_bytes": 0,
+          "status": "ok",
+          "ttft_ms": 441.3925830158405,
+          "tpot_ms": 11.217915321580104,
+          "itl_ms": [
+            11.122791969683021,
+            11.02379203075543,
+            11.110624996945262,
+            10.901750007178634,
+            11.110249964985996,
+            11.084875033702701,
+            11.073999979998916,
+            11.084416008088738,
+            11.090542015153915,
+            11.087457998655736,
+            11.09912496758625,
+            11.09387504402548,
+            10.864291980396956,
+            11.148582969326526,
+            11.158084031194448,
+            11.16466597886756,
+            11.154542036820203,
+            11.19741698494181,
+            11.20175002142787,
+            11.193082958925515,
+            11.146375036332756,
+            10.761749988887459,
+            11.396042013075203,
+            12.273624946828932,
+            11.290625028777868,
+            13.922250014729798,
+            11.286832974292338,
+            11.10662502469495,
+            11.123083007987589,
+            11.104333971161395,
+            10.377915983553976
+          ],
+          "chunk_gaps_ms": [],
+          "finish_reason": "length",
+          "trace_id": "46b922c2d378e7e38bb9009e4f55ac71",
+          "kv": {
+            "cached_input": 64,
+            "kv_bytes": 8388608,
+            "kv_bytes_per_token": 65536,
+            "source": "simulated"
+          },
+          "slo_met": true,
+          "duration_ms": 789.22124998644,
+          "kv_effective_mb_s": null,
+          "handoff_ttft_ratio": null,
+          "visible_chunks": 32,
+          "slo_targets": {
+            "ttft_ms": 750,
+            "tpot_ms": 50
+          },
+          "measurement_note": "Measured wall times of synthetic work. KV bytes are modeled; no model weights or tensors."
+        },
+        {
+          "id": "c7c6664096d44959a73e0f8288d2bf8d",
+          "created_at": "2026-09-07T23:33:35.617958+00:00",
+          "mode": "combined",
+          "source": "simulated",
+          "model": "synthetic-v1",
+          "token_provenance": "synthetic",
+          "phases": [
+            {
+              "name": "combined.queue",
+              "offset_ms": 0.1564159756526351,
+              "duration_ms": 379.5592919923365,
+              "clock": "gateway"
+            },
+            {
+              "name": "prefill.compute",
+              "offset_ms": 379.7519580111839,
+              "duration_ms": 18.542832985986024,
+              "clock": "gateway"
+            },
+            {
+              "name": "decode.visible",
+              "offset_ms": 398.35370797663927,
+              "duration_ms": 351.6496670199558,
+              "clock": "gateway"
+            }
+          ],
+          "tokens": {
+            "input": 128,
+            "output": 32,
+            "cached_input": 64,
+            "reasoning": 0,
+            "visible_output": 32,
+            "total": 160,
+            "uncached_input": 64
+          },
+          "kv_transfer_bytes": 0,
+          "status": "ok",
+          "ttft_ms": 409.48249999200925,
+          "tpot_ms": 10.9839717737369,
+          "itl_ms": [
+            11.13816600991413,
+            10.70695900125429,
+            11.105207959190011,
+            10.738458018749952,
+            11.097416980192065,
+            10.756625037174672,
+            11.117291986010969,
+            11.098249990027398,
+            11.078666022513062,
+            11.11366698751226,
+            11.137957975734025,
+            11.096959002315998,
+            10.90354099869728,
+            11.098292015958577,
+            10.568500030785799,
+            11.08095794916153,
+            11.109417013358325,
+            11.125791992526501,
+            11.090999993029982,
+            10.497000010218471,
+            11.018083023373038,
+            11.134499975014478,
+            11.110042047221214,
+            10.389415954705328,
+            11.0879170242697,
+            10.657374979928136,
+            11.085707985330373,
+            11.08566700713709,
+            11.091833002865314,
+            11.084875033702701,
+            11.097583977971226
+          ],
+          "chunk_gaps_ms": [],
+          "finish_reason": "length",
+          "trace_id": "3d2241bec8e7474d192aa59be9eded54",
+          "kv": {
+            "cached_input": 64,
+            "kv_bytes": 8388608,
+            "kv_bytes_per_token": 65536,
+            "source": "simulated"
+          },
+          "slo_met": true,
+          "duration_ms": 750.0524159986526,
+          "kv_effective_mb_s": null,
+          "handoff_ttft_ratio": null,
+          "visible_chunks": 32,
+          "slo_targets": {
+            "ttft_ms": 750,
+            "tpot_ms": 50
+          },
+          "measurement_note": "Measured wall times of synthetic work. KV bytes are modeled; no model weights or tensors."
+        },
+        {
+          "id": "cd39267a902a479195e401321643311a",
+          "created_at": "2026-09-07T23:33:35.997563+00:00",
+          "mode": "combined",
+          "source": "simulated",
+          "model": "synthetic-v1",
+          "token_provenance": "synthetic",
+          "phases": [
+            {
+              "name": "combined.queue",
+              "offset_ms": 0.07470796117559075,
+              "duration_ms": 371.0226670373231,
+              "clock": "gateway"
+            },
+            {
+              "name": "prefill.compute",
+              "offset_ms": 371.1634170031175,
+              "duration_ms": 19.025957968551666,
+              "clock": "gateway"
+            },
+            {
+              "name": "decode.visible",
+              "offset_ms": 390.2496249647811,
+              "duration_ms": 352.72450000047684,
+              "clock": "gateway"
+            }
+          ],
+          "tokens": {
+            "input": 128,
+            "output": 32,
+            "cached_input": 64,
+            "reasoning": 0,
+            "visible_output": 32,
+            "total": 160,
+            "uncached_input": 64
+          },
+          "kv_transfer_bytes": 0,
+          "status": "ok",
+          "ttft_ms": 401.35929198004305,
+          "tpot_ms": 11.01926745163397,
+          "itl_ms": [
+            11.082125012762845,
+            10.187165986280888,
+            11.09241700032726,
+            10.193417023401707,
+            11.093249951954931,
+            11.0921660088934,
+            11.073959001805633,
+            11.085583013482392,
+            10.277791996486485,
+            10.387625021394342,
+            11.087040998972952,
+            11.195041995961219,
+            13.994166976772249,
+            11.194291000720114,
+            10.65708399983123,
+            11.25000003958121,
+            10.696457989979535,
+            11.160541966091841,
+            10.424708016216755,
+            11.163624993059784,
+            11.111792002338916,
+            11.094540997873992,
+            11.077375034801662,
+            11.123124975711107,
+            11.117291986010969,
+            11.118250025901943,
+            10.179542005062103,
+            11.09462499152869,
+            11.106707970611751,
+            11.094542045611888,
+            11.091040971223265
+          ],
+          "chunk_gaps_ms": [],
+          "finish_reason": "length",
+          "trace_id": "8f350792253d1be78739bfc068e4c83f",
+          "kv": {
+            "cached_input": 64,
+            "kv_bytes": 8388608,
+            "kv_bytes_per_token": 65536,
+            "source": "simulated"
+          },
+          "slo_met": true,
+          "duration_ms": 743.0191669845954,
+          "kv_effective_mb_s": null,
+          "handoff_ttft_ratio": null,
+          "visible_chunks": 32,
+          "slo_targets": {
+            "ttft_ms": 750,
+            "tpot_ms": 50
+          },
+          "measurement_note": "Measured wall times of synthetic work. KV bytes are modeled; no model weights or tensors."
+        },
+        {
+          "id": "78f3aaaf2f0b4c20b77da0ea170c2bd3",
+          "created_at": "2026-09-07T23:33:36.368487+00:00",
+          "mode": "combined",
+          "source": "simulated",
+          "model": "synthetic-v1",
+          "token_provenance": "synthetic",
+          "phases": [
+            {
+              "name": "combined.queue",
+              "offset_ms": 0.07287500193342566,
+              "duration_ms": 373.07991698617116,
+              "clock": "gateway"
+            },
+            {
+              "name": "prefill.compute",
+              "offset_ms": 373.1926249456592,
+              "duration_ms": 19.10400000633672,
+              "clock": "gateway"
+            },
+            {
+              "name": "decode.visible",
+              "offset_ms": 392.3605000018142,
+              "duration_ms": 347.7306669810787,
+              "clock": "gateway"
+            }
+          ],
+          "tokens": {
+            "input": 128,
+            "output": 32,
+            "cached_input": 64,
+            "reasoning": 0,
+            "visible_output": 32,
+            "total": 160,
+            "uncached_input": 64
+          },
+          "kv_transfer_bytes": 0,
+          "status": "ok",
+          "ttft_ms": 402.61204197304323,
+          "tpot_ms": 10.885815870302219,
+          "itl_ms": [
+            11.105375015176833,
+            10.413374984636903,
+            11.08862500404939,
+            11.082332988735288,
+            11.115709028672427,
+            11.16020797053352,
+            11.091708031017333,
+            11.092958971858025,
+            10.959165985696018,
+            10.431667033117265,
+            10.416208009701222,
+            10.147583961952478,
+            11.111416039057076,
+            11.108208971563727,
+            11.097041016910225,
+            10.66395896486938,
+            10.495750000700355,
+            11.104041012004018,
+            10.560624999925494,
+            11.111542000435293,
+            10.985375032760203,
+            11.103499971795827,
+            10.493042005691677,
+            11.093250010162592,
+            11.088165978435427,
+            10.252874984871596,
+            11.111417028587312,
+            11.091542022768408,
+            11.106165999080986,
+            10.682541993446648,
+            11.094916961155832
+          ],
+          "chunk_gaps_ms": [],
+          "finish_reason": "length",
+          "trace_id": "6119d23e31ab3258a476ea156859ae80",
+          "kv": {
+            "cached_input": 64,
+            "kv_bytes": 8388608,
+            "kv_bytes_per_token": 65536,
+            "source": "simulated"
+          },
+          "slo_met": true,
+          "duration_ms": 740.141958987806,
+          "kv_effective_mb_s": null,
+          "handoff_ttft_ratio": null,
+          "visible_chunks": 32,
+          "slo_targets": {
+            "ttft_ms": 750,
+            "tpot_ms": 50
+          },
+          "measurement_note": "Measured wall times of synthetic work. KV bytes are modeled; no model weights or tensors."
+        },
+        {
+          "id": "86fd0a18a90a47cdbf1f7dbc4eb4953d",
+          "created_at": "2026-09-07T23:33:36.741483+00:00",
+          "mode": "combined",
+          "source": "simulated",
+          "model": "synthetic-v1",
+          "token_provenance": "synthetic",
+          "phases": [
+            {
+              "name": "combined.queue",
+              "offset_ms": 0.07083301898092031,
+              "duration_ms": 367.91145894676447,
+              "clock": "gateway"
+            },
+            {
+              "name": "prefill.compute",
+              "offset_ms": 368.0178750073537,
+              "duration_ms": 19.12520796759054,
+              "clock": "gateway"
+            },
+            {
+              "name": "decode.visible",
+              "offset_ms": 387.2083749738522,
+              "duration_ms": 351.55137500260025,
+              "clock": "gateway"
+            }
+          ],
+          "tokens": {
+            "input": 128,
+            "output": 32,
+            "cached_input": 64,
+            "reasoning": 0,
+            "visible_output": 32,
+            "total": 160,
+            "uncached_input": 64
+          },
+          "kv_transfer_bytes": 0,
+          "status": "ok",
+          "ttft_ms": 398.33716698922217,
+          "tpot_ms": 10.980858871217576,
+          "itl_ms": [
+            11.083082994446158,
+            10.205250000581145,
+            11.097542010247707,
+            11.090375017374754,
+            10.06879098713398,
+            11.122874973807484,
+            11.113417043816298,
+            11.098041955847293,
+            11.123291042167693,
+            11.091583990491927,
+            11.094874993432313,
+            11.192500009201467,
+            11.093624983914196,
+            11.111165978945792,
+            11.124667013064027,
+            11.084625031799078,
+            11.076082999352366,
+            10.11008396744728,
+            11.105415993370116,
+            11.093500012066215,
+            11.09016698319465,
+            10.444458050187677,
+            10.953583987429738,
+            11.062374978791922,
+            11.107790982350707,
+            11.0955840209499,
+            11.085083009675145,
+            11.099416995421052,
+            11.098540970124304,
+            11.10233401414007,
+            11.086500016972423
+          ],
+          "chunk_gaps_ms": [],
+          "finish_reason": "length",
+          "trace_id": "ca00b3acfbfd54a0ea93066fa4de27c4",
+          "kv": {
+            "cached_input": 64,
+            "kv_bytes": 8388608,
+            "kv_bytes_per_token": 65536,
+            "source": "simulated"
+          },
+          "slo_met": true,
+          "duration_ms": 738.8020830112509,
+          "kv_effective_mb_s": null,
+          "handoff_ttft_ratio": null,
+          "visible_chunks": 32,
+          "slo_targets": {
+            "ttft_ms": 750,
+            "tpot_ms": 50
+          },
+          "measurement_note": "Measured wall times of synthetic work. KV bytes are modeled; no model weights or tensors."
+        }
+      ]
+    },
+    {
+      "mode": "disaggregated",
+      "summary": {
+        "requests": 8,
+        "successes": 8,
+        "errors": 0,
+        "wall_seconds": 2.991212875000201,
+        "ttft_p50_ms": 383.3951665146742,
+        "ttft_p95_ms": 408.14304550003726,
+        "ttft_p99_ms": 416.5730755083496,
+        "tpot_p95_ms": 11.855307052516558,
+        "e2e_p95_ms": 776.7166248871945,
+        "requests_per_second": 2.6745003897455684,
+        "output_tokens_per_second": 85.58401247185819,
+        "goodput_per_second": 2.6745003897455684,
+        "slo_evaluable": 8
+      },
+      "records": [
+        {
+          "id": "505607e2f9aa4415b7dd938a19b41c31",
+          "created_at": "2026-09-07T23:33:37.893493+00:00",
+          "mode": "disaggregated",
+          "source": "simulated",
+          "model": "synthetic-v1",
+          "token_provenance": "synthetic",
+          "phases": [
+            {
+              "name": "prefill.rpc",
+              "offset_ms": 0.1309159561060369,
+              "duration_ms": 24.532000010367483,
+              "clock": "gateway"
+            },
+            {
+              "name": "kv.transfer",
+              "offset_ms": 24.724415969103575,
+              "duration_ms": 12.59058399591595,
+              "clock": "gateway"
+            },
+            {
+              "name": "decode.rpc",
+              "offset_ms": 37.36970794852823,
+              "duration_ms": 371.7780419974588,
+              "clock": "gateway"
+            }
+          ],
+          "tokens": {
+            "input": 128,
+            "output": 32,
+            "cached_input": 64,
+            "reasoning": 0,
+            "visible_output": 32,
+            "total": 160,
+            "uncached_input": 64
+          },
+          "kv_transfer_bytes": 8388608,
+          "status": "ok",
+          "ttft_ms": 53.093082970008254,
+          "tpot_ms": 11.449077968380504,
+          "itl_ms": [
+            10.294542007613927,
+            11.4514579763636,
+            11.194374994374812,
+            11.107792030088603,
+            11.300000012852252,
+            11.222374974749982,
+            11.349625012371689,
+            11.413457978051156,
+            11.048791988287121,
+            11.213916004635394,
+            11.316250020172447,
+            10.83054201444611,
+            11.073125002440065,
+            11.705457989592105,
+            12.642625020816922,
+            11.716291948687285,
+            13.227250019554049,
+            11.302792001515627,
+            11.196749983355403,
+            11.32154103834182,
+            11.193624988663942,
+            10.879791982006282,
+            12.088957999367267,
+            9.862625040113926,
+            11.21387496823445,
+            12.042084010317922,
+            10.721458005718887,
+            15.569666982628405,
+            11.122916010208428,
+            11.121375020593405,
+            11.176083993632346
+          ],
+          "chunk_gaps_ms": [],
+          "finish_reason": "length",
+          "trace_id": "86b0ce74d9e255c4544ea3c549e09757",
+          "kv": {
+            "cached_input": 64,
+            "kv_bytes": 8388608,
+            "kv_bytes_per_token": 65536,
+            "source": "simulated"
+          },
+          "worker_phases": {
+            "prefill": [
+              {
+                "name": "prefill.queue",
+                "offset_ms": 0.13937498442828655,
+                "duration_ms": 0.03758398815989494,
+                "clock": "worker"
+              },
+              {
+                "name": "prefill.compute",
+                "offset_ms": 0.2299999468959868,
+                "duration_ms": 18.45908403629437,
+                "clock": "worker"
+              }
+            ],
+            "decode": [
+              {
+                "name": "decode.queue",
+                "offset_ms": 0.13641698751598597,
+                "duration_ms": 0.041457999031990767,
+                "clock": "worker"
+              },
+              {
+                "name": "decode.visible",
+                "offset_ms": 0.22175000049173832,
+                "duration_ms": 366.4000420249067,
+                "clock": "worker"
+              }
+            ]
+          },
+          "slo_met": true,
+          "duration_ms": 409.19295797357336,
+          "kv_effective_mb_s": 666.2604373809063,
+          "handoff_ttft_ratio": 0.23714170079421162,
+          "visible_chunks": 32,
+          "slo_targets": {
+            "ttft_ms": 750,
+            "tpot_ms": 50
+          },
+          "measurement_note": "Measured wall times of synthetic work. KV bytes are modeled; no model weights or tensors."
+        },
+        {
+          "id": "8b2d3cc1ada84ffe9f44ff565da898b7",
+          "created_at": "2026-09-07T23:33:37.894466+00:00",
+          "mode": "disaggregated",
+          "source": "simulated",
+          "model": "synthetic-v1",
+          "token_provenance": "synthetic",
+          "phases": [
+            {
+              "name": "prefill.rpc",
+              "offset_ms": 0.059624959249049425,
+              "duration_ms": 43.21520804660395,
+              "clock": "gateway"
+            },
+            {
+              "name": "kv.transfer",
+              "offset_ms": 43.349624960683286,
+              "duration_ms": 11.868375004269183,
+              "clock": "gateway"
+            },
+            {
+              "name": "decode.rpc",
+              "offset_ms": 55.27470796369016,
+              "duration_ms": 731.4832500414923,
+              "clock": "gateway"
+            }
+          ],
+          "tokens": {
+            "input": 128,
+            "output": 32,
+            "cached_input": 64,
+            "reasoning": 0,
+            "visible_output": 32,
+            "total": 160,
+            "uncached_input": 64
+          },
+          "kv_transfer_bytes": 8388608,
+          "status": "ok",
+          "ttft_ms": 418.68058301042765,
+          "tpot_ms": 11.83291264404092,
+          "itl_ms": [
+            11.034166964236647,
+            11.054875038098544,
+            10.158249991945922,
+            11.273374955635518,
+            11.15629100240767,
+            11.227209004573524,
+            11.277500016149133,
+            11.166625015903264,
+            10.719207988586277,
+            12.598583009094,
+            11.093917011749,
+            13.351041998248547,
+            11.796874983701855,
+            13.320749974809587,
+            11.579500045627356,
+            14.096124970819801,
+            11.438333021942526,
+            13.166124990675598,
+            11.533082986716181,
+            13.297041994519532,
+            11.57833298202604,
+            14.57137503894046,
+            11.062750010751188,
+            12.341916968580335,
+            10.848333011381328,
+            10.948791983537376,
+            11.916082992684096,
+            10.885583993513137,
+            14.04833304695785,
+            11.050625005736947,
+            11.229291965719312
+          ],
+          "chunk_gaps_ms": [],
+          "finish_reason": "length",
+          "trace_id": "05bec06633d7aefa3fd78e24bfa2c17d",
+          "kv": {
+            "cached_input": 64,
+            "kv_bytes": 8388608,
+            "kv_bytes_per_token": 65536,
+            "source": "simulated"
+          },
+          "worker_phases": {
+            "prefill": [
+              {
+                "name": "prefill.queue",
+                "offset_ms": 0.08391699520871043,
+                "duration_ms": 18.26174999587238,
+                "clock": "worker"
+              },
+              {
+                "name": "prefill.compute",
+                "offset_ms": 18.421375018078834,
+                "duration_ms": 19.20674997381866,
+                "clock": "worker"
+              }
+            ],
+            "decode": [
+              {
+                "name": "decode.queue",
+                "offset_ms": 0.1611249754205346,
+                "duration_ms": 347.5610829773359,
+                "clock": "worker"
+              },
+              {
+                "name": "decode.visible",
+                "offset_ms": 347.75762498611584,
+                "duration_ms": 378.0971249798313,
+                "clock": "worker"
+              }
+            ]
+          },
+          "slo_met": true,
+          "duration_ms": 786.7980829905719,
+          "kv_effective_mb_s": 706.8034163887244,
+          "handoff_ttft_ratio": 0.02834708722084107,
+          "visible_chunks": 32,
+          "slo_targets": {
+            "ttft_ms": 750,
+            "tpot_ms": 50
+          },
+          "measurement_note": "Measured wall times of synthetic work. KV bytes are modeled; no model weights or tensors."
+        },
+        {
+          "id": "6111608aa99845ce9eae35318802234b",
+          "created_at": "2026-09-07T23:33:38.303931+00:00",
+          "mode": "disaggregated",
+          "source": "simulated",
+          "model": "synthetic-v1",
+          "token_provenance": "synthetic",
+          "phases": [
+            {
+              "name": "prefill.rpc",
+              "offset_ms": 0.09858404519036412,
+              "duration_ms": 24.196832964662462,
+              "clock": "gateway"
+            },
+            {
+              "name": "kv.transfer",
+              "offset_ms": 24.335959053132683,
+              "duration_ms": 12.147999950684607,
+              "clock": "gateway"
+            },
+            {
+              "name": "decode.rpc",
+              "offset_ms": 36.537750042043626,
+              "duration_ms": 712.9384169820696,
+              "clock": "gateway"
+            }
+          ],
+          "tokens": {
+            "input": 128,
+            "output": 32,
+            "cached_input": 64,
+            "reasoning": 0,
+            "visible_output": 32,
+            "total": 160,
+            "uncached_input": 64
+          },
+          "kv_transfer_bytes": 8388608,
+          "status": "ok",
+          "ttft_ms": 387.7533750492148,
+          "tpot_ms": 11.619674740359187,
+          "itl_ms": [
+            10.78095898265019,
+            11.241958010941744,
+            10.481667006388307,
+            11.22899999609217,
+            11.202249967027456,
+            11.484666028991342,
+            10.228500002995133,
+            13.978166971355677,
+            9.322833037003875,
+            11.254291981458664,
+            13.582542014773935,
+            10.682915977668017,
+            12.868708989117295,
+            12.050666031427681,
+            12.706334004178643,
+            10.882999980822206,
+            11.351499997545034,
+            11.949624982662499,
+            11.10266603063792,
+            13.977749971672893,
+            9.071500040590763,
+            11.652208981104195,
+            13.530957978218794,
+            10.786292026750743,
+            13.539624982513487,
+            10.62362501397729,
+            13.525832968298346,
+            11.545917019248009,
+            10.500582982786,
+            12.105417030397803,
+            10.967957961838692
+          ],
+          "chunk_gaps_ms": [],
+          "finish_reason": "length",
+          "trace_id": "e582653834fb2362ef55e37fe58b4a9a",
+          "kv": {
+            "cached_input": 64,
+            "kv_bytes": 8388608,
+            "kv_bytes_per_token": 65536,
+            "source": "simulated"
+          },
+          "worker_phases": {
+            "prefill": [
+              {
+                "name": "prefill.queue",
+                "offset_ms": 0.18220796482637525,
+                "duration_ms": 0.04045903915539384,
+                "clock": "worker"
+              },
+              {
+                "name": "prefill.compute",
+                "offset_ms": 0.28845801716670394,
+                "duration_ms": 19.117666990496218,
+                "clock": "worker"
+              }
+            ],
+            "decode": [
+              {
+                "name": "decode.queue",
+                "offset_ms": 0.08220801828429103,
+                "duration_ms": 336.429417016916,
+                "clock": "worker"
+              },
+              {
+                "name": "decode.visible",
+                "offset_ms": 336.568791011814,
+                "duration_ms": 371.4394170092419,
+                "clock": "worker"
+              }
+            ]
+          },
+          "slo_met": true,
+          "duration_ms": 749.5342090260237,
+          "kv_effective_mb_s": 690.534082487155,
+          "handoff_ttft_ratio": 0.0313291920389932,
+          "visible_chunks": 32,
+          "slo_targets": {
+            "ttft_ms": 750,
+            "tpot_ms": 50
+          },
+          "measurement_note": "Measured wall times of synthetic work. KV bytes are modeled; no model weights or tensors."
+        },
+        {
+          "id": "72fdae8611fe4543ad3e055c8f51e56d",
+          "created_at": "2026-09-07T23:33:38.682477+00:00",
+          "mode": "disaggregated",
+          "source": "simulated",
+          "model": "synthetic-v1",
+          "token_provenance": "synthetic",
+          "phases": [
+            {
+              "name": "prefill.rpc",
+              "offset_ms": 0.12762501137331128,
+              "duration_ms": 22.784208005759865,
+              "clock": "gateway"
+            },
+            {
+              "name": "kv.transfer",
+              "offset_ms": 22.946916986256838,
+              "duration_ms": 11.897750024218112,
+              "clock": "gateway"
+            },
+            {
+              "name": "decode.rpc",
+              "offset_ms": 34.88074999768287,
+              "duration_ms": 716.5861669927835,
+              "clock": "gateway"
+            }
+          ],
+          "tokens": {
+            "input": 128,
+            "output": 32,
+            "cached_input": 64,
+            "reasoning": 0,
+            "visible_output": 32,
+            "total": 160,
+            "uncached_input": 64
+          },
+          "kv_transfer_bytes": 8388608,
+          "status": "ok",
+          "ttft_ms": 380.871000001207,
+          "tpot_ms": 11.867365580157287,
+          "itl_ms": [
+            11.275083001237363,
+            11.21916703414172,
+            10.388916998635978,
+            11.240291001740843,
+            11.216083948966116,
+            10.693250049371272,
+            10.890790959820151,
+            12.099084036890417,
+            15.27412497671321,
+            10.760625009424984,
+            12.528874969575554,
+            11.461125046480447,
+            10.169540997594595,
+            11.235666985157877,
+            11.534332996234298,
+            14.856334018986672,
+            10.494790971279144,
+            14.25375003600493,
+            11.99124997947365,
+            12.204625003505498,
+            11.37858396396041,
+            12.86570803495124,
+            8.388999965973198,
+            11.824917048215866,
+            15.242333000060171,
+            10.749332956038415,
+            14.359334018081427,
+            11.60920801339671,
+            10.844666976481676,
+            11.08175003901124,
+            13.755790947470814
+          ],
+          "chunk_gaps_ms": [],
+          "finish_reason": "length",
+          "trace_id": "ff9775636787eb11e323f1cdf60f078e",
+          "kv": {
+            "cached_input": 64,
+            "kv_bytes": 8388608,
+            "kv_bytes_per_token": 65536,
+            "source": "simulated"
+          },
+          "worker_phases": {
+            "prefill": [
+              {
+                "name": "prefill.queue",
+                "offset_ms": 0.18091697711497545,
+                "duration_ms": 0.036999990697950125,
+                "clock": "worker"
+              },
+              {
+                "name": "prefill.compute",
+                "offset_ms": 0.28858298901468515,
+                "duration_ms": 18.33799999440089,
+                "clock": "worker"
+              }
+            ],
+            "decode": [
+              {
+                "name": "decode.queue",
+                "offset_ms": 0.06833398947492242,
+                "duration_ms": 331.8803749862127,
+                "clock": "worker"
+              },
+              {
+                "name": "decode.visible",
+                "offset_ms": 331.9924590177834,
+                "duration_ms": 376.38149998383597,
+                "clock": "worker"
+              }
+            ]
+          },
+          "slo_met": true,
+          "duration_ms": 751.5304170083255,
+          "kv_effective_mb_s": 705.0583499337957,
+          "handoff_ttft_ratio": 0.031238267088280303,
+          "visible_chunks": 32,
+          "slo_targets": {
+            "ttft_ms": 750,
+            "tpot_ms": 50
+          },
+          "measurement_note": "Measured wall times of synthetic work. KV bytes are modeled; no model weights or tensors."
+        },
+        {
+          "id": "266db85b5ee44d968bb69dad530205b9",
+          "created_at": "2026-09-07T23:33:39.054641+00:00",
+          "mode": "disaggregated",
+          "source": "simulated",
+          "model": "synthetic-v1",
+          "token_provenance": "synthetic",
+          "phases": [
+            {
+              "name": "prefill.rpc",
+              "offset_ms": 0.10758294956758618,
+              "duration_ms": 24.563000013586134,
+              "clock": "gateway"
+            },
+            {
+              "name": "kv.transfer",
+              "offset_ms": 24.705457966774702,
+              "duration_ms": 12.302958988584578,
+              "clock": "gateway"
+            },
+            {
+              "name": "decode.rpc",
+              "offset_ms": 37.15387498959899,
+              "duration_ms": 720.7441669888794,
+              "clock": "gateway"
+            }
+          ],
+          "tokens": {
+            "input": 128,
+            "output": 32,
+            "cached_input": 64,
+            "reasoning": 0,
+            "visible_output": 32,
+            "total": 160,
+            "uncached_input": 64
+          },
+          "kv_transfer_bytes": 8388608,
+          "status": "ok",
+          "ttft_ms": 388.5733329807408,
+          "tpot_ms": 11.807146515967625,
+          "itl_ms": [
+            11.233916971832514,
+            11.171874997671694,
+            10.194917034823447,
+            11.38879096833989,
+            11.53241703286767,
+            10.287375014740974,
+            14.443958003539592,
+            10.179166973102838,
+            11.110958002973348,
+            13.72849999461323,
+            11.320333986077458,
+            12.649832991883159,
+            11.699083028361201,
+            13.88774998486042,
+            11.426417040638626,
+            13.835957972332835,
+            11.2690000096336,
+            12.379624997265637,
+            11.373749992344528,
+            11.447208991739899,
+            12.86270801210776,
+            10.887957992963493,
+            12.138749996665865,
+            11.967792001087219,
+            10.063124995213002,
+            12.615124986041337,
+            11.538750026375055,
+            13.656417024321854,
+            11.281290964689106,
+            10.80791698768735,
+            11.640875018201768
+          ],
+          "chunk_gaps_ms": [],
+          "finish_reason": "length",
+          "trace_id": "9e569947dea47c8082eca867a1accd94",
+          "kv": {
+            "cached_input": 64,
+            "kv_bytes": 8388608,
+            "kv_bytes_per_token": 65536,
+            "source": "simulated"
+          },
+          "worker_phases": {
+            "prefill": [
+              {
+                "name": "prefill.queue",
+                "offset_ms": 0.1980409724637866,
+                "duration_ms": 0.056374992709606886,
+                "clock": "worker"
+              },
+              {
+                "name": "prefill.compute",
+                "offset_ms": 0.3363330033607781,
+                "duration_ms": 19.144541991408914,
+                "clock": "worker"
+              }
+            ],
+            "decode": [
+              {
+                "name": "decode.queue",
+                "offset_ms": 0.08020800305530429,
+                "duration_ms": 334.43470898782834,
+                "clock": "worker"
+              },
+              {
+                "name": "decode.visible",
+                "offset_ms": 334.58833303302526,
+                "duration_ms": 377.02104198979214,
+                "clock": "worker"
+              }
+            ]
+          },
+          "slo_met": true,
+          "duration_ms": 757.9939169809222,
+          "kv_effective_mb_s": 681.8366222128719,
+          "handoff_ttft_ratio": 0.03166187163233448,
+          "visible_chunks": 32,
+          "slo_targets": {
+            "ttft_ms": 750,
+            "tpot_ms": 50
+          },
+          "measurement_note": "Measured wall times of synthetic work. KV bytes are modeled; no model weights or tensors."
+        },
+        {
+          "id": "64872b8ec7c5429cbb84b253699c5812",
+          "created_at": "2026-09-07T23:33:39.435605+00:00",
+          "mode": "disaggregated",
+          "source": "simulated",
+          "model": "synthetic-v1",
+          "token_provenance": "synthetic",
+          "phases": [
+            {
+              "name": "prefill.rpc",
+              "offset_ms": 0.15179201727733016,
+              "duration_ms": 24.104207986965775,
+              "clock": "gateway"
+            },
+            {
+              "name": "kv.transfer",
+              "offset_ms": 24.289167020469904,
+              "duration_ms": 12.80695799505338,
+              "clock": "gateway"
+            },
+            {
+              "name": "decode.rpc",
+              "offset_ms": 37.304542027413845,
+              "duration_ms": 699.555832950864,
+              "clock": "gateway"
+            }
+          ],
+          "tokens": {
+            "input": 128,
+            "output": 32,
+            "cached_input": 64,
+            "reasoning": 0,
+            "visible_output": 32,
+            "total": 160,
+            "uncached_input": 64
+          },
+          "kv_transfer_bytes": 8388608,
+          "status": "ok",
+          "ttft_ms": 385.9193330281414,
+          "tpot_ms": 11.292776902161178,
+          "itl_ms": [
+            11.292624985799193,
+            11.272625008132309,
+            10.253916960209608,
+            11.005042004399002,
+            11.199000000488013,
+            13.920416007749736,
+            10.857374989427626,
+            14.101709006354213,
+            10.51258301595226,
+            10.410916991531849,
+            11.514750018250197,
+            11.840416002087295,
+            13.600750011391938,
+            11.085208971053362,
+            13.547124981414527,
+            8.778540999628603,
+            11.165042000357062,
+            11.190250050276518,
+            10.370207950472832,
+            11.160292022395879,
+            11.32095797220245,
+            11.127334029879421,
+            11.153124971315265,
+            11.175125022418797,
+            10.866875003557652,
+            11.177290987689048,
+            11.18608401156962,
+            10.291290993336588,
+            11.161667003761977,
+            11.343875026796013,
+            10.19366696709767
+          ],
+          "chunk_gaps_ms": [],
+          "finish_reason": "length",
+          "trace_id": "07dd6f071e84ee48b748559775e84dd7",
+          "kv": {
+            "cached_input": 64,
+            "kv_bytes": 8388608,
+            "kv_bytes_per_token": 65536,
+            "source": "simulated"
+          },
+          "worker_phases": {
+            "prefill": [
+              {
+                "name": "prefill.queue",
+                "offset_ms": 0.13808300718665123,
+                "duration_ms": 0.03862503217533231,
+                "clock": "worker"
+              },
+              {
+                "name": "prefill.compute",
+                "offset_ms": 0.23083301493898034,
+                "duration_ms": 19.09558300394565,
+                "clock": "worker"
+              }
+            ],
+            "decode": [
+              {
+                "name": "decode.queue",
+                "offset_ms": 0.07995899068191648,
+                "duration_ms": 333.6897910339758,
+                "clock": "worker"
+              },
+              {
+                "name": "decode.visible",
+                "offset_ms": 333.87541701085865,
+                "duration_ms": 361.2529169768095,
+                "clock": "worker"
+              }
+            ]
+          },
+          "slo_met": true,
+          "duration_ms": 736.8910830118693,
+          "kv_effective_mb_s": 655.0039442028353,
+          "handoff_ttft_ratio": 0.03318558283816139,
+          "visible_chunks": 32,
+          "slo_targets": {
+            "ttft_ms": 750,
+            "tpot_ms": 50
+          },
+          "measurement_note": "Measured wall times of synthetic work. KV bytes are modeled; no model weights or tensors."
+        },
+        {
+          "id": "f6cdb667122f46c1b2c0a1b5b827225b",
+          "created_at": "2026-09-07T23:33:39.815296+00:00",
+          "mode": "disaggregated",
+          "source": "simulated",
+          "model": "synthetic-v1",
+          "token_provenance": "synthetic",
+          "phases": [
+            {
+              "name": "prefill.rpc",
+              "offset_ms": 0.15237496700137854,
+              "duration_ms": 23.068167036399245,
+              "clock": "gateway"
+            },
+            {
+              "name": "kv.transfer",
+              "offset_ms": 23.256834014318883,
+              "duration_ms": 12.341708003077656,
+              "clock": "gateway"
+            },
+            {
+              "name": "decode.rpc",
+              "offset_ms": 35.72033398086205,
+              "duration_ms": 676.7335410113446,
+              "clock": "gateway"
+            }
+          ],
+          "tokens": {
+            "input": 128,
+            "output": 32,
+            "cached_input": 64,
+            "reasoning": 0,
+            "visible_output": 32,
+            "total": 160,
+            "uncached_input": 64
+          },
+          "kv_transfer_bytes": 8388608,
+          "status": "ok",
+          "ttft_ms": 367.8076670039445,
+          "tpot_ms": 11.090075257309381,
+          "itl_ms": [
+            11.248958006035537,
+            11.078291980084032,
+            10.381416999734938,
+            11.146833014208823,
+            10.584832984022796,
+            10.546334029641002,
+            11.17141597205773,
+            11.199000000488013,
+            11.282166989985853,
+            10.700249986257404,
+            11.214750004000962,
+            11.194000020623207,
+            10.353750025387853,
+            11.250332987401634,
+            11.494416976347566,
+            11.021832993719727,
+            11.201584013178945,
+            10.364499990828335,
+            12.251915992237628,
+            11.15279202349484,
+            11.175625026226044,
+            11.216999962925911,
+            11.07579201925546,
+            11.211208009626716,
+            11.121374962385744,
+            11.233750032261014,
+            11.23054197523743,
+            11.185707990080118,
+            11.160375026520342,
+            11.135916982311755,
+            11.205666000023484
+          ],
+          "chunk_gaps_ms": [],
+          "finish_reason": "length",
+          "trace_id": "f357f5da7cf4d38d766095e1c247b1cc",
+          "kv": {
+            "cached_input": 64,
+            "kv_bytes": 8388608,
+            "kv_bytes_per_token": 65536,
+            "source": "simulated"
+          },
+          "worker_phases": {
+            "prefill": [
+              {
+                "name": "prefill.queue",
+                "offset_ms": 0.16970798606052995,
+                "duration_ms": 0.03649998689070344,
+                "clock": "worker"
+              },
+              {
+                "name": "prefill.compute",
+                "offset_ms": 0.27308298740535975,
+                "duration_ms": 18.15912500023842,
+                "clock": "worker"
+              }
+            ],
+            "decode": [
+              {
+                "name": "decode.queue",
+                "offset_ms": 0.1110419980250299,
+                "duration_ms": 316.10225001350045,
+                "clock": "worker"
+              },
+              {
+                "name": "decode.visible",
+                "offset_ms": 316.2514590076171,
+                "duration_ms": 355.0163750187494,
+                "clock": "worker"
+              }
+            ]
+          },
+          "slo_met": true,
+          "duration_ms": 712.5184169854037,
+          "kv_effective_mb_s": 679.695873367619,
+          "handoff_ttft_ratio": 0.033554787216943195,
+          "visible_chunks": 32,
+          "slo_targets": {
+            "ttft_ms": 750,
+            "tpot_ms": 50
+          },
+          "measurement_note": "Measured wall times of synthetic work. KV bytes are modeled; no model weights or tensors."
+        },
+        {
+          "id": "6a3dbb8e95e6437598128e10e302d93a",
+          "created_at": "2026-09-07T23:33:40.173405+00:00",
+          "mode": "disaggregated",
+          "source": "simulated",
+          "model": "synthetic-v1",
+          "token_provenance": "synthetic",
+          "phases": [
+            {
+              "name": "prefill.rpc",
+              "offset_ms": 0.07449998520314693,
+              "duration_ms": 21.957165969070047,
+              "clock": "gateway"
+            },
+            {
+              "name": "kv.transfer",
+              "offset_ms": 22.053540975321084,
+              "duration_ms": 11.677041999064386,
+              "clock": "gateway"
+            },
+            {
+              "name": "decode.rpc",
+              "offset_ms": 33.7599579943344,
+              "duration_ms": 676.327291992493,
+              "clock": "gateway"
+            }
+          ],
+          "tokens": {
+            "input": 128,
+            "output": 32,
+            "cached_input": 64,
+            "reasoning": 0,
+            "visible_output": 32,
+            "total": 160,
+            "uncached_input": 64
+          },
+          "kv_transfer_bytes": 8388608,
+          "status": "ok",
+          "ttft_ms": 364.42724999506027,
+          "tpot_ms": 11.120529548685637,
+          "itl_ms": [
+            11.187041003722697,
+            11.229041963815689,
+            11.113416985608637,
+            11.128166050184518,
+            11.196042003575712,
+            11.178874992765486,
+            11.085291975177824,
+            11.3110410165973,
+            10.875292005948722,
+            11.194124992471188,
+            11.144166986923665,
+            11.06266601709649,
+            11.118374997749925,
+            11.18604198563844,
+            11.176583007909358,
+            11.243209009990096,
+            11.14974997472018,
+            11.261416017077863,
+            11.076624970883131,
+            11.22304203454405,
+            10.495041962713003,
+            11.172541009727865,
+            11.199792032130063,
+            11.123874981421977,
+            11.153416999150068,
+            11.137082998175174,
+            11.301958002150059,
+            11.13033399451524,
+            11.200540990103036,
+            10.52195904776454,
+            11.159665999002755
+          ],
+          "chunk_gaps_ms": [],
+          "finish_reason": "length",
+          "trace_id": "f7c450b1eee8fc38b0e2984eb8eb06c3",
+          "kv": {
+            "cached_input": 64,
+            "kv_bytes": 8388608,
+            "kv_bytes_per_token": 65536,
+            "source": "simulated"
+          },
+          "worker_phases": {
+            "prefill": [
+              {
+                "name": "prefill.queue",
+                "offset_ms": 0.12587499804794788,
+                "duration_ms": 0.06266700802370906,
+                "clock": "worker"
+              },
+              {
+                "name": "prefill.compute",
+                "offset_ms": 0.22624997654929757,
+                "duration_ms": 19.125625025480986,
+                "clock": "worker"
+              }
+            ],
+            "decode": [
+              {
+                "name": "decode.queue",
+                "offset_ms": 0.06712495815008879,
+                "duration_ms": 317.354750004597,
+                "clock": "worker"
+              },
+              {
+                "name": "decode.visible",
+                "offset_ms": 317.4448339850642,
+                "duration_ms": 355.4249159642495,
+                "clock": "worker"
+              }
+            ]
+          },
+          "slo_met": true,
+          "duration_ms": 710.122374992352,
+          "kv_effective_mb_s": 718.3846731622726,
+          "handoff_ttft_ratio": 0.03204217576820247,
+          "visible_chunks": 32,
+          "slo_targets": {
+            "ttft_ms": 750,
+            "tpot_ms": 50
+          },
+          "measurement_note": "Measured wall times of synthetic work. KV bytes are modeled; no model weights or tensors."
+        }
+      ]
+    }
+  ],
+  "status": "ok",
+  "environment": {
+    "python": "3.12.14",
+    "architecture": "arm64"
+  },
+  "method": "closed-loop; warmups excluded; linear interpolated percentiles; mode order fixed",
+  "resource_note": "Combined: 1 slot. Disaggregated: 1 prefill + 1 decode slot. Not equal-cost resources."
+}
