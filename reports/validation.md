@@ -4,6 +4,7 @@
 
 - The root route serves a visual beginner homepage; the private lab moved to `/lab`. The public-edge check verifies the root does not redirect and continues to block lab/operations routes.
 - 65 Python tests and 9 Node animation-state tests pass locally. Coverage includes combined versus disaggregated sequences, first-output timing in the illustration, pause/restart, manual stepping, reduced motion, timer cleanup, static asset/anchor/controller wiring and valid SVG geometry.
+- [Homepage release CI](https://github.com/sivalinb/llm-serving-observatory/actions/runs/34179964956), commit `77fe465`, passed all three jobs: Python/Node plus public-edge/observability checks, real CPU inference, and Terraform validation. This is automated validation, not a live OCI deployment.
 - The tour performs no network requests or real inference and labels all motion as explanatory. Motion stops when the page is hidden or the tour leaves view; reduced-motion users start paused.
 - The local root returned HTTP 200 and was handed off for preview. No browser-interaction, screenshot, responsive-viewport or visual-rendering QA is claimed for this update.
 - The existing OCI hosting architecture is unchanged; no separate hosting service or cloud deployment was created.

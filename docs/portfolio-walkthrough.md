@@ -2,15 +2,17 @@
 
 ## The 30-second introduction
 
-> I built an observable LLM-serving laboratory that separates application latency, hardware-capacity estimates, and real resource measurements. It demonstrates prefill/decode separation, KV-cache reuse and handoff costs, streaming token accounting, and end-to-end tracing. It runs without a GPU and has a deployment path to OCI, plus an optional real-engine integration.
+> I built an LLM-serving observatory with an animated beginner's guide, an invite-only CPU documentation assistant, and a private experiment lab. It separates real inference, simulated KV handoffs, analytical GPU-memory estimates, and measured CPU/RAM telemetry. Personal keys, quotas, streaming receipts and traceable validation make it a small but inspectable service with a Phoenix deployment path.
 
-Say “deployed on OCI” or “benchmarked on GPUs” **only after doing so** and attaching the evidence. The committed simulation report is a local experiment; the hardware report is deterministic analytical output.
+Say “deployed on OCI” or “benchmarked on GPUs” **only after doing so** and attaching the evidence. The committed simulation report is a local experiment; the hardware report is deterministic analytical output. The [real CPU receipt](../reports/real-cpu-smoke.json) comes from a GitHub runner, not OCI. It demonstrates working inference, not answer quality or production scale.
+
+Start at `/` to explain the system without an invite. The animation makes no model calls; compare modes, pause or select a stage. Continue to `/assistant` for the real service, and open `/lab` through your local connection or SSH tunnel for the demo below. Public HTTPS intentionally blocks the lab. For an assistant-focused demo covering identity, quotas, citations and recovery, use the [five-minute service walkthrough](servingops-runbook.md#portfolio-demonstration-five-minutes).
 
 ## Eight-minute live demo
 
 | Time | Show | Explain / verify |
 |---|---|---|
-| 0:00–1:00 | Architecture and request lifecycle | Gateway, separate simulated workers, inference adapter, metrics, traces and storage boundaries |
+| 0:00–1:00 | Animated homepage: Combined → Disaggregated → First token | Conceptual cache handoff and TTFT boundary; animation is not live traffic |
 | 1:00–2:00 | Live lab: run twice with a shared prefix | Cache reuse reduces prefill work; cached tokens remain part of input |
 | 2:00–3:00 | Longer prompt, then longer output | TTFT and generation duration answer different user-experience questions |
 | 3:00–4:00 | Hardware: Baseline → Save baseline → Long context | Same weights, growing KV, exceeded memory budget; estimated speed disappears when infeasible |
@@ -36,6 +38,9 @@ Extra exercise: halve the network link bandwidth instead. Explain why it changes
 
 | Claim | Evidence | What it does not establish |
 |---|---|---|
+| Beginner journey is interactive and bounded | Nine animation-state tests, reduced-motion support, pause/restart and stage selection | Measured performance or completed browser visual QA |
+| Real CPU inference works | Pinned model/container and CI streaming smoke receipt | Phoenix performance, citation quality or GPU behavior |
+| Users have isolated access and admission limits | Invite, key rotation, per-user history and concurrent quota tests | Enterprise SSO, HA or anonymous public-service hardening |
 | Request stages are instrumented | SSE output, retained trace, Prometheus histograms, Tempo | Real internal GPU spans from a generic upstream API |
 | Token accounting avoids double counting | Tests for cached input and reasoning subsets | A provider's unreported token categories |
 | Memory accounting is reproducible | Formula tests, UI comparison export, sample hardware report | Real allocator behavior, accuracy or GPU performance |
@@ -53,7 +58,7 @@ Extra exercise: halve the network link bandwidth instead. Explain why it changes
 
 ## Honest résumé / README wording
 
-“Built an OCI-ready LLM serving observability lab with FastAPI, Prometheus, Grafana and OpenTelemetry; implemented streaming latency/token accounting, disaggregated worker simulation, a GPU-memory planning model, and measured process/container resource telemetry with automated validation.”
+"Built an OCI-ready LLM serving observatory with an animated learning experience, invite-only CPU inference, source retrieval, atomic quotas and per-user metadata isolation; implemented streaming latency/token accounting, disaggregated worker simulation, GPU-memory planning, and measured resource telemetry using FastAPI, Prometheus, Grafana and OpenTelemetry."
 
 Do not claim a throughput improvement, production scale, customer impact or cost saving without a reproducible real workload and a fair baseline. For a real GPU study, record model/tokenizer revisions, engine commit, precision, total GPU count, topology, warmups, independent repetitions, request-length distribution, errors and actual billed time.
 

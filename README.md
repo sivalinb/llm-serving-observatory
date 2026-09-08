@@ -10,6 +10,8 @@ New here? Follow the [eight-minute portfolio walkthrough](docs/portfolio-walkthr
 
 The website now opens with an **animated visual homepage**: follow a request through prefill, optional KV handoff, first visible output, decode and observability. Switch architectures, pause, restart or select any stage. The tour is explanatory, makes no model calls, and respects reduced-motion preferences. Open `/assistant` for the real service or `/lab` through your local/SSH connection for experiments.
 
+Documentation: [Architecture](docs/architecture.md) · [Observability contract](docs/observability.md) · [Phoenix service runbook](docs/servingops-runbook.md) · [Portfolio walkthrough](docs/portfolio-walkthrough.md) · [Validation evidence](reports/validation.md).
+
 ## New: ServingOps Cloud — real traffic on Phoenix Free Tier
 
 The repository now includes an **invite-only documentation assistant** at `/assistant`: real streamed CPU inference, retrieved references, per-user access keys and isolated history, atomic quotas, cancellation/deadlines, and a separate real-traffic Grafana dashboard. No model configured? It offers document search and explicitly disables AI answers; it never substitutes simulated answers.
@@ -105,11 +107,12 @@ The base Compose file runs gateway, prefill, and decode services. The second com
 |---|---|
 | Visual homepage | http://localhost:8000 |
 | Lab (private) | http://localhost:8000/lab |
+| Assistant | http://localhost:8000/assistant |
 | API schema | http://localhost:8000/docs |
 | Prometheus | http://localhost:9090 |
 | Grafana | http://localhost:3000 — `admin` / your configured password |
 
-In Grafana, open the **LLM Serving** folder for User experience, Token ledger, KV cache and handoff, Capacity and SLO, and **Hardware and memory**. The hardware dashboard includes measured CPU/RAM plus optional external GPU panels; GPU panels correctly show no data until configured. For a request trace, copy its full trace ID from exported JSON and search it in **Explore → Tempo**.
+In Grafana, open the **LLM Serving** folder for User experience, Token ledger, KV cache and handoff, Capacity and SLO, **Hardware and memory**, and **ServingOps / Real traffic beta**. The assistant dashboard uses separate `assistant_*` metrics. The hardware dashboard includes measured CPU/RAM plus optional external GPU panels; GPU panels correctly show no data until configured. For a request trace, copy its full trace ID from the receipt/exported JSON and search it in **Explore → Tempo**.
 
 Prometheus evaluates alert rules locally. Notification delivery requires adding Alertmanager and your chosen receiver, or configuring OCI Monitoring alarms; the repository does not send notifications automatically.
 
@@ -130,7 +133,7 @@ UPSTREAM_KIND=llama.cpp \
 uvicorn observatory.app:app --host 127.0.0.1 --port 8000
 ```
 
-Use the exact model name returned by the engine's `/v1/models` endpoint, or configure its model alias. Choose **Real inference** in the UI. For a gateway inside Docker, localhost refers to the gateway container: use a reachable engine service name/private address instead.
+Use the exact model name returned by the engine's `/v1/models` endpoint, or configure its model alias. Choose **Real inference** in the private `/lab` UI. This `UPSTREAM_*` configuration is the lab adapter, not the assistant backend; use `compose.cpu.yaml` for the assistant. For a gateway inside Docker, localhost refers to the gateway container: use a reachable engine service name/private address instead.
 
 The adapter also accepts a vLLM endpoint or the official vLLM disaggregated proxy. [GPU runbook](docs/gpu-runbook.md) documents the two-GPU launcher, baseline comparison, engine metrics, and cleanup. The default UI remains usable when GPU resources are shut down.
 
@@ -182,22 +185,26 @@ ruff check .
 pytest -q
 node --check observatory/static/app.js
 node --check observatory/static/hardware.js
+node --check observatory/static/assistant.js
+node --check observatory/static/home.js
+node --test tests/home-tour.test.cjs
+python scripts/evaluate_retrieval.py
 terraform -chdir=infra/oci init -backend=false
 terraform -chdir=infra/oci validate
 ```
 
 ```text
-observatory/              FastAPI gateway, simulator, workers, upstream adapter
-  static/                Dashboard, architecture SVG, request-flow SVG
+observatory/              Gateway, assistant, identity/admission store, retrieval, simulator/workers
+  static/                Animated homepage, assistant, private lab and architecture SVGs
 observability/           Collector, Tempo, Prometheus, alerts, Grafana dashboards
 infra/oci/               Terraform and Ubuntu cloud-init
-scripts/                 Benchmark, smoke check, deployment, OCI export, GPU launcher
-tests/                   Accounting, failure, cancellation, API, trace and config checks
-docs/                    Architecture, measurement contract, OCI and GPU runbooks
-.github/workflows/       Python checks, Docker smoke test, Terraform validation
+scripts/                 Model download, real CPU/public-edge smokes, retrieval eval, lab/OCI tools
+tests/                   Python service/security checks and Node homepage-animation tests
+docs/                    Architecture, measurements, Phoenix service/OCI/GPU runbooks, portfolio guide
+.github/workflows/       Python/Node checks, real CPU inference, public edge, telemetry, Terraform
 ```
 
-This is a learning system with one gateway replica. SQLite, local counters and simulator state are process-local; do not run multiple Uvicorn workers. Add a shared state store, tenant-aware cache isolation, request rate limits, and a real inference scheduler before treating it as a multi-user production service.
+This is a single-node learning system and invite-only service beta. The assistant already has personal keys, isolated request metadata, quotas and bounded admission; the private lab still has shared experiment state. Use exactly one gateway worker: counters and simulator state are process-local, and SQLite is not a cross-host distributed store. Shared storage/admission, stronger edge protection, multi-replica recovery and measured capacity are still required for a larger production service. No completed OCI deployment or HA guarantee is claimed.
 
 ## Sources
 

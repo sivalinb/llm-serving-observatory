@@ -1,5 +1,23 @@
 # Architecture and design decisions
 
+## Current application surfaces
+
+| Route | Purpose | Public HTTPS access |
+|---|---|---|
+| `/` | Animated beginner introduction; combined/disaggregated conceptual tour | Yes; no authentication or model calls |
+| `/assistant` | Curated documentation search and optional real CPU answers | Page is public; search/answers require a personal key |
+| `/api/service/*` | Status, invite redemption, authenticated usage/history and streaming | Explicitly allowed; individual route authentication applies |
+| `/lab` | Experimental serving, hardware planner and benchmarks | No; local connection or SSH tunnel only |
+| `/metrics`, API docs, lab APIs | Operator telemetry and experiments | Blocked by the public Caddy allowlist |
+
+The homepage is a static HTML/CSS/JavaScript state machine. Its sequence is explanatory, not a replay of a measured request. It does not fetch data or invoke the model. Pause, restart, direct stage selection and reduced-motion behavior are covered by Node tests. Root bookmarks such as `/#hardware` redirect to `/lab#hardware` in the browser; that does not bypass the public route boundary.
+
+![Real CPU service architecture](../observatory/static/service-architecture.svg)
+
+The real assistant uses `Assistant.prepare` and a separate SQLite identity/admission ledger, not the lab's `Service.run` or shared experiment history. The path is: authenticate → retrieve approved excerpts → reserve quota/capacity atomically → stream from the private llama.cpp model → reconcile usage and retain metadata. Exactly one real assistant answer is admitted at a time; failures and cancellations retain conservative quota reservations. Questions and generated text are not persisted. The CPU engine performs real combined prefill/decode; its KV cache stays in that engine's host RAM.
+
+Read the [service runbook](servingops-runbook.md) for deployment, privacy, retention, source-citation limitations and recovery. The remaining diagrams and lifecycle descriptions below describe the **learning lab**, whose disaggregated transfer is modeled rather than a real tensor handoff.
+
 ## Hardware extension (v0.2)
 
 ![Hardware flow](../observatory/static/hardware-flow.svg)
@@ -22,7 +40,7 @@ Read the [formula and measurement contract](hardware-memory.md), [exporter setup
 
 ![Architecture](../observatory/static/architecture.svg)
 
-## Runnable paths
+## Learning-lab runnable paths
 
 ```mermaid
 flowchart LR
@@ -63,7 +81,7 @@ For the default one-process development path, two independent simulator semaphor
 
 Prefix-cache reuse is exact for `(synthetic model version, prefix_key, prefix_tokens)`. It is not fuzzy matching, tokenization of real prompts, or a cross-user cache. Metadata fits a bounded modeled byte budget. The simulator uses one fixed dense-attention geometry: 16 layers, 8 KV heads, head dimension 128, 2 bytes per value. This yields 65,536 bytes per token. GPU tensor parallel sharding, MLA, sliding windows and quantization change the formula and are outside this model.
 
-## Request sequence
+## Learning-lab request sequence
 
 ```mermaid
 sequenceDiagram

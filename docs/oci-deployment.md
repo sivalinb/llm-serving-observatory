@@ -1,5 +1,7 @@
 # OCI deployment
 
+For the current **Phoenix Free Tier assistant**, follow the [ServingOps service runbook](servingops-runbook.md). This guide covers shared infrastructure, the private learning lab and optional aggregate exports. The public routes are `/` (animated introduction) and `/assistant`; `/lab` and operations endpoints remain private.
+
 ## CPU lab
 
 The long-lived deployment is an Ubuntu ARM VM, three lightweight application containers, and optionally the local observability stack. The lab serves its own HTML/CSS/JavaScript; no separate web hosting service is needed. Resource estimates are not guarantees: inspect the Always Free label and your **aggregate** current usage in the OCI console before applying the configuration.
@@ -36,7 +38,7 @@ docker compose -f compose.yaml -f compose.observability.yaml up -d --build
 docker compose ps
 ```
 
-Open localhost:8000 and localhost:3000 on the machine with the SSH tunnel. Re-run `bash scripts/deploy.sh` after source changes; use the combined Compose command on the host to preserve the observability overlay's environment.
+Open `http://localhost:8000` for the homepage, `http://localhost:8000/lab` for experiments and `http://localhost:3000` for Grafana on the machine with the SSH tunnel. Re-run `bash scripts/deploy.sh` after source changes; then reapply all overlays you use. The script starts the base lab configuration, not the complete real-assistant deployment.
 
 ## Public HTTPS portfolio
 
@@ -46,9 +48,18 @@ Use a domain you control, with its DNS A record pointing to the VM. Set `public_
 docker compose -f compose.yaml -f compose.observability.yaml -f compose.public.yaml up -d --build
 ```
 
-Caddy terminates TLS, supports streaming without proxy buffering, limits request size, and blocks `/metrics` and API schema pages from public access. The UI is visible publicly, but experiment/request/history APIs require the lab key; enter it in the Workload form. The key is kept in page memory, not browser storage. Keep engine and worker ports private. If the OS firewall blocks ports 80/443, add only those ports using the image's supported firewall tooling; do not flush firewall rules.
+Caddy terminates TLS, supports streaming without proxy buffering, and permits only the homepage, assistant API and explicitly listed public assets. It blocks `/lab`, lab experiment/history APIs, `/metrics` and API schema pages. The lab key protects experiments reached through the local/SSH connection; it does not grant public access through Caddy. Keep engine and worker ports private. If the OS firewall blocks ports 80/443, add only those ports using the image's supported firewall tooling; do not flush firewall rules.
 
-The demo has one shared lab key and no tenant isolation or durable user identity. For public unattended inference, add per-user authentication, rate limiting and spend controls. Do not expose a paid upstream anonymously.
+The command above exposes the explanatory homepage and search-only assistant. Invited assistant users have personal hashed keys, isolated metadata history, quotas and bounded admission; these are separate from the lab's shared key and experiment store. To enable real CPU answers, first download the pinned model and add the CPU overlays:
+
+```bash
+python3 scripts/download_model.py
+docker compose -f compose.yaml -f compose.cpu.yaml -f compose.observability.yaml -f compose.cpu-observability.yaml -f compose.public.yaml up -d --build --wait --wait-timeout 300
+docker compose exec -T gateway python -m observatory.admin invite
+python3 scripts/check_public.py --url https://YOUR_DOMAIN
+```
+
+The CPU profile does not call a paid managed inference API. Follow the [service runbook](servingops-runbook.md) for key management, capacity settings, privacy, backups and rollback. This remains a single-node invite-only beta, not an anonymous production service or a guarantee of free tenancy eligibility.
 
 ## Object Storage, Monitoring and Autonomous Database
 
