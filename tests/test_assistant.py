@@ -1,8 +1,10 @@
 import asyncio
 import json
+import runpy
 import sqlite3
 import time
 from concurrent.futures import ThreadPoolExecutor
+from pathlib import Path
 
 import httpx
 import pytest
@@ -291,6 +293,13 @@ def test_retrieval_citations_and_context():
     assert citation_check("Fact [S999]", sources) == "invalid_ids"
     assert citation_check("Fact", sources) == "missing"
     assert "untrusted" in prompt("CPU RAM?", sources)[0]["content"]
+
+
+def test_retrieval_teaching_fixture():
+    module = runpy.run_path(str(Path(__file__).resolve().parents[1] / "scripts/evaluate_retrieval.py"))
+    result = module["evaluate"]()
+    assert result["cases"] == 15
+    assert result["recall_at_3"] == 1.0
 
 
 def test_backup_contents_never_include_plaintext_secrets(tmp_path):

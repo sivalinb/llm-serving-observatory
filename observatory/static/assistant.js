@@ -118,8 +118,13 @@
           if (item.type === 'error') { hadError = true; text('answer-state', item.message); }
           if (item.type === 'result') {
             completed = true; const r = item.record; $('receipt').hidden = false;
-            text('receipt', `TTFT ${ms(r.ttft_ms)} · Total ${ms(r.duration_ms)} · Input ${number(r.tokens.input)} · Output ${number(r.tokens.output)} · Reasoning ${number(r.tokens.reasoning)}\nCitation IDs: ${r.citations} (not a factual check) · Request ${r.id}`);
-            if (!hadError) text('answer-state', 'Answer complete. Verify claims against the references below.');
+            text('receipt', `TTFT ${ms(r.ttft_ms)} · Total ${ms(r.duration_ms)} · Input ${number(r.tokens.input)} · Output ${number(r.tokens.output)} · Cached input ${number(r.tokens.cached_input)} · Reasoning ${number(r.tokens.reasoning)}\nCitation IDs: ${r.citations} (not a factual check) · Request ${r.id}\nTrace ${r.trace_id || 'unavailable'}`);
+            if (!hadError) {
+              const warnings = [];
+              if (r.finish_reason === 'length') warnings.push('Output cap reached; the answer may be incomplete.');
+              if (r.citations !== 'present') warnings.push('Missing or invalid source citations: treat this answer as unverified.');
+              text('answer-state', warnings.length ? warnings.join(' ') : 'Answer complete. Verify claims against the references below.');
+            }
           }
         }
         if (chunk.done) break;

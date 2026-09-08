@@ -1,5 +1,15 @@
 # Validation record
 
+## Real-traffic CPU service (v0.3, 2026-09-07 local / 2026-09-08 UTC)
+
+- 62 local pytest tests pass, including single-use/expired invites, key rotation/revocation, separate-user history, atomic admission across SQLite connections, daily/monthly limits, duplicate request IDs, cancellation, deadlines, malformed/oversized streams, conservative unknown usage, and online backup recovery.
+- The [core implementation CI run](https://github.com/sivalinb/llm-serving-observatory/actions/runs/34176647822) passed all three jobs: full tests/observability/public-edge validation, Terraform validation, and **real CPU inference**. The later fixture-regression assertion increases the local test count from that run's 61 to 62.
+- The real CPU job downloaded the checksum-pinned official Qwen model, started the digest-pinned llama.cpp container and streamed an answer through the authenticated assistant endpoint. [Raw timing/token receipt](real-cpu-smoke.json): 274 input tokens, 64 output tokens, 1,953.49 ms TTFT, 6,500.02 ms total. These are **one GitHub x86 runner request, not a Phoenix benchmark or a throughput result**.
+- That response reached its 64-token cap and had missing citation IDs. This is a recorded limitation, not a passed answer-quality evaluation. The UI prominently warns about both truncation and missing/invalid citations; source links alone do not prove support.
+- The transparent 15-query retrieval teaching fixture has recall@3 of 1.0. It is authored against this tiny corpus and is not held-out retrieval or model-quality evidence.
+- Browser verification exercised invite redemption, personal quota display, CPU/HBM document search, disabled AI behavior without a configured model, and architecture rendering. The user-facing source excerpts and statuses were verified; no responsive breakpoint or live browser/model streaming test is claimed.
+- No OCI credentials or resources were accessed, and no OCI deployment or GPU test occurred. Public TLS issuance still requires a real domain. CI checks the Caddy route boundary using local HTTP, not an issued public certificate.
+
 ## Hardware extension (v0.2, 2026-09-07)
 
 - 39 pytest tests passed on Python 3.12.14/macOS ARM64, including deterministic memory accounting, unit conversions, capacity boundaries, independent weight/KV precision, memory-versus-network bandwidth, bounded inputs, cgroup parsing, CPU sampler lifecycle, missing-data behavior and API authentication.
