@@ -1,0 +1,355 @@
+{
+  "schema_version": "1.0",
+  "kind": "analytical_hardware_examples",
+  "warning": "Hypothetical single-device estimates. Not GPU benchmark results.",
+  "scenarios": {
+    "baseline": {
+      "schema_version": "1.0",
+      "source": "analytical_estimate",
+      "model": "single-device-dense-gqa-v1",
+      "inputs": {
+        "parameters_b": 8,
+        "layers": 32,
+        "kv_heads": 8,
+        "head_dim": 128,
+        "weight_bits": 16,
+        "kv_bits": 16,
+        "input_tokens": 4096,
+        "output_tokens": 512,
+        "concurrency": 4,
+        "memory_gib": 24,
+        "memory_gb_s": 1000,
+        "compute_tflops": 100,
+        "memory_efficiency": 0.6,
+        "compute_efficiency": 0.4,
+        "weight_overhead_pct": 10,
+        "workspace_gib": 2,
+        "reserve_pct": 10,
+        "link_gb_s": 25,
+        "link_latency_ms": 3
+      },
+      "memory": {
+        "weights_bytes": 16000000000,
+        "weight_overhead_bytes": 1600000000,
+        "kv_bytes": 2415919104,
+        "workspace_bytes": 2147483648,
+        "reserve_bytes": 2576980377.6,
+        "capacity_bytes": 25769803776,
+        "required_bytes": 24740383129.6,
+        "headroom_bytes": 1029420646.4000015,
+        "kv_bytes_per_token": 131072,
+        "kv_bytes_per_request": 603979776,
+        "max_concurrency": 5,
+        "fits": true
+      },
+      "performance": {
+        "decode_memory_floor_ms": 33.35986517333333,
+        "decode_compute_floor_ms": 1.6,
+        "decode_step_floor_ms": 33.35986517333333,
+        "aggregate_output_ceiling_tps": 119.90456134089699,
+        "prefill_dense_compute_floor_ms": 6553.6,
+        "decode_limiting_term": "memory_bandwidth",
+        "prompt_kv_transfer_bytes_per_request": 536870912,
+        "prompt_kv_transfer_floor_ms_per_request": 24.47483648,
+        "effective_memory_gb_s": 600
+      },
+      "assumptions": [
+        "One complete dense model on one device; not tensor parallel or MoE.",
+        "All requests have equal prompt/output lengths and decode in one ideal batch.",
+        "End-context KV includes input plus ALL output, including reasoning; no prefix sharing.",
+        "Workspace, weight overhead and reserve are user assumptions, not measured allocations.",
+        "Performance is an optimistic analytical bound under selected efficiencies, not TTFT/TPOT evidence.",
+        "No attention FLOPs, dequantization cost, cache hierarchy, paging, offload, or scheduling modeled.",
+        "KV transfer is one prompt per request over an independent link; no contention/overlap/compression.",
+        "Changing precision does not guarantee kernel support, accuracy or speed on real hardware.",
+        "GiB = 2^30 bytes; bandwidth GB/s = 10^9 bytes/s. Profiles are hypothetical, not GPU specifications."
+      ],
+      "context_sweep": [
+        {
+          "input_tokens": 512,
+          "required_gib": 21.29127731323242
+        },
+        {
+          "input_tokens": 2048,
+          "required_gib": 22.04127731323242
+        },
+        {
+          "input_tokens": 4096,
+          "required_gib": 23.04127731323242
+        },
+        {
+          "input_tokens": 8192,
+          "required_gib": 25.04127731323242
+        },
+        {
+          "input_tokens": 32768,
+          "required_gib": 37.04127731323242
+        },
+        {
+          "input_tokens": 131072,
+          "required_gib": 85.04127731323243
+        }
+      ]
+    },
+    "long_context": {
+      "schema_version": "1.0",
+      "source": "analytical_estimate",
+      "model": "single-device-dense-gqa-v1",
+      "inputs": {
+        "parameters_b": 8,
+        "layers": 32,
+        "kv_heads": 8,
+        "head_dim": 128,
+        "weight_bits": 16,
+        "kv_bits": 16,
+        "input_tokens": 32768,
+        "output_tokens": 512,
+        "concurrency": 4,
+        "memory_gib": 24,
+        "memory_gb_s": 1000,
+        "compute_tflops": 100,
+        "memory_efficiency": 0.6,
+        "compute_efficiency": 0.4,
+        "weight_overhead_pct": 10,
+        "workspace_gib": 2,
+        "reserve_pct": 10,
+        "link_gb_s": 25,
+        "link_latency_ms": 3
+      },
+      "memory": {
+        "weights_bytes": 16000000000,
+        "weight_overhead_bytes": 1600000000,
+        "kv_bytes": 17448304640,
+        "workspace_bytes": 2147483648,
+        "reserve_bytes": 2576980377.6,
+        "capacity_bytes": 25769803776,
+        "required_bytes": 39772768665.6,
+        "headroom_bytes": -14002964889.599998,
+        "kv_bytes_per_token": 131072,
+        "kv_bytes_per_request": 4362076160,
+        "max_concurrency": 0,
+        "fits": false
+      },
+      "performance": {
+        "decode_memory_floor_ms": null,
+        "decode_compute_floor_ms": null,
+        "decode_step_floor_ms": null,
+        "aggregate_output_ceiling_tps": null,
+        "prefill_dense_compute_floor_ms": null,
+        "decode_limiting_term": "capacity",
+        "prompt_kv_transfer_bytes_per_request": 4294967296,
+        "prompt_kv_transfer_floor_ms_per_request": 174.79869184,
+        "effective_memory_gb_s": 600
+      },
+      "assumptions": [
+        "One complete dense model on one device; not tensor parallel or MoE.",
+        "All requests have equal prompt/output lengths and decode in one ideal batch.",
+        "End-context KV includes input plus ALL output, including reasoning; no prefix sharing.",
+        "Workspace, weight overhead and reserve are user assumptions, not measured allocations.",
+        "Performance is an optimistic analytical bound under selected efficiencies, not TTFT/TPOT evidence.",
+        "No attention FLOPs, dequantization cost, cache hierarchy, paging, offload, or scheduling modeled.",
+        "KV transfer is one prompt per request over an independent link; no contention/overlap/compression.",
+        "Changing precision does not guarantee kernel support, accuracy or speed on real hardware.",
+        "GiB = 2^30 bytes; bandwidth GB/s = 10^9 bytes/s. Profiles are hypothetical, not GPU specifications."
+      ],
+      "context_sweep": [
+        {
+          "input_tokens": 512,
+          "required_gib": 21.29127731323242
+        },
+        {
+          "input_tokens": 2048,
+          "required_gib": 22.04127731323242
+        },
+        {
+          "input_tokens": 8192,
+          "required_gib": 25.04127731323242
+        },
+        {
+          "input_tokens": 32768,
+          "required_gib": 37.04127731323242
+        },
+        {
+          "input_tokens": 131072,
+          "required_gib": 85.04127731323243
+        }
+      ]
+    },
+    "four_bit_weights": {
+      "schema_version": "1.0",
+      "source": "analytical_estimate",
+      "model": "single-device-dense-gqa-v1",
+      "inputs": {
+        "parameters_b": 8,
+        "layers": 32,
+        "kv_heads": 8,
+        "head_dim": 128,
+        "weight_bits": 4,
+        "kv_bits": 16,
+        "input_tokens": 4096,
+        "output_tokens": 512,
+        "concurrency": 4,
+        "memory_gib": 24,
+        "memory_gb_s": 1000,
+        "compute_tflops": 100,
+        "memory_efficiency": 0.6,
+        "compute_efficiency": 0.4,
+        "weight_overhead_pct": 10,
+        "workspace_gib": 2,
+        "reserve_pct": 10,
+        "link_gb_s": 25,
+        "link_latency_ms": 3
+      },
+      "memory": {
+        "weights_bytes": 4000000000,
+        "weight_overhead_bytes": 400000000,
+        "kv_bytes": 2415919104,
+        "workspace_bytes": 2147483648,
+        "reserve_bytes": 2576980377.6,
+        "capacity_bytes": 25769803776,
+        "required_bytes": 11540383129.6,
+        "headroom_bytes": 14229420646.4,
+        "kv_bytes_per_token": 131072,
+        "kv_bytes_per_request": 603979776,
+        "max_concurrency": 27,
+        "fits": true
+      },
+      "performance": {
+        "decode_memory_floor_ms": 11.359865173333334,
+        "decode_compute_floor_ms": 1.6,
+        "decode_step_floor_ms": 11.359865173333334,
+        "aggregate_output_ceiling_tps": 352.1168551709383,
+        "prefill_dense_compute_floor_ms": 6553.6,
+        "decode_limiting_term": "memory_bandwidth",
+        "prompt_kv_transfer_bytes_per_request": 536870912,
+        "prompt_kv_transfer_floor_ms_per_request": 24.47483648,
+        "effective_memory_gb_s": 600
+      },
+      "assumptions": [
+        "One complete dense model on one device; not tensor parallel or MoE.",
+        "All requests have equal prompt/output lengths and decode in one ideal batch.",
+        "End-context KV includes input plus ALL output, including reasoning; no prefix sharing.",
+        "Workspace, weight overhead and reserve are user assumptions, not measured allocations.",
+        "Performance is an optimistic analytical bound under selected efficiencies, not TTFT/TPOT evidence.",
+        "No attention FLOPs, dequantization cost, cache hierarchy, paging, offload, or scheduling modeled.",
+        "KV transfer is one prompt per request over an independent link; no contention/overlap/compression.",
+        "Changing precision does not guarantee kernel support, accuracy or speed on real hardware.",
+        "GiB = 2^30 bytes; bandwidth GB/s = 10^9 bytes/s. Profiles are hypothetical, not GPU specifications."
+      ],
+      "context_sweep": [
+        {
+          "input_tokens": 512,
+          "required_gib": 8.997819328308106
+        },
+        {
+          "input_tokens": 2048,
+          "required_gib": 9.747819328308106
+        },
+        {
+          "input_tokens": 4096,
+          "required_gib": 10.747819328308106
+        },
+        {
+          "input_tokens": 8192,
+          "required_gib": 12.747819328308106
+        },
+        {
+          "input_tokens": 32768,
+          "required_gib": 24.747819328308104
+        },
+        {
+          "input_tokens": 131072,
+          "required_gib": 72.74781932830811
+        }
+      ]
+    },
+    "half_memory_bandwidth": {
+      "schema_version": "1.0",
+      "source": "analytical_estimate",
+      "model": "single-device-dense-gqa-v1",
+      "inputs": {
+        "parameters_b": 8,
+        "layers": 32,
+        "kv_heads": 8,
+        "head_dim": 128,
+        "weight_bits": 16,
+        "kv_bits": 16,
+        "input_tokens": 4096,
+        "output_tokens": 512,
+        "concurrency": 4,
+        "memory_gib": 24,
+        "memory_gb_s": 500,
+        "compute_tflops": 100,
+        "memory_efficiency": 0.6,
+        "compute_efficiency": 0.4,
+        "weight_overhead_pct": 10,
+        "workspace_gib": 2,
+        "reserve_pct": 10,
+        "link_gb_s": 25,
+        "link_latency_ms": 3
+      },
+      "memory": {
+        "weights_bytes": 16000000000,
+        "weight_overhead_bytes": 1600000000,
+        "kv_bytes": 2415919104,
+        "workspace_bytes": 2147483648,
+        "reserve_bytes": 2576980377.6,
+        "capacity_bytes": 25769803776,
+        "required_bytes": 24740383129.6,
+        "headroom_bytes": 1029420646.4000015,
+        "kv_bytes_per_token": 131072,
+        "kv_bytes_per_request": 603979776,
+        "max_concurrency": 5,
+        "fits": true
+      },
+      "performance": {
+        "decode_memory_floor_ms": 66.71973034666667,
+        "decode_compute_floor_ms": 1.6,
+        "decode_step_floor_ms": 66.71973034666667,
+        "aggregate_output_ceiling_tps": 59.952280670448495,
+        "prefill_dense_compute_floor_ms": 6553.6,
+        "decode_limiting_term": "memory_bandwidth",
+        "prompt_kv_transfer_bytes_per_request": 536870912,
+        "prompt_kv_transfer_floor_ms_per_request": 24.47483648,
+        "effective_memory_gb_s": 300
+      },
+      "assumptions": [
+        "One complete dense model on one device; not tensor parallel or MoE.",
+        "All requests have equal prompt/output lengths and decode in one ideal batch.",
+        "End-context KV includes input plus ALL output, including reasoning; no prefix sharing.",
+        "Workspace, weight overhead and reserve are user assumptions, not measured allocations.",
+        "Performance is an optimistic analytical bound under selected efficiencies, not TTFT/TPOT evidence.",
+        "No attention FLOPs, dequantization cost, cache hierarchy, paging, offload, or scheduling modeled.",
+        "KV transfer is one prompt per request over an independent link; no contention/overlap/compression.",
+        "Changing precision does not guarantee kernel support, accuracy or speed on real hardware.",
+        "GiB = 2^30 bytes; bandwidth GB/s = 10^9 bytes/s. Profiles are hypothetical, not GPU specifications."
+      ],
+      "context_sweep": [
+        {
+          "input_tokens": 512,
+          "required_gib": 21.29127731323242
+        },
+        {
+          "input_tokens": 2048,
+          "required_gib": 22.04127731323242
+        },
+        {
+          "input_tokens": 4096,
+          "required_gib": 23.04127731323242
+        },
+        {
+          "input_tokens": 8192,
+          "required_gib": 25.04127731323242
+        },
+        {
+          "input_tokens": 32768,
+          "required_gib": 37.04127731323242
+        },
+        {
+          "input_tokens": 131072,
+          "required_gib": 85.04127731323243
+        }
+      ]
+    }
+  }
+}

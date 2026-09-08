@@ -14,3 +14,6 @@ scrape_configs:
   - job_name: inference-engine
     file_sd_configs:
       - files: [/etc/prometheus/engine-targets.json]
+  - job_name: gpu-hardware
+    file_sd_configs:
+      - files: [/etc/prometheus/gpu-targets.json]

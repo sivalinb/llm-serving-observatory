@@ -15,14 +15,14 @@ PROVIDER = TracerProvider(
     resource=Resource.create(
         {
             "service.name": os.getenv("OTEL_SERVICE_NAME", "observatory-gateway"),
-            "service.version": "0.1.0",
+            "service.version": "0.2.0",
         }
     )
 )
 if os.getenv("OTEL_EXPORTER_OTLP_ENDPOINT"):
     PROVIDER.add_span_processor(BatchSpanProcessor(OTLPSpanExporter()))
 trace.set_tracer_provider(PROVIDER)
-TRACER = trace.get_tracer("observatory", "0.1.0")
+TRACER = trace.get_tracer("observatory", "0.2.0")
 LABELS = ["mode", "source"]
 BUCKETS = (0.001, 0.005, 0.01, 0.025, 0.05, 0.1, 0.25, 0.5, 0.75, 1, 2, 5, 10, 30, 60, 120)
 REQUESTS = Counter(

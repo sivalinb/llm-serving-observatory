@@ -75,12 +75,14 @@ Do not expose engine ports to the internet. On a same-host loopback-only GPU set
 
 ## Dashboards, alerts, and storage
 
-Four Grafana dashboards are provisioned from committed JSON. OTel sends traces to Tempo (24-hour retention); Prometheus uses three-day/512 MB retention. JSON stdout includes request ID, trace ID, mode, status and duration. Docker rotates logs at 10 MB × 3 files. The built-in UI reads retained SQLite request metadata.
+Five Grafana dashboards are provisioned from committed JSON. OTel sends traces to Tempo (24-hour retention); Prometheus uses three-day/512 MB retention. JSON stdout includes request ID, trace ID, mode, status and duration. Docker rotates logs at 10 MB × 3 files. The built-in UI reads retained SQLite request metadata.
 
 Prometheus rules cover TTFT > 750 ms, TPOT > 50 ms, request failures > 2%, modeled cache pressure and worker availability. These are example learning targets. Rules evaluate, but notification routing is not configured. Add Alertmanager or OCI alarms with an explicit destination when ready.
 
 Actual billing/cost data is unavailable from inference timings. For a GPU experiment, record total instance cost and elapsed billed time, then compute `billed_cost / generated_tokens × 1,000,000`. If using provider prices, keep cached-input, uncached-input and output rates separate. Never add reasoning tokens to an output total that already includes them.
 
 ## OCI option
+
+The CPU/RAM sampler and optional GPU exporter are documented in [Hardware telemetry](hardware-telemetry.md). GPU analytical estimates are never exported as measured hardware counters.
 
 `scripts/export_oci.py` exports aggregate benchmark points to namespace `llm_observatory` using OCI Monitoring's ingestion endpoint and your configured SDK profile. This is explicit export, not continuous scraping. For OCI APM, route the collector through the supported ingestion configuration for your APM domain. Obtain the data-upload endpoint and private data key in OCI; keep the resulting collector environment outside Git. Follow [Oracle's OpenTelemetry integration](https://docs.oracle.com/en/learn/oci-apm-with-opentelemetry/index.html). The local Tempo path works without Oracle APM configuration.

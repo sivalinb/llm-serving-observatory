@@ -15,6 +15,15 @@ async def smoke(url):
     async with httpx.AsyncClient(base_url=url, headers=headers, timeout=60) as client:
         assert (await client.get("/healthz")).json()["status"] == "ok"
         assert (await client.get("/")).status_code == 200
+        estimate = (await client.post("/api/hardware/estimate", json={})).json()
+        assert estimate["source"] == "analytical_estimate"
+        assert estimate["memory"]["fits"]
+        over = (await client.post("/api/hardware/estimate", json={"input_tokens": 32768})).json()
+        assert not over["memory"]["fits"]
+        assert over["performance"]["decode_step_floor_ms"] is None
+        resources = (await client.get("/api/hardware/resources")).json()
+        assert resources["source"] == "measured"
+        assert resources["process"]["rss_bytes"] > 0
         request = {
             "mode": "disaggregated",
             "input_tokens": 64,
@@ -38,6 +47,7 @@ async def smoke(url):
         metrics = (await client.get("/metrics")).text
         assert "lab_ttft_seconds" in metrics
         assert "lab_tokens_total" in metrics
+        assert "lab_resource_process_rss_bytes" in metrics
         print(
             json.dumps(
                 {

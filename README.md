@@ -1,6 +1,12 @@
 # LLM Serving Observatory
 
-A working LLM serving laboratory for learning **TTFT, prefill, decode, KV-cache transfer, disaggregation, token accounting, and observability**. Run it on a laptop or an OCI CPU VM; connect a real llama.cpp or vLLM server when available.
+[![Validation](https://github.com/sivalinb/llm-serving-observatory/actions/workflows/ci.yaml/badge.svg)](https://github.com/sivalinb/llm-serving-observatory/actions/workflows/ci.yaml)
+
+A working LLM serving laboratory for learning **TTFT, prefill, decode, KV-cache transfer, CPU/RAM, GPU/HBM memory planning, disaggregation, token accounting, and observability**. Run it on a laptop or an OCI CPU VM; connect a real llama.cpp or vLLM server when available.
+
+**Three evidence lanes:** measured serving timings · analytical GPU-memory estimates · real process/container telemetry. No GPU needed for the default lab; no GPU performance claims from simulation.
+
+New here? Follow the [eight-minute portfolio walkthrough](docs/portfolio-walkthrough.md) or the [hardware and memory guide](docs/hardware-memory.md).
 
 ![System architecture](observatory/static/architecture.svg)
 
@@ -24,6 +30,7 @@ Open [localhost:8000](http://localhost:8000). No cloud account, API key, model d
 4. Lower transfer bandwidth or increase prompt length to expose the handoff cost.
 5. Open **Benchmarks** and compare combined versus disaggregated timing.
 6. Inject a transfer failure; inspect the retained error trace and metric counter.
+7. Open **Hardware & memory**, save a baseline, then try **Long context**, **4-bit weights**, and **Slower HBM path**. Export the comparison and inspect the real CPU/RAM readings below it.
 
 ## What is implemented
 
@@ -34,7 +41,10 @@ Open [localhost:8000](http://localhost:8000). No cloud account, API key, model d
 | Prefix cache | Capacity-bounded LRU with hits, misses and eviction counters | Synthetic exact-prefix identity |
 | Real model inference | Configured OpenAI Chat Completions stream adapter | Provider-reported usage; gateway arrival timings |
 | Real GPU disaggregation | Finite vLLM/NIXL launcher using an explicit official source checkout | Requires two GPUs and hardware validation |
-| Observability | Prometheus, four Grafana dashboards, OTel collector, Tempo, JSON logs | Source labels keep simulated / upstream data distinct |
+| Hardware planning | Interactive weight/KV/workspace budget, capacity sweep, bounds, baseline comparison and export | Hypothetical single device; no model allocations or GPU benchmark claims |
+| CPU/RAM telemetry | Per-service CPU cores, RSS, host RAM and optional cgroup-v2 limits/throttling | Measured process/container aggregates, not per-request attribution |
+| GPU telemetry integration | Private DCGM discovery, collector field list, GPU/DRAM/SM and VRAM panels | External compatible GPU/exporter required; no fake samples |
+| Observability | Prometheus, five Grafana dashboards, OTel collector, Tempo, JSON logs | Source labels keep simulated / upstream data distinct |
 | Experiment storage | SQLite WAL, bounded retention, JSON export | No prompts or generated text retained |
 | OCI integration | A1 Terraform, private Object Storage, optional budget, export to Monitoring/ADB | Credentials and an OCI apply are required |
 | Rich diagrams | Downloadable SVG architecture and lifecycle, live serving-path view | Diagrams document actual boundaries |
@@ -46,6 +56,14 @@ Open [localhost:8000](http://localhost:8000). No cloud account, API key, model d
 ![Request lifecycle](observatory/static/request-flow.svg)
 
 The main diagram is available as a [full-size SVG](observatory/static/architecture.svg), and the [request-flow SVG](observatory/static/request-flow.svg) explains the latency boundaries and token subsets. Both render in the application's Architecture view. [Architecture notes](docs/architecture.md) include editable Mermaid source and component responsibilities.
+
+## From requests to hardware
+
+![Hardware and memory architecture](observatory/static/hardware-flow.svg)
+
+The hardware view separates **capacity** (what fits), **memory bandwidth** (how quickly data reaches compute), **compute throughput** (model math), and the **network link** (KV handoff). Presets change one variable at a time. If a configuration exceeds capacity, estimated throughput is withheld rather than shown as achievable.
+
+`python scripts/hardware_report.py` reproduces [the analytical sample report](reports/sample-hardware.json). Its complete inputs, formulas and limitations are documented in the [memory contract](docs/hardware-memory.md). These estimates do not change Live lab simulation rates.
 
 ## Separate workers + observability
 
@@ -67,7 +85,7 @@ The base Compose file runs gateway, prefill, and decode services. The second com
 | Prometheus | http://localhost:9090 |
 | Grafana | http://localhost:3000 — `admin` / your configured password |
 
-In Grafana, open the **LLM Serving** folder for User experience, Token ledger, KV cache and handoff, and Capacity and SLO. For a request trace, copy its full trace ID from exported JSON and search it in **Explore → Tempo**.
+In Grafana, open the **LLM Serving** folder for User experience, Token ledger, KV cache and handoff, Capacity and SLO, and **Hardware and memory**. The hardware dashboard includes measured CPU/RAM plus optional external GPU panels; GPU panels correctly show no data until configured. For a request trace, copy its full trace ID from exported JSON and search it in **Explore → Tempo**.
 
 Prometheus evaluates alert rules locally. Notification delivery requires adding Alertmanager and your chosen receiver, or configuring OCI Monitoring alarms; the repository does not send notifications automatically.
 
@@ -128,7 +146,8 @@ python scripts/export_oci.py experiment.json --bucket YOUR_PRIVATE_BUCKET --comp
 - **ITL:** intervals between individual synthetic tokens. Real upstream chunk intervals have a separate name; a chunk is not necessarily a token.
 - **Reasoning/extended tokens:** a subset of output, not added twice. Missing provider details remain null, not zero. The app does not reconstruct or log hidden reasoning.
 - **KV transfer:** simulated byte volume uses a documented dense-attention formula. Effective modeled throughput includes configured setup delay; it is not a network benchmark.
-- **Cache capacity:** prefix metadata is retained up to a modeled byte budget. Active decode KV memory, allocator fragmentation, and GPU OOM are not modeled.
+- **Cache capacity:** the serving simulator retains prefix metadata up to a modeled byte budget. The separate hardware calculator estimates end-context active KV; neither implements real allocator fragmentation or GPU OOM.
+- **Hardware:** GPU budget and speed bounds are analytical estimates, not utilization measurements. Measured process CPU/RSS, host RAM and optional cgroup-v2 counters use separate names. DCGM DRAM activity is not GB/s.
 
 The [observability guide](docs/observability.md) explains metric names, trace structure, queries, cardinality, and limitations.
 
@@ -138,6 +157,7 @@ The [observability guide](docs/observability.md) explains metric names, trace st
 ruff check .
 pytest -q
 node --check observatory/static/app.js
+node --check observatory/static/hardware.js
 terraform -chdir=infra/oci init -backend=false
 terraform -chdir=infra/oci validate
 ```

@@ -5,18 +5,24 @@ permissions:
 jobs:
   test:
     runs-on: ubuntu-latest
+    env:
+      GRAFANA_PASSWORD: ci-only-ephemeral
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with: {python-version: '3.12'}
       - run: pip install -r requirements.lock && pip install -e '.[dev]'
       - run: ruff check . && pytest -q
-      - run: node --check observatory/static/app.js
+      - run: node --check observatory/static/app.js && node --check observatory/static/hardware.js
+      - run: docker run --rm --entrypoint promtool -v "$PWD/observability:/etc/prometheus:ro" prom/prometheus:v3.2.1 check config /etc/prometheus/prometheus.yaml
       - run: docker compose config --quiet
       - run: GRAFANA_PASSWORD=ci-only docker compose -f compose.yaml -f compose.observability.yaml config --quiet
-      - run: docker compose up -d --build --wait
+      - run: docker compose -f compose.yaml -f compose.observability.yaml up -d --build --wait
       - run: python scripts/smoke.py --url http://127.0.0.1:8000
-      - run: docker compose down
+      - run: python scripts/check_observability.py
+      - run: docker compose -f compose.yaml -f compose.observability.yaml logs --tail=60
+        if: failure()
+      - run: docker compose -f compose.yaml -f compose.observability.yaml down
         if: always()
   terraform:
     runs-on: ubuntu-latest

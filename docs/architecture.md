@@ -1,5 +1,25 @@
 # Architecture and design decisions
 
+## Hardware extension (v0.2)
+
+![Hardware flow](../observatory/static/hardware-flow.svg)
+
+The Hardware view calls a pure, bounded single-device calculator at `/api/hardware/estimate`. It allocates no model memory and does not alter serving timings. A separate background sampler measures the gateway and each worker process using psutil and optional cgroup-v2 namespace-root counters. The UI reads the gateway snapshot; Prometheus scrapes all three services. External DCGM targets supply actual GPU telemetry only when explicitly configured.
+
+```mermaid
+flowchart LR
+  UI[Hardware view] --> E[Analytical calculator]
+  E --> J[Versioned comparison JSON]
+  UI --> R[Gateway resource snapshot]
+  S[Process samplers: gateway / prefill / decode] --> R
+  S --> P[Prometheus]
+  D[Optional private DCGM exporters] --> P
+  V[Optional engine KV metrics] --> P
+  P --> G[Grafana hardware dashboard]
+```
+
+Read the [formula and measurement contract](hardware-memory.md), [exporter setup](hardware-telemetry.md), and [portfolio walkthrough](portfolio-walkthrough.md). The two-device diagram is a conceptual serving path, not the calculator's single-device allocation model.
+
 ![Architecture](../observatory/static/architecture.svg)
 
 ## Runnable paths

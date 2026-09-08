@@ -6,16 +6,19 @@
   <title>LLM Serving Observatory</title>
   <link rel="icon" href="/static/icon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="/static/style.css">
+  <link rel="stylesheet" href="/static/hardware.css">
   <script src="/static/app.js" defer></script>
+  <script src="/static/hardware.js" defer></script>
 </head>
 <body>
 <header class="topbar"><a class="brand" href="/"><img src="/static/icon.svg" alt="" width="32" height="32"><span>Serving<span class="brand-light"> / Observatory</span></span></a><div class="top-right"><span class="version">LAB 01 · OCI</span><span class="pill" id="connection">Connecting</span></div></header>
 <div class="shell">
   <nav class="nav" aria-label="Workspace views">
     <button class="nav-item active" data-view="lab" aria-current="page"><span>01</span> Live lab</button>
-    <button class="nav-item" data-view="architecture"><span>02</span> Architecture</button>
-    <button class="nav-item" data-view="benchmarks"><span>03</span> Benchmarks</button>
-    <button class="nav-item" data-view="learn"><span>04</span> Learning path</button>
+    <button class="nav-item" data-view="hardware"><span>02</span> Hardware &amp; memory</button>
+    <button class="nav-item" data-view="architecture"><span>03</span> Architecture</button>
+    <button class="nav-item" data-view="benchmarks"><span>04</span> Benchmarks</button>
+    <button class="nav-item" data-view="learn"><span>05</span> Learning path</button>
     <a href="/docs" class="api-link">API reference ↗</a>
   </nav>
   <main>
@@ -61,7 +64,47 @@
     <section id="view-architecture" class="view" hidden><div class="page-heading"><div><p class="eyebrow">SYSTEM MAP</p><h1>One request. Every handoff.</h1><p>Implementation boundaries, data paths, and the route from CPU learning to GPU serving.</p></div></div><div class="diagram-toolbar"><a href="/static/architecture.svg" target="_blank" rel="noopener">Open architecture at full size ↗</a><a href="/static/architecture.svg" download>Download SVG ↓</a></div><div class="panel diagram"><img src="/static/architecture.svg" alt="Detailed architecture: clients enter the FastAPI gateway, which routes to combined simulator, separate simulated workers, or a configured real inference server. Metrics go to Prometheus and Grafana, traces to OpenTelemetry and Tempo, records to SQLite and optional OCI exports."></div><div class="diagram-toolbar"><a href="/static/request-flow.svg" target="_blank" rel="noopener">Open request lifecycle ↗</a><a href="/static/request-flow.svg" download>Download SVG ↓</a></div><div class="panel diagram"><img src="/static/request-flow.svg" alt="Request lifecycle and measurement boundaries: admission, queue, prefix lookup, prefill, KV handoff, reasoning, visible decode, final usage and persisted trace. TTFT ends at first visible output; TPOT spans first to last visible token."></div></section>
     <section id="view-benchmarks" class="view" hidden><div class="page-heading"><div><p class="eyebrow">CONTROLLED EXPERIMENTS</p><h1>Make the tradeoff measurable.</h1><p>Compare the same workload, inspect percentiles, and export every observation.</p></div></div><div class="benchmark-grid"><form id="benchmark-form" class="panel controls"><h2>Experiment</h2><label for="preset">Workload preset</label><select id="preset"><option value="short">Short chat · 128 → 32</option><option value="long">Long context · 4096 → 32</option><option value="generation">Generation heavy · 128 → 128</option><option value="prefix">Shared prefix · 2048 → 32</option></select><div class="two-fields"><div><label for="bench-requests">Requests / mode</label><input id="bench-requests" type="number" min="1" max="64" value="8" required></div><div><label for="concurrency">Concurrency</label><input id="concurrency" type="number" min="1" max="8" value="2" required></div></div><label for="warmup">Warmup requests / mode</label><input id="warmup" type="number" min="0" max="3" value="1" required><p class="hint">Warmups are excluded. Timing and cache settings come from Live lab. Combined has one service slot; disaggregated has two independent slots. These are not equal-cost GPU resources.</p><button class="primary" id="benchmark-button" type="submit">Compare serving modes ↗</button><p id="benchmark-progress" role="status">No experiment running.</p></form><div><section class="panel"><div class="panel-heading"><h2>Comparison</h2><button class="text-button" id="export-benchmark" disabled>Export experiment ↓</button></div><div id="comparison" class="comparison"><p class="empty">Run an experiment to compare TTFT, TPOT, goodput, and output throughput.</p></div></section><section class="panel methodology"><h2>Read the result honestly</h2><p>These are wall-clock measurements of a queue and timing simulator. More service slots can increase throughput independently of disaggregation.</p><p>For GPU conclusions, use the supplied vLLM recipe, compare equal total GPUs, record engine versions and network topology, and repeat both cold- and warm-cache runs.</p><p>Upstream stream chunks may contain several tokens. Chunk gaps are not token-level ITL. Unknown reasoning counts keep visible TPOT unavailable.</p></section></div></div></section>
     <section id="view-learn" class="view" hidden><div class="page-heading"><div><p class="eyebrow">FROM TOKENS TO SYSTEMS</p><h1>Your learning path.</h1><p>Each step connects a concept to an experiment you can run.</p></div></div><div id="learning-path" class="learning-path"></div></section>
-    <footer><span>LLM Serving Observatory</span><span>Simulation · Instrumentation · Evidence</span><span>v0.1.0</span></footer>
+    <section id="view-hardware" class="view" hidden>
+      <div class="page-heading"><div><p class="eyebrow">CAPACITY ≠ BANDWIDTH ≠ COMPUTE</p><h1>Where do the tokens live?</h1><p>Explore a hypothetical GPU, then inspect the CPU service actually running this lab.</p></div><span class="source-badge">ANALYTICAL MODEL</span></div>
+      <div class="hardware-intro"><p><strong>HBM is fast GPU memory.</strong> It holds weights, KV cache, and temporary work. The CPU coordinates serving; system RAM is a different memory pool. Not every GPU uses HBM.</p><p>These controls do not allocate GPU memory or alter Live lab timings. They are a separate, single-device dense-model calculator—not a hardware benchmark.</p></div>
+      <div class="hardware-grid">
+        <form id="hardware-form" class="panel controls">
+          <h2>Build a memory budget</h2><p class="hint">Hypothetical 8B / GQA model. Change one variable at a time.</p>
+          <div id="hardware-fields" class="two-fields"></div>
+          <details><summary>Model geometry &amp; memory overhead</summary><div id="hardware-geometry" class="two-fields"></div></details>
+          <details><summary>Compute, HBM &amp; network assumptions</summary><div id="hardware-performance" class="two-fields"></div></details>
+          <button type="submit" class="primary">Calculate budget ↗</button>
+          <p id="hardware-error" class="hardware-error" role="alert" hidden></p>
+          <p class="hint">Capacity uses GiB (2³⁰ bytes). Bandwidth uses GB/s (10⁹ bytes/s). Output includes any reasoning tokens.</p>
+        </form>
+        <div class="hardware-results">
+          <section class="panel"><div class="panel-heading"><h2>Device memory budget</h2><span id="hardware-fit" class="small-code">CALCULATING</span></div>
+            <div class="memory-total"><strong id="hardware-required">—</strong><span id="hardware-capacity">estimated allocation + reserve</span></div>
+            <div id="hardware-budget-bar" class="memory-stack" role="img" aria-label="Memory budget"></div><div id="hardware-legend" class="memory-legend"></div>
+            <p id="hardware-headroom" class="hardware-verdict" aria-live="polite"></p>
+            <p class="hint">Reserved headroom is a planning allowance, not an allocation. “Fits” is not a guarantee against real out-of-memory errors.</p>
+          </section>
+          <section class="panel"><div class="panel-heading"><h2>What could limit generation?</h2><span class="small-code">OPTIMISTIC BOUNDS</span></div>
+            <div id="hardware-bounds" class="bound-grid"></div><p id="hardware-bound-note" class="hint"></p>
+            <div class="transfer-detail"><span>Separate network: prompt KV handoff / request</span><strong id="hardware-transfer">—</strong></div>
+            <p class="hint">HBM bandwidth moves data inside a GPU. Link bandwidth moves KV between workers. These are different paths; neither value is a measured request latency.</p>
+          </section>
+          <section class="panel"><div class="panel-heading"><h2>Longer prompts, larger KV cache</h2><span class="small-code">SAME OUTPUT &amp; CONCURRENCY</span></div><div id="hardware-sweep" class="context-sweep" role="img" aria-label="Estimated memory versus input token count"></div><p class="hint">Bar = required GiB including reserve. Marker = device capacity. Values past it exceed the selected budget.</p></section>
+        </div>
+      </div>
+      <section class="panel hardware-section"><div class="panel-heading"><h2>Run a portfolio experiment</h2><div class="hardware-actions"><button id="hardware-pin" type="button" class="text-button" disabled>Save baseline</button><button id="hardware-export" type="button" class="text-button" disabled>Export comparison JSON ↓</button></div></div>
+        <div class="experiment-buttons"><button type="button" class="secondary" data-hardware-preset="baseline">1 · Baseline</button><button type="button" class="secondary" data-hardware-preset="context">2 · Long context</button><button type="button" class="secondary" data-hardware-preset="quantize">3 · 4-bit weights</button><button type="button" class="secondary" data-hardware-preset="bandwidth">4 · Slower HBM path</button></div>
+        <p id="hardware-experiment-note" class="hint">Calculate and save a baseline, change one control, then export both configurations and assumptions. Presets reset all fields for a reproducible comparison.</p><div id="hardware-comparison" class="table-scroll"></div>
+      </section>
+      <section class="panel hardware-section"><div class="panel-heading"><h2>The machine running this lab</h2><span id="resource-status" class="small-code">MEASURED · GATEWAY PROCESS</span></div>
+        <div class="resource-grid"><article><span>Process CPU</span><strong id="resource-cpu">—</strong><small>cores consumed; 1.0 = one full core</small></article><article><span>Process resident RAM</span><strong id="resource-rss">—</strong><small>RSS, not GPU memory</small></article><article><span>Host-visible RAM available</span><strong id="resource-host">—</strong><small>not the container's allowance</small></article><article><span>Container memory</span><strong id="resource-container">—</strong><small>current / limit, cgroup v2 if available</small></article></div>
+        <p id="resource-note" class="hint" aria-live="polite">Measured every two seconds. First CPU interval is unavailable. GPU telemetry requires an external exporter.</p>
+        <p class="hint">The simulator waits to imitate compute, so its real CPU usage can stay low while modeled GPU demand is high. Grafana shows all three services, CPU throttling, and optional real GPU counters. Measurements are process/device aggregates, not per-request attribution.</p>
+      </section>
+      <section class="panel hardware-section"><div class="panel-heading"><h2>From request to silicon</h2><a href="/static/hardware-flow.svg" target="_blank" rel="noopener">Full-size diagram ↗</a></div><div class="diagram"><img src="/static/hardware-flow.svg" alt="CPU request orchestration uses host RAM. GPU compute reads model weights and KV cache from HBM. A separate interconnect transfers KV from prefill to decode. Process metrics, DCGM and engine metrics flow to Grafana with distinct provenance."></div></section>
+      <details class="hardware-assumptions"><summary>Read the model assumptions before presenting results</summary><ul id="hardware-assumptions"></ul><p><a href="https://github.com/sivalinb/llm-serving-observatory/blob/main/docs/hardware-memory.md" target="_blank" rel="noopener">Formula reference</a> · <a href="https://github.com/sivalinb/llm-serving-observatory/blob/main/docs/portfolio-walkthrough.md" target="_blank" rel="noopener">Portfolio demo script</a></p></details>
+    </section>
+    <footer><span>LLM Serving Observatory</span><span>Simulation · Instrumentation · Evidence</span><span>v0.2.0</span></footer>
   </main>
 </div>
 </body>

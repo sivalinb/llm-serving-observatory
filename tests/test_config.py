@@ -25,7 +25,7 @@ def test_terraform_syntax():
 
 
 def test_svg_assets_and_no_external_scripts():
-    for name in ["architecture.svg", "request-flow.svg", "icon.svg"]:
+    for name in ["architecture.svg", "request-flow.svg", "hardware-flow.svg", "icon.svg"]:
         root = ElementTree.parse(ROOT / "observatory/static" / name).getroot()
         assert root.tag.endswith("svg")
     assert '<script src="https:' not in (ROOT / "observatory/static/index.html").read_text()

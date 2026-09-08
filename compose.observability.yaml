@@ -22,6 +22,7 @@ services:
       - ./observability/prometheus.yaml:/etc/prometheus/prometheus.yaml:ro
       - ./observability/alerts.yaml:/etc/prometheus/alerts.yaml:ro
       - ./observability/engine-targets.json:/etc/prometheus/engine-targets.json:ro
+      - ./observability/gpu-targets.json:/etc/prometheus/gpu-targets.json:ro
       - prometheus-data:/prometheus
     mem_limit: 512m
     restart: unless-stopped

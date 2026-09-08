@@ -10,9 +10,11 @@ from fastapi import Depends, FastAPI, Header, HTTPException, Request, Response
 from fastapi.responses import FileResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 from opentelemetry.propagate import extract
-from prometheus_client import CONTENT_TYPE_LATEST, generate_latest
+from prometheus_client import CONTENT_TYPE_LATEST, REGISTRY, generate_latest
 
+from .hardware import HardwareRequest, estimate_with_sweep
 from .models import BenchmarkRequest, ChatRequest, LabRequest
+from .resources import ResourceMonitor
 from .service import Service, summarize
 from .store import Store
 
@@ -31,11 +33,18 @@ def create_app(db_path=None, service=None):
         app.state.service = service or Service(
             Store(db_path or os.getenv("LAB_DB", "data/lab.sqlite"))
         )
-        yield
-        await app.state.service.client.aclose()
-        app.state.service.store.close()
+        app.state.resources = ResourceMonitor()
+        REGISTRY.register(app.state.resources)
+        await app.state.resources.start()
+        try:
+            yield
+        finally:
+            await app.state.resources.stop()
+            REGISTRY.unregister(app.state.resources)
+            await app.state.service.client.aclose()
+            app.state.service.store.close()
 
-    app = FastAPI(title="LLM Serving Observatory", version="0.1.0", lifespan=lifespan)
+    app = FastAPI(title="LLM Serving Observatory", version="0.2.0", lifespan=lifespan)
     static = Path(__file__).parent / "static"
     app.mount("/static", StaticFiles(directory=static, check_dir=False), name="static")
 
@@ -84,7 +93,16 @@ def create_app(db_path=None, service=None):
 
     @app.get("/healthz")
     def health():
-        return {"status": "ok", "version": "0.1.0"}
+        return {"status": "ok", "version": "0.2.0"}
+
+    @app.post("/api/hardware/estimate", dependencies=[Depends(require_key)])
+    def hardware_estimate(req: HardwareRequest):
+        return estimate_with_sweep(req)
+
+    @app.get("/api/hardware/resources", dependencies=[Depends(require_key)])
+    def hardware_resources(request: Request, response: Response):
+        response.headers["Cache-Control"] = "no-store"
+        return request.app.state.resources.snapshot()
 
     @app.get("/api/config")
     def config(service=Depends(svc)):

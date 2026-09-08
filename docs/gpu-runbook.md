@@ -1,5 +1,7 @@
 # Real GPU prefill/decode experiment
 
+For real device-memory/SM/DRAM counters, follow [Hardware telemetry](hardware-telemetry.md). The Hardware UI's capacity calculator is an independent analytical model; do not cite its numbers as results from this runbook.
+
 This is the hardware extension of the CPU laboratory. The repository contains a real streaming adapter and a supervised launcher for official vLLM NIXL components, but no hardware results are claimed until this runbook is executed on compatible GPUs.
 
 ## Prerequisites

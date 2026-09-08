@@ -32,3 +32,22 @@ groups:
         labels: {severity: critical}
         annotations:
           summary: 'An observatory service is not responding to metric scrapes'
+      - alert: ContainerMemoryPressure
+        expr: lab_resource_cgroup_namespace_root_memory_current_bytes / lab_resource_cgroup_namespace_root_memory_limit_bytes > 0.9
+        for: 5m
+        labels: {severity: warning}
+        annotations:
+          summary: 'Measured container memory exceeds 90% of its local cgroup-v2 limit'
+          description: 'Inspect RSS and container usage separately. This is not GPU HBM pressure.'
+      - alert: ContainerCPUThrottling
+        expr: rate(lab_resource_cgroup_namespace_root_cpu_throttled_seconds_total[5m]) > 0.1
+        for: 5m
+        labels: {severity: warning}
+        annotations:
+          summary: 'Container CPU throttling is sustained; correlate with queue delay and TTFT'
+      - alert: ResourceSamplerUnavailable
+        expr: lab_resource_sample_available == 0 or lab_resource_sample_age_seconds > 10
+        for: 1m
+        labels: {severity: warning}
+        annotations:
+          summary: 'Process resource telemetry is missing or stale'

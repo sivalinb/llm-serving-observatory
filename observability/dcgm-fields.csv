@@ -1,0 +1,8 @@
+# Optional custom DCGM exporter field list. Requires compatible external hardware.
+DCGM_FI_DEV_FB_USED, gauge, Framebuffer memory used in MiB.
+DCGM_FI_DEV_FB_FREE, gauge, Framebuffer memory free in MiB.
+DCGM_FI_DEV_GPU_UTIL, gauge, GPU utilization in percent.
+DCGM_FI_PROF_DRAM_ACTIVE, gauge, Fraction of cycles with device memory traffic NOT bytes per second.
+DCGM_FI_PROF_SM_ACTIVE, gauge, Fraction of SM active cycles.
+DCGM_FI_DEV_POWER_USAGE, gauge, Power draw in watts.
+DCGM_FI_DEV_GPU_TEMP, gauge, GPU temperature in degrees C.

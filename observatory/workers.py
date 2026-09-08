@@ -4,18 +4,33 @@ import asyncio
 import json
 import os
 import secrets
+from contextlib import asynccontextmanager
 
 from fastapi import Depends, FastAPI, Header, HTTPException, Response
 from fastapi.responses import StreamingResponse
 from opentelemetry.propagate import extract
-from prometheus_client import CONTENT_TYPE_LATEST, generate_latest
+from prometheus_client import CONTENT_TYPE_LATEST, REGISTRY, generate_latest
 from starlette.requests import Request
 
 from .models import LabRequest
+from .resources import ResourceMonitor
 from .simulation import Simulator, worker_record
 from .telemetry import TRACER
 
-app = FastAPI(title="Observatory simulated worker")
+
+@asynccontextmanager
+async def lifespan(app):
+    monitor = ResourceMonitor()
+    REGISTRY.register(monitor)
+    await monitor.start()
+    try:
+        yield
+    finally:
+        await monitor.stop()
+        REGISTRY.unregister(monitor)
+
+
+app = FastAPI(title="Observatory simulated worker", lifespan=lifespan)
 sim = Simulator()
 
 
