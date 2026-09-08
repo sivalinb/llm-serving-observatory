@@ -1,5 +1,7 @@
 # In-website observability
 
+**Release status:** code and all four CI jobs passed; the OCI rollout is held after a pre-upgrade check found an incumbent database memory-limit failure. The existing pilot remains unchanged. See the [release evidence and deployment hold](../reports/observability-release.md). Instructions below describe the new release, not a claim that it is already live.
+
 Open **`/observability` on the private OCI gateway**, beside `/assistant`. This is a native dashboard, not an embedded Grafana iframe. It reuses the existing shared-profile Prometheus and assistant SQLite ledger: no additional container, cloud service, paid model call or public route is required.
 
 For access through an active approved tunnel, use `http://127.0.0.1:18000/observability`. A localhost URL is not a public website; it stops working when its SSH/Bastion session expires. The public Sites academy stays static and disconnected from this API.

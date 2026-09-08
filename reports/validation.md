@@ -1,10 +1,10 @@
 # Validation record
 
-## Native private observability (2026-09-08, local validation)
+## Native private observability (2026-09-08, local and CI validation; OCI held)
 
 The `/observability` implementation passes **96 Python tests, 28 Node tests and Ruff** locally. New coverage includes operator default-deny/fresh revocation, cross-user request/event isolation, enum-only event sanitization and bounded retention, backup recovery, Prometheus catalog and query budgets, stale/unavailable responses, invalid expressions, null-versus-zero math and public-export exclusion. Two existing dependency deprecation warnings remain. The local shell responds HTTP 200; no browser interaction, screenshot or responsive-rendering QA is claimed.
 
-The shared CI job now runs a no-inference dashboard smoke against actual Prometheus, granting/revoking a temporary operator and key. The public-edge test explicitly blocks dashboard routes and assets. Those configured checks are not yet a claim of a passing CI run or an OCI upgrade; deployment evidence will be recorded separately after verification. No new backend/container, public publication, GPU data, raw log storage or persisted trace backend is introduced.
+All four jobs in [CI run 34283790034](https://github.com/sivalinb/llm-serving-observatory/actions/runs/34283790034) passed for code `4cb9f95`, including a no-inference dashboard smoke against actual Prometheus and the public-edge route/asset boundary. The dashboard smoke verified 52 catalog entries, two healthy targets, three evaluated rules and temporary operator/key revocation. **OCI was not upgraded:** a pre-upgrade check found an incumbent database memory-limit failure and increased collector restart count. [Exact release evidence and deployment hold](observability-release.md). No new backend/container, public publication, GPU data, raw log storage or persisted trace backend is introduced.
 
 ## Private Phoenix deployment (2026-09-08)
 

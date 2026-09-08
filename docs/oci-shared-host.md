@@ -115,6 +115,8 @@ It requests 64 output tokens, records timing/token metadata without the question
 
 ## 4. Observability with a small footprint
 
+**Dashboard rollout status:** implemented and CI-verified, but not yet installed on the existing OCI pilot. The upgrade was held before any application change after detecting an incumbent ClickHouse memory-limit failure and collector restart. [Release evidence and required follow-up](../reports/observability-release.md).
+
 The native **`/observability`** page now displays a bounded metric catalog/charts, target health, alert states, gateway resources, per-request timelines and sanitized application events. Ordinary keys see personal metadata only; global data requires an explicit host CLI operator grant. It reuses the two existing data stores, adds no container and makes no model calls. Follow the [dashboard field guide](observability-dashboard.md) for access, architecture, retention, limits and absent instrumentation. Prometheus's own UI remains optional/private.
 
 Open private Prometheus through the tunnel. It scrapes only this gateway and model every 30 seconds; there is no Grafana, Tempo, OTel collector, Alertmanager or node exporter in this profile. The three alert rules appear in the Prometheus UI, but **do not send email or paging notifications**. Stopping Prometheus also stops these checks. A separate external monitor would require a later design and approval.
