@@ -11,7 +11,7 @@ flowchart TB
   learner["Public learner"] --> sites["ChatGPT Sites · animated tour + Serving Academy<br/>Static teaching · no live inference"]
   operator["Invited pilot user / operator"] --> tunnel["Approved SSH / OCI Bastion tunnel<br/>No new public ingress"]
   subgraph vm["Existing OCI Phoenix A1 VM · shared CPU, RAM and disk"]
-    incumbent["Existing application<br/>Own containers, ports, volumes and monitoring<br/>NO configuration changes or restarts"]
+    incumbent["Existing application<br/>Own containers, ports, volumes and monitoring<br/>Separate maintenance approval required"]
     subgraph own["observatory-shared · own access bridge + internal model network"]
       gateway["Gateway · loopback :18000<br/>0.25 CPU · 256 MiB<br/>Invites → authentication → retrieval → admission"]
       ledger[("Own SQLite volume<br/>Hashed keys · quotas · metadata<br/>No stored questions or answers")]
@@ -115,7 +115,7 @@ It requests 64 output tokens, records timing/token metadata without the question
 
 ## 4. Observability with a small footprint
 
-**Dashboard rollout status:** implemented and CI-verified, but not yet installed on the existing OCI pilot. The upgrade was held before any application change after detecting an incumbent ClickHouse memory-limit failure and collector restart. [Release evidence and required follow-up](../reports/observability-release.md).
+**Dashboard rollout status: live on the private OCI pilot, September 8, 2026.** An initial safety hold led to an explicitly approved, targeted ClickHouse log-merge and collector-resilience repair. After a quiet stability check, only the observatory gateway was upgraded; the model and Prometheus were not restarted. [Actual checks, resource readings and incident chronology](../reports/observability-release.md).
 
 The native **`/observability`** page now displays a bounded metric catalog/charts, target health, alert states, gateway resources, per-request timelines and sanitized application events. Ordinary keys see personal metadata only; global data requires an explicit host CLI operator grant. It reuses the two existing data stores, adds no container and makes no model calls. Follow the [dashboard field guide](observability-dashboard.md) for access, architecture, retention, limits and absent instrumentation. Prometheus's own UI remains optional/private.
 
@@ -182,6 +182,8 @@ Do not use `down -v`, Docker system prune, broad process kills, or the incumbent
 
 This is an upgrade of an approved existing pilot, not permission to reinstall it. Do not rerun the new-install preflight against an active stack: it intentionally rejects occupied ports/existing containers. Instead, inspect current available RAM, disk, swap, incumbent health/restarts and this project's enforced limits. Investigate unhealthy/restarting services or less than 2 GiB available RAM / 4 GiB disk; builds are not constrained by runtime container limits. Preserve the incumbent and model/Prometheus containers.
 
+Record swap allocation **and** changes in `/proc/vmstat` `pswpin`/`pswpout`. Existing cold-page allocation after maintenance is different from ongoing paging. A reviewed finite post-maintenance observation may distinguish these explicitly; it must not be reported as passing the fresh-install zero-swap gate. Stop on new swap growth/activity during that quiet check. Never clear swap or drop caches to manufacture a pass. The September 8 incident repair required separate explicit approval and is documented in the release report; this runbook does not generally authorize changing the incumbent.
+
 1. Record the old gateway image ID and checkout commit. Wait for any active answer to finish; the dashboard upgrade briefly interrupts the gateway.
 2. Run the online backup command above with a new dated filename **before** recreating the gateway. Do not overwrite a prior backup.
 3. Fetch/review the exact tested revision in this project's dedicated checkout. Preserve any local changes and pause if they overlap.
@@ -189,7 +191,7 @@ This is an upgrade of an approved existing pilot, not permission to reinstall it
 
 ```bash
 sudo -n docker compose -f compose.shared.yaml build gateway
-sudo -n docker compose -f compose.shared.yaml up -d --no-deps --wait gateway
+sudo -n docker compose -f compose.shared.yaml up -d --no-deps --no-build --wait gateway
 sudo -n python3 scripts/check_shared_runtime.py
 sudo -n env COMPOSE_FILE=compose.shared.yaml COMPOSE_PROFILES=metrics \
   python3 scripts/smoke_dashboard.py --url http://127.0.0.1:18000

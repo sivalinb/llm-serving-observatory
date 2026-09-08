@@ -1,6 +1,6 @@
 # In-website observability
 
-**Release status:** code and all four CI jobs passed; the OCI rollout is held after a pre-upgrade check found an incumbent database memory-limit failure. The existing pilot remains unchanged. See the [release evidence and deployment hold](../reports/observability-release.md). Instructions below describe the new release, not a claim that it is already live.
+**Release status: live on the private Phoenix OCI website, September 8, 2026.** All four observatory CI jobs passed. Following an explicitly approved, targeted repair of the incumbent database/collector issue, only the observatory gateway was upgraded. Actual OCI checks found 58 metric entries, two healthy scrape targets, three evaluated alert rules and three retained requests, with zero model calls from the dashboard check. See the [release evidence and incident resolution](../reports/observability-release.md).
 
 Open **`/observability` on the private OCI gateway**, beside `/assistant`. This is a native dashboard, not an embedded Grafana iframe. It reuses the existing shared-profile Prometheus and assistant SQLite ledger: no additional container, cloud service, paid model call or public route is required.
 
