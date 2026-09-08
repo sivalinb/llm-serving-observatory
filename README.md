@@ -46,7 +46,7 @@ The assistant performs real combined prefill/decode. It does **not** claim real 
 
 ## Private in-website observability
 
-New users: open **Assistant → How it works** (`/assistant#system`) for a seven-step animated walkthrough of keys, workspaces, authentication, questions, search/AI, receipts and the dashboard. Examples only fill the question box; they do not submit it. [First-visit guide](docs/using-the-service.md).
+New users: open **Assistant → How it works** (`/assistant#system`) for a seven-step animated walkthrough of keys, workspaces, authentication, questions, search/AI, receipts and the dashboard. Examples only fill the question box; they do not submit it. **Deployed on the private OCI service September 8 at 23:28 UTC.** [First-visit guide](docs/using-the-service.md) · [Walkthrough release evidence](reports/usage-guide-release.md).
 
 **Live on the private OCI website as of September 8, 2026.** Open `http://127.0.0.1:18000/observability` through an approved active Bastion/SSH tunnel. [Deployment checks and memory-incident resolution](reports/observability-release.md). This is not a public endpoint; the Sites academy stays separate.
 

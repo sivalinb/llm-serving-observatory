@@ -4,6 +4,8 @@
 
 Code commit: [`4cb9f9591c331f8d3c989be9f41ac15ffe64b9ad`](https://github.com/sivalinb/llm-serving-observatory/commit/4cb9f9591c331f8d3c989be9f41ac15ffe64b9ad). [Architecture, access and operating guide](../docs/observability-dashboard.md).
 
+This report preserves the initial dashboard deployment evidence. The later **23:28 UTC static-only walkthrough update** replaces the gateway image without changing dashboard logic, accounts or limits; see the [current walkthrough release record](usage-guide-release.md).
+
 ## Verified implementation
 
 - Native `/observability` overview, metric catalog/charts, request timeline and sanitized events. Existing personal-key authentication; separate host-granted operator roles for global telemetry.

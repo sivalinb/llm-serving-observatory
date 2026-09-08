@@ -1,5 +1,11 @@
 # Validation record
 
+## First-visit animated guide (2026-09-08, live on OCI)
+
+The seven-step `/assistant#system` guide passes **99 Python tests, 34 Node tests, Ruff, JavaScript syntax, static export and whitespace checks** locally. [All four CI jobs passed](https://github.com/sivalinb/llm-serving-observatory/actions/runs/34289932816) for source `69aa584`. Examples fill the question box only; explanatory playback is bounded, opt-in and respects reduced motion. Browser interaction/visual QA is not claimed.
+
+The static-only gateway overlay was deployed at **23:28:14 UTC**. Served asset hashes match the source; the shared-runtime and dashboard checks pass with two healthy targets, 58 catalog entries, three evaluated rules and five retained requests. Existing accounts/keys/roles, limits, environment and all other container IDs were preserved; temporary smoke-test access was revoked. Deployment checks generated no inference. See the [walkthrough release record](usage-guide-release.md) for exact image, scope and the short, explicitly limited post-update memory observation. The public Sites academy remains unchanged.
+
 ## Native private observability (2026-09-08, live on OCI)
 
 The `/observability` implementation passes **96 Python tests, 28 Node tests and Ruff** locally. New coverage includes operator default-deny/fresh revocation, cross-user request/event isolation, enum-only event sanitization and bounded retention, backup recovery, Prometheus catalog and query budgets, stale/unavailable responses, invalid expressions, null-versus-zero math and public-export exclusion. Two existing dependency deprecation warnings remain. The local shell responds HTTP 200; no browser interaction, screenshot or responsive-rendering QA is claimed.

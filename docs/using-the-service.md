@@ -2,6 +2,8 @@
 
 On the private OCI website, open **Assistant → How it works** (`/assistant#system`). The dashboard's navigation has the same link. This is a seven-step, animated explanation of the existing service, not a model request or a replay of your traffic. It is separate from the public Sites academy.
 
+Deployed on September 8, 2026 at 23:28 UTC. [Exact release, automated checks and OCI verification](../reports/usage-guide-release.md).
+
 ## Take the guided path
 
 Select any numbered step, use Previous/Next, or choose Play walkthrough. Playback advances every 12 seconds and stops at the last step. Manual selection pauses it. Playback stops when the page is hidden, the guide leaves the viewport or you follow an action. It does not automatically resume. Reduced-motion preferences disable playback/animation while preserving manual navigation. The complete text remains readable if the guide script is unavailable. Step links support keyboard navigation; automatic playback does not repeatedly announce every step to screen readers.
