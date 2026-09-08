@@ -12,7 +12,7 @@ flowchart TB
   operator["Invited pilot user / operator"] --> tunnel["Approved SSH / OCI Bastion tunnel<br/>No new public ingress"]
   subgraph vm["Existing OCI Phoenix A1 VM · shared CPU, RAM and disk"]
     incumbent["Existing application<br/>Own containers, ports, volumes and monitoring<br/>NO configuration changes or restarts"]
-    subgraph own["observatory-shared · isolated internal Docker network"]
+    subgraph own["observatory-shared · own access bridge + internal model network"]
       gateway["Gateway · loopback :18000<br/>0.25 CPU · 256 MiB<br/>Invites → authentication → retrieval → admission"]
       ledger[("Own SQLite volume<br/>Hashed keys · quotas · metadata<br/>No stored questions or answers")]
       model["Private llama.cpp · no host port<br/>0.5 CPU · 2.5 GiB · 1 inference slot<br/>Qwen 1.5B Q4 · host RAM, no HBM"]
@@ -173,6 +173,8 @@ docker compose -f compose.shared.yaml --profile metrics stop
 Do not use `down -v`, Docker system prune, broad process kills, or the incumbent's service-control commands. The runtime check expects no prior restarts; investigate any recorded restart before accepting the pilot. `on-failure:3` also means operator verification/start is required after a Docker daemon or host restart; this beta does not promise unattended recovery.
 
 ## Evidence and next release
+
+The [corrected integration run](https://github.com/sivalinb/llm-serving-observatory/actions/runs/34270910559) passed all four jobs, including full and shared real inference. Its [shared-profile receipt](../reports/shared-cpu-smoke.json) recorded **274 input / 64 output tokens, 17.60 s TTFT and 26.11 s total**, with the model limited to half a CPU and 2.5 GiB RAM. This is one x86 GitHub-runner request, **not** an OCI/ARM result, throughput benchmark or service-level promise. It hit the output cap, so the answer may be incomplete. Runtime checks also verified actual limits, healthy containers without restarts, network memberships, host-facing auth/lab boundaries and both metrics targets.
 
 Record the reviewed commit, image/model pins, OCI shape/region (without secrets), before/after incumbent health, actual enforced resource limits, one cold and several sequential warm receipts, failures, RSS/cgroup memory, disk headroom and recovery outcome. Keep the pilot small; do not extrapolate one request into a throughput or availability claim.
 

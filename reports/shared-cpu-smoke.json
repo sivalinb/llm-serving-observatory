@@ -1,0 +1,41 @@
+{
+  "real_cpu_smoke": "passed",
+  "record": {
+    "id": "2edf3e654f5c71e7343f64012f237df2",
+    "status": "ok",
+    "backend": "selfhosted_cpu",
+    "created": 1788896871.479882,
+    "corpus_version": "serving-guide-2026-09-v1",
+    "reserved_tokens_estimate": 1687,
+    "max_output_tokens": 64,
+    "tokens": {
+      "input": 274,
+      "output": 64,
+      "cached_input": 0,
+      "uncached_input": 274,
+      "reasoning": null,
+      "visible_output": null,
+      "total": 338
+    },
+    "ttft_ms": 17601.678167000016,
+    "duration_ms": 26112.915240999995,
+    "chunk_count": 64,
+    "retrieval_ms": 0.4785830000173519,
+    "citations": "present",
+    "source_ids": [
+      "citations",
+      "latency"
+    ],
+    "trace_id": "1d0cd63919459c4996b45fc743a6f239",
+    "finish_reason": "length"
+  },
+  "evidence": {
+    "environment": "GitHub Actions ubuntu-latest x86_64; not OCI or ARM",
+    "commit": "3b114bad9ed063fdac1cdb6f520def132a5aa70e",
+    "workflow_url": "https://github.com/sivalinb/llm-serving-observatory/actions/runs/34270910559",
+    "profile": "compose.shared.yaml with metrics",
+    "model_cpu_limit": 0.5,
+    "model_memory_limit_mib": 2560,
+    "scope": "One request, not a capacity benchmark. Output reached its 64-token cap; answer may be incomplete. Citation IDs do not validate factual support. Trace ID has no persisted trace backend in this profile."
+  }
+}
