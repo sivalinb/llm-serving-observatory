@@ -14,8 +14,13 @@ URL = f"https://huggingface.co/Qwen/Qwen2.5-1.5B-Instruct-GGUF/resolve/{REVISION
 
 
 def checksum(path):
+    # Operator tooling also runs on Oracle Linux 9's Python 3.9.
+    # Keep the gateway's Python 3.12 container runtime independent of the host.
+    hashed = hashlib.sha256()
     with path.open("rb") as handle:
-        return hashlib.file_digest(handle, "sha256").hexdigest()
+        while chunk := handle.read(1024 * 1024):
+            hashed.update(chunk)
+    return hashed.hexdigest()
 
 
 def main():

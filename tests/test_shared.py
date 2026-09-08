@@ -1,3 +1,4 @@
+import hashlib
 import json
 import runpy
 from pathlib import Path
@@ -12,6 +13,16 @@ from observatory.assistant import Assistant, Settings
 from observatory.assistant_store import AssistantStore
 
 ROOT = Path(__file__).resolve().parents[1]
+
+
+def test_model_checksum_uses_bounded_reads_on_older_host_python(tmp_path):
+    script = runpy.run_path(str(ROOT / "scripts/download_model.py"))
+    path = tmp_path / "model.bin"
+    contents = b"pinned model fixture" * 100000
+    path.write_bytes(contents)
+    assert script["checksum"](path) == hashlib.sha256(contents).hexdigest()
+    path.write_bytes(b"")
+    assert script["checksum"](path) == hashlib.sha256(b"").hexdigest()
 
 
 def test_assistant_only_does_not_construct_or_expose_lab(tmp_path, monkeypatch):

@@ -52,12 +52,12 @@ The lab and benchmark routes are not registered in assistant-only mode, includin
 
 ## 1. Gate the installation — no changes yet
 
-Prerequisites: the existing Oracle Linux 9 ARM host, working Docker Engine with Compose v2 and cgroup v2, Python 3.11+ for the pinned downloader, a **newly approved** Bastion/SSH session with the existing restricted allowlist, and permission to install this isolated application. A past read-only tunnel approval is not deployment approval. Use the console-generated tunnel command and the existing local private key; do not copy keys into the repository, disable host-key checking or open public SSH.
+Prerequisites: the existing Oracle Linux 9 ARM host, working Docker Engine with Compose v2-compatible commands and cgroup v2, Python 3.9+ for the standalone operator scripts, a **newly approved** Bastion/SSH session with the existing restricted allowlist, and permission to install this isolated application. The application still runs in its Python 3.12 container; do not install it into the host's older Python. A past read-only tunnel approval is not deployment approval. Use the console-generated tunnel command and the existing local private key; do not copy keys into the repository, disable host-key checking or open public SSH.
 
 Run in a fresh, dedicated checkout of this repository on the target host, not inside the incumbent application's checkout. Review and use a known Git commit. First confirm Python, then run the non-mutating checker:
 
 ```bash
-python3 -c 'import sys; assert sys.version_info >= (3, 11), "Python 3.11+ required"'
+python3 -c 'import sys; assert sys.version_info >= (3, 9), "Python 3.9+ required for operator scripts"'
 python3 scripts/shared_preflight.py
 docker stats --no-stream
 docker system df
