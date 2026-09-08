@@ -7,4 +7,6 @@
 .diagram-card a:hover h3{text-decoration:underline;text-underline-offset:4px}
 #live-service{scroll-margin-top:24px}
 .hero-note{font-size:.875rem}
+.academy-launch{display:grid;grid-template-columns:1.2fr 1fr;gap:20px 50px;margin:0 5% 50px;padding:35px;background:#e7f0e5;border:1px solid #c0d7c8;border-radius:15px}.academy-launch h2{font-size:2rem}.academy-launch ol{padding-left:22px;align-self:center}.academy-launch li{margin:12px 0}.academy-launch>p{grid-column:1/-1;font-size:.875rem;color:var(--muted);margin:0}.academy-launch .eyebrow{margin-bottom:12px}
+@media(max-width:750px){.academy-launch{grid-template-columns:1fr;padding:25px}.academy-launch ol{margin:0}}
 @media(max-width:700px){.diagram-grid{grid-template-columns:1fr}.diagram-card{padding:20px}}

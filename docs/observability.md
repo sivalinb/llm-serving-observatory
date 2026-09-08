@@ -1,8 +1,9 @@
 # Observability contract
 
-## Separate the three surfaces
+## Separate the learning and service surfaces
 
 - **Homepage:** explanatory animation only. It emits no inference measurements or telemetry requests.
+- **Public Serving Academy:** per-module observability briefs and a layered signal map describe instrumentation targets. Browser memory/latency/queue/token/cost exercises are analytical or simulated, never exported as live metrics. They call no telemetry/model API and preserve unknown token subsets. See [the complete learning path](learning-path.md).
 - **Assistant:** real CPU inference uses the `assistant_*` metric namespace and personal metadata history.
 - **Lab:** experiments use `lab_*`; serving-series labels distinguish simulated work from configured real upstreams. Hardware planning is analytical, while process/cgroup telemetry is measured separately.
 

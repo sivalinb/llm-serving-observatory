@@ -8,6 +8,7 @@ import pytest
 
 EXPORT = runpy.run_path(str(Path(__file__).resolve().parents[1] / "scripts/build_portfolio.py"))
 ASSETS, ROOT, build, replace_once = (EXPORT[key] for key in ("ASSETS", "ROOT", "build", "replace_once"))
+SITE_ASSETS = EXPORT["SITE_ASSETS"]
 
 
 class PortfolioPage(HTMLParser):
@@ -45,7 +46,8 @@ def test_public_portfolio_is_honest_and_all_links_resolve(tmp_path):
         elif parsed.path == "/":
             continue
         elif parsed.path:
-            assert (tmp_path / parsed.path.lstrip("/")).is_file(), url
+            target = tmp_path / parsed.path.lstrip("/")
+            assert target.is_file() or (target / "index.html").is_file(), url
         elif parsed.fragment:
             assert parsed.fragment in page.ids, url
     assert {f"/static/{name}.svg" for name in (
@@ -61,7 +63,7 @@ def test_public_portfolio_is_honest_and_all_links_resolve(tmp_path):
 def test_export_is_allowlisted_and_deterministic(tmp_path):
     build(tmp_path)
     snapshot = {str(p.relative_to(tmp_path)): p.read_bytes() for p in tmp_path.rglob("*") if p.is_file()}
-    assert set(snapshot) == {"index.html", "404.html", "static/portfolio.css"} | {f"static/{a}" for a in ASSETS}
+    assert set(snapshot) == {"index.html", "404.html", "learn/index.html"} | {f"static/{a}" for a in ASSETS + SITE_ASSETS}
     build(tmp_path)
     assert snapshot == {str(p.relative_to(tmp_path)): p.read_bytes() for p in tmp_path.rglob("*") if p.is_file()}
     # Exporting does not disable the real application or leak its interactive assets.

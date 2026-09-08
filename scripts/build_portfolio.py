@@ -4,6 +4,7 @@ Standard-library only. The OCI homepage remains the single source for the animat
 Exact replacement checks fail closed if its wording changes and needs a new export.
 """
 
+import runpy
 import shutil
 from pathlib import Path
 
@@ -14,6 +15,7 @@ ASSETS = (
     "hardware-flow.svg", "service-architecture.svg",
 )
 REPO = "https://github.com/sivalinb/llm-serving-observatory"
+SITE_ASSETS = ("portfolio.css", "academy.css", "academy.js")
 
 
 def replace_once(text: str, old: str, new: str) -> str:
@@ -26,6 +28,7 @@ def render() -> str:
     page = (STATIC / "home.html").read_text()
     replacements = [
         ('<html lang="en">', '<html lang="en" data-deployment="portfolio">'),
+        ('<a href="#concepts">The concepts</a>', '<a href="/learn/">Serving Academy</a>'),
         ('then explore the real CPU assistant and private experiment lab.',
          'explore architecture diagrams and the source. Live AI chat is pending OCI deployment.'),
         ('href="/assistant">Open assistant', 'href="#live-service">AI service status'),
@@ -76,22 +79,40 @@ def render() -> str:
     )
     page = replace_once(page, '<section class="deployment section"', diagrams + '<section class="deployment section"')
     page = replace_once(page, '</head>', '<link rel="stylesheet" href="/static/portfolio.css">\n</head>')
+    academy = (
+        '<section class="academy-launch section" aria-labelledby="academy-title">'
+        '<div><p class="eyebrow">LEARN END-TO-END SERVING</p>'
+        '<h2 id="academy-title">Go beyond the first token.</h2>'
+        '<p>20 modules connect models and tokens to batching, KV memory, GPU topology, infrastructure, '
+        'security, observability, reliability, quality and cost.</p>'
+        '<a class="button primary" href="/learn/">Start learning in the Serving Academy ↗</a></div>'
+        '<ol><li>Foundations → define the workload and model</li><li>Engine → manage memory and execution</li>'
+        '<li>Scale → place, route and grow capacity</li><li>Operate → measure, protect and recover</li>'
+        '<li>Applications → evaluate outcomes and cost</li></ol>'
+        '<p>Includes self-checks and four browser exercises. No GPU or cloud account required. '
+        'Exercises are explanatory, not live inference.</p></section>'
+    )
+    page = replace_once(page, '<section class="purpose"', academy + '<section class="purpose"')
     return page
 
 
 def build(destination: Path) -> None:
     """Write an allowlisted artifact and reject stale/unrecognized output files."""
-    expected = {"index.html", "404.html", "static/portfolio.css"} | {f"static/{a}" for a in ASSETS}
+    expected = {"index.html", "404.html", "learn/index.html"} | {f"static/{a}" for a in ASSETS + SITE_ASSETS}
     if destination.exists():
         unexpected = {str(p.relative_to(destination)) for p in destination.rglob("*") if p.is_file()} - expected
         symlinks = [p for p in destination.rglob("*") if p.is_symlink()]
         if unexpected or symlinks or destination.is_symlink():
             raise ValueError("Output contains unexpected files or symlinks; use a clean build directory")
     page = render()  # Validate the source contract before writing any output.
+    academy = runpy.run_path(str(ROOT / "scripts/render_academy.py"))["render_academy"]()
     (destination / "static").mkdir(parents=True, exist_ok=True)
     for asset in ASSETS:
         shutil.copyfile(STATIC / asset, destination / "static" / asset)
-    shutil.copyfile(ROOT / "sites/portfolio.css", destination / "static/portfolio.css")
+    for asset in SITE_ASSETS:
+        shutil.copyfile(ROOT / "sites" / asset, destination / "static" / asset)
+    (destination / "learn").mkdir(exist_ok=True)
+    (destination / "learn/index.html").write_text(academy)
     (destination / "index.html").write_text(page)
     (destination / "404.html").write_text(
         '<!doctype html><html lang="en"><head><meta charset="utf-8">'

@@ -1,5 +1,13 @@
 # Validation record
 
+## End-to-end Serving Academy (2026-09-08)
+
+- Adds 20 ordered modules and self-checks, five tracks, primary readings, per-module signals/traps/practice, two cross-layer maps and four browser-only exercises.
+- Regression checks cover curriculum structure/order, HTML escaping, export links/assets/controller IDs, memory and transfer units, invalid inputs, token subsets/unknowns, deterministic bounded queues, goodput/cost denominators and search matching.
+- Local validation passes: 73 Python tests, 25 Node tests (9 animation + 16 academy), Ruff, JavaScript syntax, static export and whitespace checks. The local `/learn/` route returns HTTP 200. GitHub CI and Sites record their separate final publication results.
+- The public academy generates no real inference, GPU utilization, telemetry, user-data persistence or OCI resources. Exercise measurements are explicitly analytical or simulated. Live assistant deployment remains pending OCI.
+- Browser interaction/visual QA, real GPU/kernel optimization, cluster autoscaling, HA, held-out model quality and new OCI benchmarks are not claimed. Sources and exercise contracts are recorded in [the learning path](../docs/learning-path.md).
+
 ## Public portfolio export (2026-09-07)
 
 The Sites export is separately built from allowlisted public assets. New regression checks cover deployment-boundary copy, link/anchor/controller wiring, all four diagrams, deterministic output, unchanged full-service entry points, stale-file/symlink rejection and source-contract failures. The export adds no model requests, live telemetry, user-data store or backend. Its local HTTP preview returns 200; browser visual/interaction QA is not claimed. Publication status and the exact source SHA are recorded by Sites, separately from GitHub CI. See [the publishing guide](../docs/sites-publishing.md).

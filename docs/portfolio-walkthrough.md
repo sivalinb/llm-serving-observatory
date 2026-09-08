@@ -2,6 +2,8 @@
 
 ## The 30-second introduction
 
+The [public Serving Academy](https://llm-serving-observatory.siva-babu.chatgpt.site/learn/) now supports an end-to-end teaching demo: search a concept, explain its metrics and failure mode, answer a self-check, then change a memory/latency/traffic/token assumption. Use the [capstone checklist](learning-path.md) to connect those hypotheses to future measured infrastructure and service evidence. Public exercise values are not benchmark results.
+
 For a public, no-setup introduction, share [the ChatGPT Sites portfolio](https://llm-serving-observatory.siva-babu.chatgpt.site). It includes the tour and architecture diagrams, not live inference or the interactive lab. The demonstrations below require the full local/OCI application. See [publication boundaries](sites-publishing.md).
 
 > I built an LLM-serving observatory with an animated beginner's guide, an invite-only CPU documentation assistant, and a private experiment lab. It separates real inference, simulated KV handoffs, analytical GPU-memory estimates, and measured CPU/RAM telemetry. Personal keys, quotas, streaming receipts and traceable validation make it a small but inspectable service with a Phoenix deployment path.

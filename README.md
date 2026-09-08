@@ -14,11 +14,15 @@ The website now opens with an **animated visual homepage**: follow a request thr
 
 [Open the public learning portfolio](https://llm-serving-observatory.siva-babu.chatgpt.site).
 
-The temporary public website includes the animated tour, serving/memory/token concepts, four full-size architecture diagrams and links to this repository. **Live AI chat is coming with OCI deployment.** This static export does not host FastAPI, llama.cpp, the interactive lab, authentication, request history, live metrics or dashboards. ChatGPT Sites supplies hosting, not ChatGPT-powered answers. No OCI resources are created by publishing it.
+**[Serving Academy: learn end to end](https://llm-serving-observatory.siva-babu.chatgpt.site/learn/)** adds 20 ordered modules, 20 self-checks, a control/request/operations map, per-module observability and practice briefs, and four browser exercises. Search for a concept or filter Foundations → Engine → Scale → Operate → Applications. No account, model or GPU is required for the public lessons.
+
+New coverage includes model/artifact lifecycle, tokenization/sampling, continuous batching, chunked prefill, paged/prefix/offloaded KV, quantization/kernels/speculative decoding, parallelism/topology, OCI/Kubernetes infrastructure, routing/autoscaling, SLOs, recovery, security, RAG/tools, multimodal/LoRA/MoE, quality releases and cost. See the [learning path and capstone checklist](docs/learning-path.md).
+
+The public website includes the academy, animated tour, four full-size architecture diagrams and links to this repository. **Live AI chat is coming with OCI deployment.** The academy's memory, latency, token-ledger and bounded-queue/SLO/cost exercises are analytical or simulated. This static export does not host FastAPI, llama.cpp, the private experiment lab, authentication, request history, live metrics or dashboards. ChatGPT Sites supplies hosting, not ChatGPT-powered answers. No OCI resources are created by publishing it.
 
 Build with `python scripts/build_portfolio.py`; preview with `python -m http.server 8766 --bind 127.0.0.1 --directory dist`. Only allowlisted public assets enter `dist/`. See [Sites publishing and the OCI transition](docs/sites-publishing.md). GitHub pushes validate the export but do **not** automatically redeploy Sites.
 
-Documentation: [Architecture](docs/architecture.md) · [Observability contract](docs/observability.md) · [Phoenix service runbook](docs/servingops-runbook.md) · [Portfolio walkthrough](docs/portfolio-walkthrough.md) · [Validation evidence](reports/validation.md).
+Documentation: [Learning path](docs/learning-path.md) · [Architecture](docs/architecture.md) · [Observability contract](docs/observability.md) · [Phoenix service runbook](docs/servingops-runbook.md) · [Portfolio walkthrough](docs/portfolio-walkthrough.md) · [Validation evidence](reports/validation.md).
 
 ## New: ServingOps Cloud — real traffic on Phoenix Free Tier
 
@@ -196,6 +200,7 @@ node --check observatory/static/hardware.js
 node --check observatory/static/assistant.js
 node --check observatory/static/home.js
 node --test tests/home-tour.test.cjs
+node --test tests/academy.test.cjs
 python scripts/build_portfolio.py
 python scripts/evaluate_retrieval.py
 terraform -chdir=infra/oci init -backend=false
@@ -210,7 +215,7 @@ infra/oci/               Terraform and Ubuntu cloud-init
 scripts/                 Model download, real CPU/public-edge smokes, retrieval eval, lab/OCI tools
 tests/                   Python service/security checks and Node homepage-animation tests
 docs/                    Architecture, measurements, Phoenix service/OCI/GPU runbooks, portfolio guide
-sites/                   Public-portfolio styling; export reuses the animated homepage
+sites/                   Reviewed curriculum, academy template/styles and pure browser teaching models
 .openai/hosting.json      Sites project binding and static-output configuration (no credentials)
 .github/workflows/       Python/Node checks, real CPU inference, public edge, telemetry, Terraform
 ```

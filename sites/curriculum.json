@@ -1,0 +1,845 @@
+{
+  "version": 1,
+  "reviewed": "2026-09-08",
+  "sources": {
+    "modelcard": {
+      "title": "Model cards · Hugging Face",
+      "url": "https://huggingface.co/docs/hub/en/model-cards"
+    },
+    "template": {
+      "title": "Chat templates · Hugging Face",
+      "url": "https://huggingface.co/docs/transformers/en/chat_templating"
+    },
+    "generation": {
+      "title": "Generation strategies · Hugging Face",
+      "url": "https://huggingface.co/docs/transformers/en/generation_strategies"
+    },
+    "vllm": {
+      "title": "Engine optimization · vLLM",
+      "url": "https://docs.vllm.ai/en/latest/configuration/optimization/"
+    },
+    "paged": {
+      "title": "PagedAttention paper",
+      "url": "https://arxiv.org/abs/2309.06180"
+    },
+    "prefix": {
+      "title": "Prefix caching · vLLM",
+      "url": "https://docs.vllm.ai/en/latest/features/automatic_prefix_caching/"
+    },
+    "flash": {
+      "title": "FlashAttention paper",
+      "url": "https://arxiv.org/abs/2205.14135"
+    },
+    "spec": {
+      "title": "Speculative decoding paper",
+      "url": "https://arxiv.org/abs/2211.17192"
+    },
+    "parallel": {
+      "title": "TensorRT-LLM serving · NVIDIA",
+      "url": "https://docs.nvidia.com/deeplearning/triton-inference-server/user-guide/docs/tensorrtllm_backend/README.html"
+    },
+    "disagg": {
+      "title": "DistServe paper",
+      "url": "https://arxiv.org/abs/2401.09670"
+    },
+    "oci": {
+      "title": "VCN security · Oracle",
+      "url": "https://docs.oracle.com/en-us/iaas/Content/Security/Reference/networking_security.htm"
+    },
+    "free": {
+      "title": "Always Free resources · Oracle",
+      "url": "https://docs.oracle.com/en-us/iaas/Content/FreeTier/freetier_topic-Always_Free_Resources.htm"
+    },
+    "probes": {
+      "title": "Health probes · Kubernetes",
+      "url": "https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/"
+    },
+    "hpa": {
+      "title": "Horizontal autoscaling · Kubernetes",
+      "url": "https://kubernetes.io/docs/concepts/workloads/autoscaling/horizontal-pod-autoscale/"
+    },
+    "otel": {
+      "title": "GenAI semantic conventions · OpenTelemetry",
+      "url": "https://github.com/open-telemetry/semantic-conventions-genai"
+    },
+    "bench": {
+      "title": "Serving benchmarks · vLLM",
+      "url": "https://docs.vllm.ai/en/latest/cli/bench/serve/"
+    },
+    "slo": {
+      "title": "Alerting on SLOs · Google SRE",
+      "url": "https://sre.google/workbook/alerting-on-slos/"
+    },
+    "release": {
+      "title": "Canarying releases · Google SRE",
+      "url": "https://sre.google/workbook/canarying-releases/"
+    },
+    "security": {
+      "title": "LLM application security · OWASP",
+      "url": "https://owasp.org/www-project-top-10-for-large-language-model-applications/"
+    }
+  },
+  "tracks": [
+    "Foundations",
+    "Engine",
+    "Scale",
+    "Operate",
+    "Applications"
+  ],
+  "lessons": [
+    {
+      "id": "service-contract",
+      "title": "Define the service before choosing a GPU",
+      "track": "Foundations",
+      "summary": "An interactive chat, an overnight batch job and an embedding endpoint need different serving contracts.",
+      "concepts": [
+        {
+          "term": "Workload",
+          "detail": "Record prompt/output length distributions, arrival bursts, concurrency, languages and privacy needs."
+        },
+        {
+          "term": "Online vs offline",
+          "detail": "Interactive serving optimizes waiting and streaming; offline jobs prioritize completion windows and throughput."
+        },
+        {
+          "term": "SLO",
+          "detail": "A service-level objective describes a user outcome over a stated window. Availability, latency and answer quality are separate."
+        }
+      ],
+      "signals": "Measure request mix, admission failures and first-output/whole-response latency by bounded workload class.",
+      "pitfall": "Fast tokens are not useful if the answer is wrong or most visitors are rejected.",
+      "exercise": "Write a one-page contract: audience, model task, context/output limits, latency targets, quality gate and monthly spending ceiling.",
+      "quiz": {
+        "question": "Does a high tokens/sec result prove a good chat experience?",
+        "choices": [
+          "No: latency, errors and quality also matter.",
+          "Yes, throughput is the only user metric.",
+          "Only when using a GPU."
+        ],
+        "answer": 0,
+        "explanation": "Throughput is a system metric. Define the user-visible outcome and its denominator before optimizing."
+      },
+      "sources": [
+        "bench",
+        "slo"
+      ],
+      "prerequisite": null
+    },
+    {
+      "id": "model-artifacts",
+      "title": "Ship a model as a versioned artifact",
+      "track": "Foundations",
+      "summary": "A model is more than a weight file: reproducibility depends on everything that interprets it.",
+      "concepts": [
+        {
+          "term": "Model selection",
+          "detail": "Compare task quality, license, context support and the runtime's supported model architecture."
+        },
+        {
+          "term": "Artifact bundle",
+          "detail": "Pin weight checksum, tokenizer, chat template, model configuration, quantization format and engine/container version."
+        },
+        {
+          "term": "Cold start",
+          "detail": "Download, read, load, compile or capture kernels, warm up, then pass readiness before receiving traffic."
+        }
+      ],
+      "signals": "Track load/warm-up time, artifact failures, ready replicas and deployed model/engine versions.",
+      "pitfall": "A compatible HTTP API does not guarantee the same tokenizer, sampling, usage fields or model quality.",
+      "exercise": "Inspect the repository's pinned model downloader and CPU profile. Record their checksums and explain a safe rollback.",
+      "quiz": {
+        "question": "What belongs with the weights in a reproducible release?",
+        "choices": [
+          "Only a model name.",
+          "Tokenizer, template, configuration and engine version.",
+          "A screenshot of an answer."
+        ],
+        "answer": 1,
+        "explanation": "The same bytes can behave differently under a different template, tokenizer or runtime."
+      },
+      "sources": [
+        "modelcard",
+        "probes"
+      ],
+      "prerequisite": "service-contract"
+    },
+    {
+      "id": "tokens-sampling",
+      "title": "Tokens, context and generation controls",
+      "track": "Foundations",
+      "summary": "The model sees token IDs, not words. The serialized conversation must fit its context budget.",
+      "concepts": [
+        {
+          "term": "Tokenization + templates",
+          "detail": "Roles, system instructions, tools and retrieved text consume input tokens. A token is not a word or necessarily one streamed chunk."
+        },
+        {
+          "term": "Sampling",
+          "detail": "Temperature changes probability sharpness; top-k/top-p restrict candidates. Stop sequences, EOS and output caps determine termination."
+        },
+        {
+          "term": "Token ledger",
+          "detail": "Cached tokens are part of input; reported reasoning tokens are part of output. Unsupported details stay unknown. Extended tokens is not a universal field."
+        }
+      ],
+      "signals": "Track input/output distributions, context-limit errors, stop reasons and missing-usage rate without logging hidden reasoning.",
+      "pitfall": "Adding cached input or reasoning a second time inflates total usage; visible words cannot reconstruct true token counts.",
+      "exercise": "Use the token ledger below. Then compare two chat templates locally and count the serialized prompt with the actual tokenizer.",
+      "quiz": {
+        "question": "Input 1,000 (400 cached), output 200 (50 reasoning): total?",
+        "choices": [
+          "1,650",
+          "1,250",
+          "1,200"
+        ],
+        "answer": 2,
+        "explanation": "Total is input + output. Both cached input and reasoning are overlapping subsets."
+      },
+      "sources": [
+        "template",
+        "generation"
+      ],
+      "prerequisite": "model-artifacts"
+    },
+    {
+      "id": "request-lifecycle",
+      "title": "Prefill, decode and the streaming boundary",
+      "track": "Foundations",
+      "summary": "Follow one request through the gateway, queue, model and network before drawing a latency conclusion.",
+      "concepts": [
+        {
+          "term": "Prefill",
+          "detail": "Process the input and build attention state. The final prompt position can already provide logits for the first generated token."
+        },
+        {
+          "term": "Decode",
+          "detail": "Generate subsequent tokens using cached state. Prefill is often compute-heavy; small-batch decode is often bandwidth-sensitive, not universally so."
+        },
+        {
+          "term": "TTFT / TPOT / ITL",
+          "detail": "TTFT stops at first visible content. TPOT is an average over output intervals; ITL measures individual token gaps only when token boundaries are known."
+        }
+      ],
+      "signals": "Capture client and server clocks separately, queue/prefill durations, stream gaps, cancellations and end-to-end completion.",
+      "pitfall": "Do not sum nested spans, subtract timestamps from different machines or equate an SSE chunk to one token.",
+      "exercise": "Play the homepage tour, then use the latency budget below to distinguish queue delay from KV-transfer delay.",
+      "quiz": {
+        "question": "A proxy buffers the response. Which latency can worsen without slower model execution?",
+        "choices": [
+          "Client-observed TTFT.",
+          "Weight memory capacity.",
+          "Tokenizer vocabulary size."
+        ],
+        "answer": 0,
+        "explanation": "Client TTFT includes transport and buffering outside the engine's timing boundary."
+      },
+      "sources": [
+        "disagg",
+        "otel"
+      ],
+      "prerequisite": "tokens-sampling"
+    },
+    {
+      "id": "memory",
+      "title": "CPU, GPU and the full memory budget",
+      "track": "Engine",
+      "summary": "Capacity asks whether it fits; bandwidth asks how quickly bytes move; compute asks how fast the math runs.",
+      "concepts": [
+        {
+          "term": "Memory hierarchy",
+          "detail": "CPU cores use caches and host DRAM. GPU compute uses on-chip storage plus device memory such as HBM or GDDR. PCIe/NVLink are links, not memory capacity."
+        },
+        {
+          "term": "Weights + KV + workspace",
+          "detail": "Budget weights, active KV, temporary activations/workspace and runtime overhead. Quantized weights do not imply quantized KV."
+        },
+        {
+          "term": "Attention architectures",
+          "detail": "MHA, GQA and MQA have different KV-head counts. MLA, sliding windows and hybrid state-space models need different accounting."
+        }
+      ],
+      "signals": "Observe process RSS/cgroups and CPU throttling; on GPU hosts add device memory, compute activity, bandwidth, power and thermal throttling.",
+      "pitfall": "A1 has CPU and host RAM, not a GPU or HBM. A theoretical memory bound is not utilization or achieved tokens/sec.",
+      "exercise": "Change context and concurrent sequences in the memory calculator. Explain why KV grows while weight memory stays fixed.",
+      "quiz": {
+        "question": "Halving weight precision necessarily halves KV memory?",
+        "choices": [
+          "Yes, always.",
+          "No; KV precision is independent.",
+          "Only on ARM."
+        ],
+        "answer": 1,
+        "explanation": "Weights and KV have separate formats. The calculation also needs attention architecture and sequence lengths."
+      },
+      "sources": [
+        "paged",
+        "flash"
+      ],
+      "prerequisite": "request-lifecycle"
+    },
+    {
+      "id": "batching",
+      "title": "Admission, continuous batching and fairness",
+      "track": "Engine",
+      "summary": "The scheduler decides who waits and which requests share the next execution step.",
+      "concepts": [
+        {
+          "term": "Admission control",
+          "detail": "Bound running work, queued work, input length and output reservation. Reject overload early instead of building an unbounded queue."
+        },
+        {
+          "term": "Continuous batching",
+          "detail": "An engine can retire finished sequences and admit new ones between iterations, unlike a fixed batch that waits for its slowest member."
+        },
+        {
+          "term": "Chunked prefill",
+          "detail": "Split long prompt work into smaller scheduling units to reduce interference with ongoing decode; tune against both TTFT and token-gap targets."
+        }
+      ],
+      "signals": "Watch queue age/depth, active sequences, scheduled tokens per step, preemptions and tenant fairness.",
+      "pitfall": "A bigger batch can increase throughput and worsen latency. CPU usage alone does not explain scheduler pressure.",
+      "exercise": "Use the traffic exercise below to see bounded admission. For real continuous batching, compare an engine with equal hardware and a fixed workload.",
+      "quiz": {
+        "question": "Why split a long prefill into chunks?",
+        "choices": [
+          "To remove all prompt tokens.",
+          "To guarantee lower latency for every request.",
+          "To limit how long prompt work interferes with other work."
+        ],
+        "answer": 2,
+        "explanation": "Chunking is a scheduling tradeoff. It is not an unconditional speedup."
+      },
+      "sources": [
+        "vllm"
+      ],
+      "prerequisite": "memory"
+    },
+    {
+      "id": "caching",
+      "title": "Paged KV, prefix reuse and cache eviction",
+      "track": "Engine",
+      "summary": "Cache mechanisms reuse different things. Keep their keys, lifetimes and correctness rules distinct.",
+      "concepts": [
+        {
+          "term": "Paged KV",
+          "detail": "Allocate token state in blocks and map logical sequence positions to physical storage. This reduces waste; it is not disk paging by definition."
+        },
+        {
+          "term": "Prefix caching",
+          "detail": "Reuse compatible state for an identical prefix. A warm prefix can reduce prefill work but does not eliminate generation for a new answer."
+        },
+        {
+          "term": "Response cache + offload",
+          "detail": "A response cache reuses answers and needs freshness/tenant rules. KV offload moves state to another memory tier and trades capacity for transfer cost."
+        }
+      ],
+      "signals": "Measure prefix hit tokens, misses, evictions, allocated/free blocks, recomputation and offload bytes/latency.",
+      "pitfall": "Cache keys must account for model, adapter, tokenization and isolation. Semantic similarity alone cannot establish identical KV state.",
+      "exercise": "Compare cold and warm prefixes locally. Change the model or adapter and explain why blindly reusing state would be unsafe.",
+      "quiz": {
+        "question": "Does PagedAttention mean KV is always stored on disk?",
+        "choices": [
+          "No; it is a block-based memory-management approach.",
+          "Yes; it requires swap.",
+          "Yes; every token uses object storage."
+        ],
+        "answer": 0,
+        "explanation": "Paging describes logical-to-physical block mapping; offload is a separate capability."
+      },
+      "sources": [
+        "paged",
+        "prefix"
+      ],
+      "prerequisite": "batching"
+    },
+    {
+      "id": "optimization",
+      "title": "Kernels, quantization and speculative decoding",
+      "track": "Engine",
+      "summary": "Optimize the bottleneck you measured, then retest quality and workload-wide performance.",
+      "concepts": [
+        {
+          "term": "Kernel efficiency",
+          "detail": "Fusion and graph capture can reduce launch overhead. FlashAttention reduces attention-related memory traffic through tiling; it is not prefix caching."
+        },
+        {
+          "term": "Quantization",
+          "detail": "Lower-precision weights or KV can reduce memory. Kernel support, metadata and accuracy determine the real benefit."
+        },
+        {
+          "term": "Speculative decoding",
+          "detail": "A draft proposes tokens and a target verifies them. Exact methods preserve the target distribution under their assumptions; draft cost and acceptance determine speedup."
+        }
+      ],
+      "signals": "Profile kernel time and memory traffic; report speculative acceptance, draft/verify cost, decode latency and quality regressions.",
+      "pitfall": "Do not quote a paper's speedup as your benchmark. A draft model adds memory and may make an unsuitable workload slower.",
+      "exercise": "List the baseline, one optimization, equal resource budget and quality gate. Treat the public calculators as hypotheses, not a kernel benchmark.",
+      "quiz": {
+        "question": "What does low draft acceptance tend to do?",
+        "choices": [
+          "Make verification free.",
+          "Waste more proposal work and reduce potential speedup.",
+          "Remove the need for the target model."
+        ],
+        "answer": 1,
+        "explanation": "Rejected proposals still cost work. Measure net end-to-end performance, not just acceptance."
+      },
+      "sources": [
+        "flash",
+        "spec"
+      ],
+      "prerequisite": "caching"
+    },
+    {
+      "id": "parallelism",
+      "title": "Replicas, sharding and GPU topology",
+      "track": "Scale",
+      "summary": "More devices can add replicas or split one model. These are different scaling strategies.",
+      "concepts": [
+        {
+          "term": "Data / tensor / pipeline",
+          "detail": "Data parallelism replicates serving capacity; tensor parallelism splits layer math; pipeline parallelism assigns different layers or stages to devices."
+        },
+        {
+          "term": "Expert / context",
+          "detail": "Expert parallelism distributes MoE experts; context parallelism splits long-sequence work. Communication patterns differ."
+        },
+        {
+          "term": "Topology",
+          "detail": "Collectives such as all-reduce/all-to-all depend on PCIe, NVLink, NIC placement and inter-node networking. NUMA locality also matters on CPU hosts."
+        }
+      ],
+      "signals": "Measure collective time, link bandwidth, imbalance, per-rank memory and tokens/sec per device.",
+      "pitfall": "Two GPUs do not automatically double speed. A model split across ranks can fail when one rank or link fails.",
+      "exercise": "Draw one replicated model versus one tensor-sharded model. Identify which can survive losing one instance without rebuilding a distributed group.",
+      "quiz": {
+        "question": "Which choice splits a layer's computation across devices?",
+        "choices": [
+          "Data parallel replication.",
+          "An HTTP load balancer.",
+          "Tensor parallelism."
+        ],
+        "answer": 2,
+        "explanation": "Tensor parallelism shards within model computation and introduces synchronization."
+      },
+      "sources": [
+        "parallel"
+      ],
+      "prerequisite": "optimization"
+    },
+    {
+      "id": "disaggregation",
+      "title": "Separate prefill and decode deliberately",
+      "track": "Scale",
+      "summary": "Disaggregated serving gives each phase its own capacity pool, but makes the cache handoff a distributed-system problem.",
+      "concepts": [
+        {
+          "term": "Separate pools",
+          "detail": "Tune prefill and decode capacity independently and reduce interference between their workload shapes."
+        },
+        {
+          "term": "KV transfer",
+          "detail": "Move compatible attention state, plus ownership/position metadata, to the selected decode worker. Serialization, setup and link contention add cost."
+        },
+        {
+          "term": "Transfer correctness",
+          "detail": "Track destination readiness, cache lifecycle, retries and failed/partial transfers. RDMA or NIXL support is engine- and deployment-specific."
+        }
+      ],
+      "signals": "Observe prefill/decode queue imbalance, transfer size/time/failure, cache residency and goodput under both latency targets.",
+      "pitfall": "Disaggregation is not always faster. Compare against a combined baseline using the same total hardware budget.",
+      "exercise": "Move the bandwidth slider below. The repository lab models a handoff; only a real compatible multi-worker engine can prove tensor transport.",
+      "quiz": {
+        "question": "When can disaggregation be worse?",
+        "choices": [
+          "When handoff and coordination costs outweigh separation benefits.",
+          "Never; it is always faster.",
+          "Only when output has zero words."
+        ],
+        "answer": 0,
+        "explanation": "Placement, workload and link behavior determine whether separation is worth its cost."
+      },
+      "sources": [
+        "disagg"
+      ],
+      "prerequisite": "parallelism"
+    },
+    {
+      "id": "infrastructure",
+      "title": "From a laptop to an OCI or GPU cluster",
+      "track": "Scale",
+      "summary": "Understand the infrastructure beneath the model before adding an orchestrator.",
+      "concepts": [
+        {
+          "term": "Compute + storage",
+          "detail": "Choose CPU/GPU shape, RAM/device memory, model storage, image registry and driver/runtime compatibility. Cache model downloads and budget startup I/O."
+        },
+        {
+          "term": "Network + identity",
+          "detail": "Use VCN/subnets, routes, NSGs/firewall rules, DNS, TLS and least-privilege IAM. Keep model and operator endpoints private."
+        },
+        {
+          "term": "Orchestration",
+          "detail": "Containers isolate processes; Kubernetes adds scheduling, resource requests/limits, GPU device plugins, placement and health management. It is optional for one VM."
+        }
+      ],
+      "signals": "Monitor node health, disk space/I/O, network failures, CPU quotas, ready capacity, failed scheduling and regional quota/capacity errors.",
+      "pitfall": "Free Tier eligibility is not a guarantee of available capacity. Do not provision a paid GPU or managed cluster implicitly.",
+      "exercise": "Trace internet → HTTPS → private gateway/model on the Phoenix diagram. Mark every port, trust boundary and storage volume before applying Terraform.",
+      "quiz": {
+        "question": "Does learning Kubernetes require deploying it on your A1 VM now?",
+        "choices": [
+          "Yes, every model needs Kubernetes.",
+          "No; learn the design while running the one-VM profile.",
+          "Only if the model is quantized."
+        ],
+        "answer": 1,
+        "explanation": "Use infrastructure proportional to the workload. The current OCI blueprint remains one CPU VM."
+      },
+      "sources": [
+        "oci",
+        "free"
+      ],
+      "prerequisite": "disaggregation"
+    },
+    {
+      "id": "routing-scaling",
+      "title": "Routing, readiness and autoscaling",
+      "track": "Scale",
+      "summary": "A running process is not necessarily ready to answer. A new replica is not immediately useful capacity.",
+      "concepts": [
+        {
+          "term": "Routing",
+          "detail": "Balance queue pressure and locality. Cache-aware routing may improve reuse but can overload a popular replica; tenancy and fairness still apply."
+        },
+        {
+          "term": "Probes",
+          "detail": "Startup probes allow loading time, readiness gates traffic, and liveness detects a stuck process. A normal long request is not automatically a liveness failure."
+        },
+        {
+          "term": "Scaling",
+          "detail": "Combine arrival load, queued tokens, active sequences and latency with measured capacity. Account for warm-up, cooldown, scale-to-zero delay and stream draining."
+        }
+      ],
+      "signals": "Compare desired/ready replicas, oldest queue age, cold starts, load imbalance and scale-down cancellations.",
+      "pitfall": "Autoscaling cannot fix exhausted regional capacity or an unavailable model artifact; CPU-only triggers may miss GPU bottlenecks.",
+      "exercise": "Write a scale-out trigger and a safe scale-in procedure. Explain why removing a worker halfway through a stream is risky.",
+      "quiz": {
+        "question": "Which probe should stop traffic to a model that is still loading?",
+        "choices": [
+          "An unrelated DNS check.",
+          "A token counter.",
+          "Readiness, with startup protection for loading."
+        ],
+        "answer": 2,
+        "explanation": "Readiness controls traffic eligibility; startup checks prevent premature liveness restarts."
+      },
+      "sources": [
+        "probes",
+        "hpa"
+      ],
+      "prerequisite": "infrastructure"
+    },
+    {
+      "id": "observability",
+      "title": "Metrics, traces, logs and profiling",
+      "track": "Operate",
+      "summary": "Use signals from every layer, and keep evidence types and clocks explicit.",
+      "concepts": [
+        {
+          "term": "Metrics",
+          "detail": "Use latency histograms, error/admission counters, token rates, queue gauges and memory signals. Bound labels; request IDs and prompt text do not belong in metric labels."
+        },
+        {
+          "term": "Traces + logs",
+          "detail": "Propagate trace context through gateway, retrieval and engine boundaries. Redact content and secrets; sample with an explicit policy. One trace can explain what aggregate charts cannot."
+        },
+        {
+          "term": "Profiling + provenance",
+          "detail": "Profiles explain CPU/kernel hotspots. Tag results as measured, reported, simulated or analytical; record exporter and semantic-convention versions."
+        }
+      ],
+      "signals": "Start with user outcome → admission/queue → model → hardware → dependency. Monitor telemetry loss and the monitoring system itself.",
+      "pitfall": "Missing GPU or reasoning fields are unknown, not zero. Gateway duration does not reveal engine-internal prefill without instrumentation.",
+      "exercise": "Use the signal map below to choose the first dashboard and trace for a slow request. Then compare the repository's assistant_* and lab_* contracts.",
+      "quiz": {
+        "question": "Should a prompt or unique request ID be a Prometheus label?",
+        "choices": [
+          "No; it leaks content and/or creates unbounded cardinality.",
+          "Yes, it makes every chart faster.",
+          "Only for large models."
+        ],
+        "answer": 0,
+        "explanation": "Use redacted, access-controlled traces/logs for per-request detail and bounded metric dimensions for aggregation."
+      },
+      "sources": [
+        "otel"
+      ],
+      "prerequisite": "routing-scaling"
+    },
+    {
+      "id": "benchmark-slo",
+      "title": "Load tests, percentiles and error budgets",
+      "track": "Operate",
+      "summary": "A benchmark is a controlled experiment, not one impressive screenshot.",
+      "concepts": [
+        {
+          "term": "Load generation",
+          "detail": "Closed-loop workers slow their arrivals when the service slows. Open-loop arrivals expose queue buildup; record the offered and accepted workload."
+        },
+        {
+          "term": "Latency + goodput",
+          "detail": "Report sample size, warm-up/cache state, p50/p95/p99, errors and successful throughput. Goodput counts requests that meet all defined SLO conditions per wall-clock second."
+        },
+        {
+          "term": "Error budget",
+          "detail": "Define eligible events and the evaluation window. Multiwindow burn-rate alerts distinguish urgent failures from low-rate noise."
+        }
+      ],
+      "signals": "Measure rejected, failed, timed-out, cancelled and SLO-violating requests, not just successful streams.",
+      "pitfall": "A small-sample p99 is unstable. Combining different hardware or warm-cache states invalidates a simple speedup claim.",
+      "exercise": "Use the traffic exercise, then create a real test matrix: short/long inputs, short/long outputs, burst/steady load, cold/warm cache and repeated runs.",
+      "quiz": {
+        "question": "Should failed requests vanish from a latency/availability report?",
+        "choices": [
+          "Yes, only successes are interesting.",
+          "No; report failures and their denominators explicitly.",
+          "Only under heavy load."
+        ],
+        "answer": 1,
+        "explanation": "Successful latency alone can improve while the system rejects more visitors."
+      },
+      "sources": [
+        "bench",
+        "slo"
+      ],
+      "prerequisite": "observability"
+    },
+    {
+      "id": "reliability",
+      "title": "Timeouts, overload and recovery",
+      "track": "Operate",
+      "summary": "Design the unhappy path before opening the service to strangers.",
+      "concepts": [
+        {
+          "term": "Bounded work",
+          "detail": "Apply deadlines, cancellation, output caps, queue limits and backpressure. Stop expensive model work when a client disconnects when the engine supports it."
+        },
+        {
+          "term": "Safe retries",
+          "detail": "Use bounded retry budgets and jitter. A partially delivered stream or side-effecting tool call cannot be blindly replayed; use idempotency where supported."
+        },
+        {
+          "term": "Recovery",
+          "detail": "Drain requests during rollout, test backup restoration, define RPO/RTO and distinguish one-node recovery from multi-zone high availability."
+        }
+      ],
+      "signals": "Track cancellations, abandoned admissions, retry amplification, OOM/restarts, recovery time and backup/restore outcomes.",
+      "pitfall": "Restarting endlessly is not resilience. Circuit breakers and load shedding protect dependencies but need explicit recovery behavior.",
+      "exercise": "Tabletop a model crash during streaming. Specify what the user sees, how quota is reconciled and how the operator verifies recovery.",
+      "quiz": {
+        "question": "After half an answer is delivered, should the gateway silently retry forever?",
+        "choices": [
+          "Yes; retries are always safe.",
+          "Yes, if the model is small.",
+          "No; partial output and repeated work need explicit policy."
+        ],
+        "answer": 2,
+        "explanation": "A retry may duplicate content, cost or tool side effects. Bound it and surface the outcome."
+      },
+      "sources": [
+        "probes",
+        "release"
+      ],
+      "prerequisite": "benchmark-slo"
+    },
+    {
+      "id": "security",
+      "title": "Security, privacy and tenant isolation",
+      "track": "Operate",
+      "summary": "Treat public prompts, retrieved documents and model output as untrusted data.",
+      "concepts": [
+        {
+          "term": "Service protection",
+          "detail": "Use TLS, authentication/authorization, secret rotation, quotas, body/context limits, network isolation and audited administrative actions."
+        },
+        {
+          "term": "LLM-specific threats",
+          "detail": "Prompt injection, retrieval poisoning, unsafe output use and excessive tool permissions require controls outside the model."
+        },
+        {
+          "term": "Isolation + retention",
+          "detail": "Enforce tenant access before retrieval/cache reuse. Minimize content collection, define retention/deletion and protect model artifacts and logs."
+        }
+      ],
+      "signals": "Monitor denied access, abuse patterns, quota anomalies and audit events without placing secrets or personal text in telemetry.",
+      "pitfall": "A safety instruction is not an authorization boundary. Schema-valid JSON is not safe shell code or a trusted database operation.",
+      "exercise": "Threat-model one tenant trying to read another tenant's document/cache. Mark each enforceable access check outside the model.",
+      "quiz": {
+        "question": "Can a system prompt replace authorization on a tool?",
+        "choices": [
+          "No; the tool must enforce permissions independently.",
+          "Yes, with enough capital letters.",
+          "Yes, if temperature is zero."
+        ],
+        "answer": 0,
+        "explanation": "Models can be manipulated or mistaken. The receiving system must validate identity, scope and inputs."
+      },
+      "sources": [
+        "security"
+      ],
+      "prerequisite": "reliability"
+    },
+    {
+      "id": "rag-agents",
+      "title": "RAG, structured outputs and tool workflows",
+      "track": "Applications",
+      "summary": "A model call may be only one step in a larger request.",
+      "concepts": [
+        {
+          "term": "RAG",
+          "detail": "Ingest, chunk, embed/index, retrieve and optionally rerank authorized material. Context assembly adds tokens and latency; retrieval is not model training."
+        },
+        {
+          "term": "Structured output",
+          "detail": "Constrain and validate the output schema, then validate meaning and allowed values. Parse failures and factual errors are different."
+        },
+        {
+          "term": "Tools + agents",
+          "detail": "Tool calls add dependency latency, permissions, retries and possible side effects. Bound iteration count, execution time and total token/tool spend."
+        }
+      ],
+      "signals": "Track retrieval latency/recall, empty results, grounded-answer quality, parse failures, tool errors and per-step token/cost totals.",
+      "pitfall": "An answer with citation IDs is not necessarily supported by the sources. Retrieved text must not become privileged instructions.",
+      "exercise": "Compare the repository's lexical retrieval with a proposed vector pipeline. Write an authorization check and evaluation set before adding uploads/tools.",
+      "quiz": {
+        "question": "Does RAG update the model weights for each document?",
+        "choices": [
+          "Yes, automatically.",
+          "No; it supplies retrieved context at inference time.",
+          "Only when citations are returned."
+        ],
+        "answer": 1,
+        "explanation": "Retrieval changes context, not weights. Fine-tuning is a separate lifecycle."
+      },
+      "sources": [
+        "security",
+        "template"
+      ],
+      "prerequisite": "security"
+    },
+    {
+      "id": "specialized-models",
+      "title": "Multimodal, LoRA and mixture-of-experts",
+      "track": "Applications",
+      "summary": "Text-only dense-model assumptions do not cover every serving workload.",
+      "concepts": [
+        {
+          "term": "Multimodal",
+          "detail": "Images/audio/video may require decoding, resizing, feature encoders and separate queues. Their token accounting and TTFT boundary are model/provider-specific."
+        },
+        {
+          "term": "LoRA / multi-model",
+          "detail": "Adapters specialize a base model without replacing all weights. Loading, caching, routing and isolating adapters introduce additional state."
+        },
+        {
+          "term": "MoE",
+          "detail": "Only selected experts execute for a token, but inactive experts may still occupy memory. Expert placement and routing imbalance can dominate communication."
+        }
+      ],
+      "signals": "Measure preprocessing/encoder latency, media-size limits, adapter load/cache misses, per-expert imbalance and memory residency.",
+      "pitfall": "Active parameter count is not the same as resident weight memory. Text-token estimates do not automatically price images or audio.",
+      "exercise": "Draw the extra stages for a screenshot question, then list how its telemetry and limits differ from text-only serving.",
+      "quiz": {
+        "question": "An MoE activates a fraction of experts. Can you budget only active weights in memory?",
+        "choices": [
+          "Yes, always.",
+          "Yes, regardless of offload.",
+          "No; resident experts and the deployment strategy determine memory."
+        ],
+        "answer": 2,
+        "explanation": "Execution sparsity and memory residency are different; offload adds its own costs."
+      },
+      "sources": [
+        "parallel"
+      ],
+      "prerequisite": "rag-agents"
+    },
+    {
+      "id": "evaluation-release",
+      "title": "Quality gates and safe model releases",
+      "track": "Applications",
+      "summary": "A service can stay fast and available while its answers get worse.",
+      "concepts": [
+        {
+          "term": "Evaluation",
+          "detail": "Use held-out, task-specific cases for correctness, groundedness, safety, structured output and tool success. Human or model judging needs calibration and error analysis."
+        },
+        {
+          "term": "Release tuple",
+          "detail": "Version model, tokenizer, template, adapter, corpus, engine and policy together. Quantization or prompt changes are behavior changes."
+        },
+        {
+          "term": "Canary + rollback",
+          "detail": "Compare a limited rollout with a control on quality, latency, errors and cost. Shadow traffic has privacy/cost implications; obtain the right authorization."
+        }
+      ],
+      "signals": "Track quality by workload slice, regression rates, truncation/invalid citations, canary divergence and rollback time.",
+      "pitfall": "Passing retrieval fixtures or emitting a valid citation ID is not proof of answer quality. Avoid evaluating only on training examples.",
+      "exercise": "Create a release checklist with ten held-out questions, failure examples, latency/cost limits and a tested rollback to a pinned artifact.",
+      "quiz": {
+        "question": "What should block a rollout even if latency improves?",
+        "choices": [
+          "Nothing; speed is enough.",
+          "A material regression in the agreed quality or safety gate.",
+          "A different timestamp on the file."
+        ],
+        "answer": 1,
+        "explanation": "Serving success includes the task outcome, not only a healthy HTTP response."
+      },
+      "sources": [
+        "release",
+        "modelcard"
+      ],
+      "prerequisite": "specialized-models"
+    },
+    {
+      "id": "cost-capstone",
+      "title": "Cost, capacity and an end-to-end capstone",
+      "track": "Applications",
+      "summary": "Optimize cost per useful outcome, including idle capacity and the work that fails.",
+      "concepts": [
+        {
+          "term": "Cost model",
+          "detail": "Include compute hours, storage, network/egress, idle warm replicas, monitoring, retries and external model/tool calls. Use actual prices and billing units."
+        },
+        {
+          "term": "Useful throughput",
+          "detail": "Cost per SLO-compliant completion can rise even when raw tokens/sec improves. Prompt mix, rejection and quality all affect the denominator."
+        },
+        {
+          "term": "Capstone",
+          "detail": "Specify → pin artifacts → secure infrastructure → serve → instrument → load-test → evaluate → release → recover. Save evidence and document limits at every stage."
+        }
+      ],
+      "signals": "Track total spend, allocated versus useful capacity, cost per accepted/SLO-compliant request and budget forecasts. Alerts are not spending caps.",
+      "pitfall": "The public site uses no model API and deploys no OCI resources. A hypothetical cost slider is not an OCI price quote or a free guarantee.",
+      "exercise": "Deliver a reproducible Phoenix CPU demo: architecture, IaC plan, pinned model, threat model, measured receipts, SLO/quality report, restore drill and cost assumptions. GPU/HA work stays optional.",
+      "quiz": {
+        "question": "What is the better cost denominator for an SLO-focused service?",
+        "choices": [
+          "Every token, even from failed work.",
+          "Only GPU utilization.",
+          "Useful completions that meet the defined objective."
+        ],
+        "answer": 2,
+        "explanation": "Include all relevant costs and state which completions qualify. Quality must be evaluated separately."
+      },
+      "sources": [
+        "free",
+        "bench"
+      ],
+      "prerequisite": "evaluation-release"
+    }
+  ]
+}

@@ -9,18 +9,20 @@ This is a public **ChatGPT Sites** publication of the learning portfolio, not a 
 | Surface | ChatGPT Sites portfolio | Full local / future OCI service |
 |---|---|---|
 | Animated request journey | Yes; combined/disaggregated explanatory modes | Yes |
+| Serving Academy `/learn/` | 20 modules, self-checks, four browser exercises and signal map | Static export can be hosted separately; not a FastAPI route |
 | TTFT, tokens, CPU/RAM, GPU/HBM concepts | Read-only explanations and diagrams | Explanations plus private analytical lab |
 | Four architecture diagrams | Public full-size SVGs | Public assets plus application views |
 | Documentation assistant | Explicitly marked coming with OCI | Search; real CPU streaming when configured |
 | Invites, keys, history and quotas | Not packaged; no application data collected | Private identity and admission ledger |
 | Live metrics and traces | None; animation is not measured traffic | Private Prometheus/Grafana/Tempo |
-| Interactive lab and hardware calculator | Not packaged; source links only | Local or SSH-tunneled `/lab` |
+| Private experiment lab and detailed hardware planner | Not packaged; separate simplified academy exercises are public | Local or SSH-tunneled `/lab` |
 
 ```mermaid
 flowchart TB
   Repo[GitHub source + documentation] --> Export[Allowlisted static export]
   Export --> Sites[Public ChatGPT Sites website]
   Sites --> Tour[Animated concepts + architecture diagrams]
+  Sites --> Academy[20 modules + browser exercises + signal map]
   Sites --> Notice[Live AI chat coming with OCI deployment]
   Repo -. separate future deployment .-> OCI[OCI Phoenix eligible A1 VM]
   OCI --> Edge[Public HTTPS + invited assistant]
@@ -42,11 +44,12 @@ python -m http.server 8766 --bind 127.0.0.1 --directory dist
 
 The script reuses `observatory/static/home.html`, its animation and styles. It adapts only the exported copy: service calls-to-action become truthful deployment notices, lab bookmarks no longer redirect to an unavailable API, and the diagram gallery is added. The original FastAPI pages and full functionality are preserved.
 
-`dist/` is ignored by Git. The output is limited to `index.html`, `404.html`, the homepage script/styles, portfolio styles, the icon and four diagrams. Unexpected output files and symlinks fail the build rather than being published. Exact copy-replacement checks fail when the homepage changes incompatibly. Update the export and tests together in that case; do not weaken these checks to hide an error.
+`dist/` is ignored by Git. The output is limited to `index.html`, `404.html`, `learn/index.html`, homepage/portfolio/academy scripts and styles, the icon and four diagrams. The reviewed curriculum is compiled into HTML, not fetched from a server. Unexpected output files and symlinks fail the build rather than being published. Exact copy-replacement checks fail when the homepage changes incompatibly. Update the export and tests together in that case; do not weaken these checks to hide an error.
 
 ```bash
 pytest -q
 node --test tests/home-tour.test.cjs
+node --test tests/academy.test.cjs
 python scripts/build_portfolio.py
 ```
 
