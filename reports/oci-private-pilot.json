@@ -1,0 +1,3106 @@
+{
+  "schema_version": 1,
+  "evidence_type": "measured_private_oci_cpu_pilot",
+  "date_utc": "2026-09-08",
+  "code_commit": "800842e05e409259ed5733ecdff34851daa6edde",
+  "ci_run_url": "https://github.com/sivalinb/llm-serving-observatory/actions/runs/34273067398",
+  "environment": {
+    "region": "us-phoenix-1",
+    "shape": "VM.Standard.A1.Flex",
+    "ocpus": 2,
+    "configured_memory_gb": 12,
+    "architecture": "aarch64",
+    "os": "Oracle Linux 9.8",
+    "host_python": "3.9.25",
+    "docker": "29.8.0",
+    "compose": "5.5.1",
+    "cgroup_version": 2,
+    "selinux": "Enforcing",
+    "profile": "compose.shared.yaml --profile metrics",
+    "shared_host": true,
+    "public_inference": false,
+    "sites_republished": false
+  },
+  "model": {
+    "name": "Qwen2.5-1.5B-Instruct",
+    "quantization": "Q4_K_M",
+    "gguf_bytes": 1117320736,
+    "gguf_sha256": "6a1a2eb6d15622bf3c96857206351ba97e1af16c30d7a74ee38970e434e9407e",
+    "source_revision": "91cad51170dc346986eccefdc2dd33a9da36ead9",
+    "context_tokens": 4096,
+    "parallel_slots": 1,
+    "compute_threads": 1,
+    "max_output_tokens": 64,
+    "deadline_seconds": 90
+  },
+  "runtime_initial": {
+    "utc": "2026-09-08T20:35:15Z",
+    "passed": true,
+    "code_commit": "800842e05e409259ed5733ecdff34851daa6edde"
+  },
+  "receipts": [
+    {
+      "case": "first_request_after_engine_start",
+      "real_cpu_smoke": "passed",
+      "status": "ok",
+      "backend": "selfhosted_cpu",
+      "created": 1788899728.555995,
+      "corpus_version": "serving-guide-2026-09-v1",
+      "reserved_tokens_estimate": 1687,
+      "max_output_tokens": 64,
+      "tokens": {
+        "input": 274,
+        "output": 64,
+        "cached_input": 0,
+        "uncached_input": 274,
+        "reasoning": null,
+        "visible_output": null,
+        "total": 338
+      },
+      "ttft_ms": 31268.180226994446,
+      "duration_ms": 48364.81711298984,
+      "chunk_count": 64,
+      "retrieval_ms": 0.5495219957083464,
+      "citations": "present",
+      "source_ids": [
+        "citations",
+        "latency"
+      ],
+      "finish_reason": "length"
+    },
+    {
+      "case": "identical_warm_prefix_1",
+      "real_cpu_smoke": "passed",
+      "status": "ok",
+      "backend": "selfhosted_cpu",
+      "created": 1788899814.4570181,
+      "corpus_version": "serving-guide-2026-09-v1",
+      "reserved_tokens_estimate": 1687,
+      "max_output_tokens": 64,
+      "tokens": {
+        "input": 274,
+        "output": 64,
+        "cached_input": 273,
+        "uncached_input": 1,
+        "reasoning": null,
+        "visible_output": null,
+        "total": 338
+      },
+      "ttft_ms": 249.77772698912304,
+      "duration_ms": 17235.988665997866,
+      "chunk_count": 64,
+      "retrieval_ms": 0.32068099244497716,
+      "citations": "missing",
+      "source_ids": [
+        "citations",
+        "latency"
+      ],
+      "finish_reason": "length"
+    },
+    {
+      "case": "identical_warm_prefix_2",
+      "real_cpu_smoke": "passed",
+      "status": "ok",
+      "backend": "selfhosted_cpu",
+      "created": 1788899863.80666,
+      "corpus_version": "serving-guide-2026-09-v1",
+      "reserved_tokens_estimate": 1687,
+      "max_output_tokens": 64,
+      "tokens": {
+        "input": 274,
+        "output": 64,
+        "cached_input": 273,
+        "uncached_input": 1,
+        "reasoning": null,
+        "visible_output": null,
+        "total": 338
+      },
+      "ttft_ms": 238.70572999294382,
+      "duration_ms": 17186.611098994035,
+      "chunk_count": 64,
+      "retrieval_ms": 0.740802992368117,
+      "citations": "missing",
+      "source_ids": [
+        "citations",
+        "latency"
+      ],
+      "finish_reason": "length"
+    }
+  ],
+  "token_reconciliation": {
+    "input": 822,
+    "output": 192,
+    "total": 1014,
+    "cached_input_subset": 546,
+    "uncached_input": 276,
+    "engine_processed_prompt_tokens": 276,
+    "engine_generated_tokens": 192,
+    "reasoning_subset": null,
+    "visible_output_subset": null
+  },
+  "resources_during_first_request": {
+    "utc": "2026-09-08T20:36:10.625105+00:00",
+    "containers": {
+      "gateway": {
+        "started_at": "2026-09-08T20:34:53.345805017Z",
+        "health": "healthy",
+        "restarts": 0,
+        "oom_killed": false,
+        "nano_cpus": 250000000,
+        "memory_limit_bytes": 268435456,
+        "memory_swap_limit_bytes": 268435456,
+        "read_only_rootfs": true,
+        "pids_limit": 64,
+        "architecture": "arm64",
+        "image_id": "sha256:6030792f45d42199bd093c16bda97378cdf9eba36c9610b375bc795d3724f874",
+        "image_repo_digests": [
+          "observatory-shared-gateway@sha256:6030792f45d42199bd093c16bda97378cdf9eba36c9610b375bc795d3724f874"
+        ],
+        "cgroup": {
+          "memory.current": "54800384",
+          "memory.max": "268435456",
+          "memory.swap.current": "0",
+          "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0",
+          "cpu.max": "25000 100000",
+          "cpu.stat": "usage_usec 2605601\nuser_usec 2347128\nsystem_usec 258473\nnice_usec 0\ncore_sched.force_idle_usec 0\nnr_periods 345\nnr_throttled 95\nthrottled_usec 6279772\nnr_bursts 0\nburst_usec 0"
+        }
+      },
+      "model": {
+        "started_at": "2026-09-08T20:34:37.539731319Z",
+        "health": "healthy",
+        "restarts": 0,
+        "oom_killed": false,
+        "nano_cpus": 500000000,
+        "memory_limit_bytes": 2684354560,
+        "memory_swap_limit_bytes": 2684354560,
+        "read_only_rootfs": true,
+        "pids_limit": 64,
+        "architecture": "arm64",
+        "image_id": "sha256:6bc9134e3278a0ecab23d7ef2f6a46b4595740014fe9bc2f67e8ba7dca8395b4",
+        "image_repo_digests": [
+          "ghcr.io/ggml-org/llama.cpp@sha256:6bc9134e3278a0ecab23d7ef2f6a46b4595740014fe9bc2f67e8ba7dca8395b4"
+        ],
+        "cgroup": {
+          "memory.current": "1632055296",
+          "memory.max": "2684354560",
+          "memory.swap.current": "0",
+          "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0",
+          "cpu.max": "50000 100000",
+          "cpu.stat": "usage_usec 25035819\nuser_usec 24362288\nsystem_usec 673530\nnice_usec 0\ncore_sched.force_idle_usec 0\nnr_periods 560\nnr_throttled 489\nthrottled_usec 20585763\nnr_bursts 0\nburst_usec 0"
+        }
+      },
+      "prometheus": {
+        "started_at": "2026-09-08T20:34:37.768430577Z",
+        "health": "healthy",
+        "restarts": 0,
+        "oom_killed": false,
+        "nano_cpus": 250000000,
+        "memory_limit_bytes": 268435456,
+        "memory_swap_limit_bytes": 268435456,
+        "read_only_rootfs": true,
+        "pids_limit": 64,
+        "architecture": "arm64",
+        "image_id": "sha256:6927e0919a144aa7616fd0137d4816816d42f6b816de3af269ab065250859a62",
+        "image_repo_digests": [
+          "prom/prometheus@sha256:6927e0919a144aa7616fd0137d4816816d42f6b816de3af269ab065250859a62"
+        ],
+        "cgroup": {
+          "memory.current": "35753984",
+          "memory.max": "268435456",
+          "memory.swap.current": "0",
+          "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0",
+          "cpu.max": "25000 100000",
+          "cpu.stat": "usage_usec 214165\nuser_usec 102973\nsystem_usec 111191\nnice_usec 0\ncore_sched.force_idle_usec 0\nnr_periods 36\nnr_throttled 4\nthrottled_usec 213667\nnr_bursts 0\nburst_usec 0"
+        }
+      }
+    },
+    "model_metrics": [
+      "# HELP llamacpp:prompt_tokens_total Number of prompt tokens processed.",
+      "# TYPE llamacpp:prompt_tokens_total counter",
+      "llamacpp:prompt_tokens_total 274",
+      "# HELP llamacpp:prompt_seconds_total Prompt process time",
+      "# TYPE llamacpp:prompt_seconds_total counter",
+      "llamacpp:prompt_seconds_total 31.246",
+      "# HELP llamacpp:tokens_predicted_total Number of generation tokens processed.",
+      "# TYPE llamacpp:tokens_predicted_total counter",
+      "llamacpp:tokens_predicted_total 0",
+      "# HELP llamacpp:tokens_predicted_seconds_total Predict process time",
+      "# TYPE llamacpp:tokens_predicted_seconds_total counter",
+      "llamacpp:tokens_predicted_seconds_total 0",
+      "# HELP llamacpp:n_decode_total Total number of llama_decode() calls",
+      "# TYPE llamacpp:n_decode_total counter",
+      "llamacpp:n_decode_total 43",
+      "# HELP llamacpp:n_tokens_max Largest observed n_tokens.",
+      "# TYPE llamacpp:n_tokens_max counter",
+      "llamacpp:n_tokens_max 316",
+      "# HELP llamacpp:prompt_tokens_seconds Average prompt throughput in tokens/s.",
+      "# TYPE llamacpp:prompt_tokens_seconds gauge",
+      "llamacpp:prompt_tokens_seconds 8.76912",
+      "# HELP llamacpp:predicted_tokens_seconds Average generation throughput in tokens/s.",
+      "# TYPE llamacpp:predicted_tokens_seconds gauge",
+      "llamacpp:predicted_tokens_seconds 0",
+      "# HELP llamacpp:requests_processing Number of requests processing.",
+      "# TYPE llamacpp:requests_processing gauge",
+      "llamacpp:requests_processing 1",
+      "# HELP llamacpp:requests_deferred Number of requests deferred.",
+      "# TYPE llamacpp:requests_deferred gauge",
+      "llamacpp:requests_deferred 0",
+      "# HELP llamacpp:n_busy_slots_per_decode Average number of busy slots per llama_decode() call",
+      "# TYPE llamacpp:n_busy_slots_per_decode gauge",
+      "llamacpp:n_busy_slots_per_decode 1"
+    ]
+  },
+  "resources_after_canaries": {
+    "utc": "2026-09-08T20:39:01.763383+00:00",
+    "containers": {
+      "gateway": {
+        "started_at": "2026-09-08T20:34:53.345805017Z",
+        "health": "healthy",
+        "restarts": 0,
+        "oom_killed": false,
+        "nano_cpus": 250000000,
+        "memory_limit_bytes": 268435456,
+        "memory_swap_limit_bytes": 268435456,
+        "read_only_rootfs": true,
+        "pids_limit": 64,
+        "architecture": "arm64",
+        "image_id": "sha256:6030792f45d42199bd093c16bda97378cdf9eba36c9610b375bc795d3724f874",
+        "image_repo_digests": [
+          "observatory-shared-gateway@sha256:6030792f45d42199bd093c16bda97378cdf9eba36c9610b375bc795d3724f874"
+        ],
+        "cgroup": {
+          "memory.current": "55005184",
+          "memory.max": "268435456",
+          "memory.swap.current": "0",
+          "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0",
+          "cpu.max": "25000 100000",
+          "cpu.stat": "usage_usec 6147984\nuser_usec 5543762\nsystem_usec 604222\nnice_usec 0\ncore_sched.force_idle_usec 0\nnr_periods 1095\nnr_throttled 213\nthrottled_usec 15847015\nnr_bursts 0\nburst_usec 0"
+        }
+      },
+      "model": {
+        "started_at": "2026-09-08T20:34:37.539731319Z",
+        "health": "healthy",
+        "restarts": 0,
+        "oom_killed": false,
+        "nano_cpus": 500000000,
+        "memory_limit_bytes": 2684354560,
+        "memory_swap_limit_bytes": 2684354560,
+        "read_only_rootfs": true,
+        "pids_limit": 64,
+        "architecture": "arm64",
+        "image_id": "sha256:6bc9134e3278a0ecab23d7ef2f6a46b4595740014fe9bc2f67e8ba7dca8395b4",
+        "image_repo_digests": [
+          "ghcr.io/ggml-org/llama.cpp@sha256:6bc9134e3278a0ecab23d7ef2f6a46b4595740014fe9bc2f67e8ba7dca8395b4"
+        ],
+        "cgroup": {
+          "memory.current": "1635233792",
+          "memory.max": "2684354560",
+          "memory.swap.current": "0",
+          "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0",
+          "cpu.max": "50000 100000",
+          "cpu.stat": "usage_usec 45568515\nuser_usec 44441870\nsystem_usec 1126644\nnice_usec 0\ncore_sched.force_idle_usec 0\nnr_periods 1028\nnr_throttled 894\nthrottled_usec 38572010\nnr_bursts 0\nburst_usec 0"
+        }
+      },
+      "prometheus": {
+        "started_at": "2026-09-08T20:34:37.768430577Z",
+        "health": "healthy",
+        "restarts": 0,
+        "oom_killed": false,
+        "nano_cpus": 250000000,
+        "memory_limit_bytes": 268435456,
+        "memory_swap_limit_bytes": 268435456,
+        "read_only_rootfs": true,
+        "pids_limit": 64,
+        "architecture": "arm64",
+        "image_id": "sha256:6927e0919a144aa7616fd0137d4816816d42f6b816de3af269ab065250859a62",
+        "image_repo_digests": [
+          "prom/prometheus@sha256:6927e0919a144aa7616fd0137d4816816d42f6b816de3af269ab065250859a62"
+        ],
+        "cgroup": {
+          "memory.current": "48218112",
+          "memory.max": "268435456",
+          "memory.swap.current": "0",
+          "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0",
+          "cpu.max": "25000 100000",
+          "cpu.stat": "usage_usec 326068\nuser_usec 164824\nsystem_usec 161243\nnice_usec 0\ncore_sched.force_idle_usec 0\nnr_periods 87\nnr_throttled 4\nthrottled_usec 213667\nnr_bursts 0\nburst_usec 0"
+        }
+      }
+    },
+    "model_metrics": [
+      "# HELP llamacpp:prompt_tokens_total Number of prompt tokens processed.",
+      "# TYPE llamacpp:prompt_tokens_total counter",
+      "llamacpp:prompt_tokens_total 276",
+      "# HELP llamacpp:prompt_seconds_total Prompt process time",
+      "# TYPE llamacpp:prompt_seconds_total counter",
+      "llamacpp:prompt_seconds_total 31.694",
+      "# HELP llamacpp:tokens_predicted_total Number of generation tokens processed.",
+      "# TYPE llamacpp:tokens_predicted_total counter",
+      "llamacpp:tokens_predicted_total 192",
+      "# HELP llamacpp:tokens_predicted_seconds_total Predict process time",
+      "# TYPE llamacpp:tokens_predicted_seconds_total counter",
+      "llamacpp:tokens_predicted_seconds_total 51.026",
+      "# HELP llamacpp:n_decode_total Total number of llama_decode() calls",
+      "# TYPE llamacpp:n_decode_total counter",
+      "llamacpp:n_decode_total 192",
+      "# HELP llamacpp:n_tokens_max Largest observed n_tokens.",
+      "# TYPE llamacpp:n_tokens_max counter",
+      "llamacpp:n_tokens_max 337",
+      "# HELP llamacpp:prompt_tokens_seconds Average prompt throughput in tokens/s.",
+      "# TYPE llamacpp:prompt_tokens_seconds gauge",
+      "llamacpp:prompt_tokens_seconds 8.70827",
+      "# HELP llamacpp:predicted_tokens_seconds Average generation throughput in tokens/s.",
+      "# TYPE llamacpp:predicted_tokens_seconds gauge",
+      "llamacpp:predicted_tokens_seconds 3.76279",
+      "# HELP llamacpp:requests_processing Number of requests processing.",
+      "# TYPE llamacpp:requests_processing gauge",
+      "llamacpp:requests_processing 0",
+      "# HELP llamacpp:requests_deferred Number of requests deferred.",
+      "# TYPE llamacpp:requests_deferred gauge",
+      "llamacpp:requests_deferred 0",
+      "# HELP llamacpp:n_busy_slots_per_decode Average number of busy slots per llama_decode() call",
+      "# TYPE llamacpp:n_busy_slots_per_decode gauge",
+      "llamacpp:n_busy_slots_per_decode 1"
+    ]
+  },
+  "backup": {
+    "backup_and_key_cleanup": "passed",
+    "checks": {
+      "live": {
+        "integrity": "ok",
+        "ledger_rows": 3,
+        "ok_rows": 3,
+        "active_keys": 0,
+        "mode": "0o600"
+      },
+      "backup": {
+        "integrity": "ok",
+        "ledger_rows": 3,
+        "ok_rows": 3,
+        "active_keys": 0,
+        "mode": "0o600"
+      }
+    }
+  },
+  "staging": {
+    "post_build": {
+      "utc": "2026-09-08T20:30:45.517760+00:00",
+      "elapsed_seconds": 0.12626942999486346,
+      "host_cpu_percent_interval": null,
+      "load_1m": 2.44,
+      "mem_available_bytes": 7309963264,
+      "swap_used_bytes": 0,
+      "docker_fs_available_bytes": 8083570688,
+      "health_probe": {
+        "http_status": 200,
+        "ms": 20.82071099721361,
+        "status": "ok"
+      },
+      "telemetry_query_probe": {
+        "http_status": 200,
+        "ms": 49.07576700497884,
+        "sample_count": 286,
+        "latest_sample_age_seconds": 8.449
+      },
+      "incumbent_checks": {
+        "count": 5,
+        "all_running": true,
+        "any_oom": false,
+        "any_unhealthy": false,
+        "restart_deltas": {
+          "incumbent_1": 0,
+          "incumbent_2": 0,
+          "incumbent_3": 0,
+          "incumbent_4": 0,
+          "incumbent_5": 0
+        }
+      },
+      "pilot_checks": {
+        "count": 0,
+        "all_healthy": true,
+        "restart_total": 0
+      },
+      "stop_conditions": []
+    },
+    "settled_pre_start_gate": {
+      "ready_for_review": true,
+      "load_1m": 1.37,
+      "memory_available_bytes": 7514132480,
+      "docker_free_bytes": 9622462464,
+      "checkout_free_bytes": 9622462464,
+      "swap_used_bytes": 0
+    }
+  },
+  "limitations": [
+    "Three sequential identical questions, not a load/quality/HA benchmark.",
+    "First request is not a controlled cold disk/page-cache measurement.",
+    "All outputs reached the 64-token cap; two lacked citations.",
+    "Read-only incumbent probe latency is not customer traffic or a production SLO.",
+    "No real GPU/HBM, remote KV transfer, persisted traces or delivered alerts.",
+    "Same-volume backup only; no off-host restore or live pause/resume test.",
+    "No unattended monitoring or public inference enabled."
+  ],
+  "prometheus_verification": {
+    "utc": "2026-09-08T20:46:55Z",
+    "tokens_by_kind": {
+      "input": 822,
+      "output": 192,
+      "cached_input": 546,
+      "uncached_input": 276,
+      "total": 1014
+    },
+    "rules": [
+      {
+        "name": "SharedTargetDown",
+        "state": "inactive",
+        "health": "ok"
+      },
+      {
+        "name": "SharedAnswerFailures",
+        "state": "inactive",
+        "health": "ok"
+      },
+      {
+        "name": "SharedGatewayMemoryPressure",
+        "state": "inactive",
+        "health": "ok"
+      }
+    ],
+    "notifications_configured": false
+  },
+  "observation_complete": true,
+  "resources_near_window_end": {
+    "utc": "2026-09-08T20:49:26.924431+00:00",
+    "containers": {
+      "gateway": {
+        "started_at": "2026-09-08T20:34:53.345805017Z",
+        "health": "healthy",
+        "restarts": 0,
+        "oom_killed": false,
+        "nano_cpus": 250000000,
+        "memory_limit_bytes": 268435456,
+        "memory_swap_limit_bytes": 268435456,
+        "read_only_rootfs": true,
+        "pids_limit": 64,
+        "architecture": "arm64",
+        "image_id": "sha256:6030792f45d42199bd093c16bda97378cdf9eba36c9610b375bc795d3724f874",
+        "image_repo_digests": [
+          "observatory-shared-gateway@sha256:6030792f45d42199bd093c16bda97378cdf9eba36c9610b375bc795d3724f874"
+        ],
+        "cgroup": {
+          "memory.current": "54972416",
+          "memory.max": "268435456",
+          "memory.swap.current": "0",
+          "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0",
+          "cpu.max": "25000 100000",
+          "cpu.stat": "usage_usec 16245631\nuser_usec 14610998\nsystem_usec 1634632\nnice_usec 0\ncore_sched.force_idle_usec 0\nnr_periods 3148\nnr_throttled 552\nthrottled_usec 38846741\nnr_bursts 0\nburst_usec 0"
+        }
+      },
+      "model": {
+        "started_at": "2026-09-08T20:34:37.539731319Z",
+        "health": "healthy",
+        "restarts": 0,
+        "oom_killed": false,
+        "nano_cpus": 500000000,
+        "memory_limit_bytes": 2684354560,
+        "memory_swap_limit_bytes": 2684354560,
+        "read_only_rootfs": true,
+        "pids_limit": 64,
+        "architecture": "arm64",
+        "image_id": "sha256:6bc9134e3278a0ecab23d7ef2f6a46b4595740014fe9bc2f67e8ba7dca8395b4",
+        "image_repo_digests": [
+          "ghcr.io/ggml-org/llama.cpp@sha256:6bc9134e3278a0ecab23d7ef2f6a46b4595740014fe9bc2f67e8ba7dca8395b4"
+        ],
+        "cgroup": {
+          "memory.current": "1642102784",
+          "memory.max": "2684354560",
+          "memory.swap.current": "0",
+          "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0",
+          "cpu.max": "50000 100000",
+          "cpu.stat": "usage_usec 46600070\nuser_usec 44978642\nsystem_usec 1621428\nnice_usec 0\ncore_sched.force_idle_usec 0\nnr_periods 1321\nnr_throttled 894\nthrottled_usec 38572010\nnr_bursts 0\nburst_usec 0"
+        }
+      },
+      "prometheus": {
+        "started_at": "2026-09-08T20:34:37.768430577Z",
+        "health": "healthy",
+        "restarts": 0,
+        "oom_killed": false,
+        "nano_cpus": 250000000,
+        "memory_limit_bytes": 268435456,
+        "memory_swap_limit_bytes": 268435456,
+        "read_only_rootfs": true,
+        "pids_limit": 64,
+        "architecture": "arm64",
+        "image_id": "sha256:6927e0919a144aa7616fd0137d4816816d42f6b816de3af269ab065250859a62",
+        "image_repo_digests": [
+          "prom/prometheus@sha256:6927e0919a144aa7616fd0137d4816816d42f6b816de3af269ab065250859a62"
+        ],
+        "cgroup": {
+          "memory.current": "48717824",
+          "memory.max": "268435456",
+          "memory.swap.current": "0",
+          "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0",
+          "cpu.max": "25000 100000",
+          "cpu.stat": "usage_usec 770726\nuser_usec 427105\nsystem_usec 343621\nnice_usec 0\ncore_sched.force_idle_usec 0\nnr_periods 281\nnr_throttled 4\nthrottled_usec 213667\nnr_bursts 0\nburst_usec 0"
+        }
+      }
+    },
+    "model_metrics": [
+      "# HELP llamacpp:prompt_tokens_total Number of prompt tokens processed.",
+      "# TYPE llamacpp:prompt_tokens_total counter",
+      "llamacpp:prompt_tokens_total 276",
+      "# HELP llamacpp:prompt_seconds_total Prompt process time",
+      "# TYPE llamacpp:prompt_seconds_total counter",
+      "llamacpp:prompt_seconds_total 31.694",
+      "# HELP llamacpp:tokens_predicted_total Number of generation tokens processed.",
+      "# TYPE llamacpp:tokens_predicted_total counter",
+      "llamacpp:tokens_predicted_total 192",
+      "# HELP llamacpp:tokens_predicted_seconds_total Predict process time",
+      "# TYPE llamacpp:tokens_predicted_seconds_total counter",
+      "llamacpp:tokens_predicted_seconds_total 51.026",
+      "# HELP llamacpp:n_decode_total Total number of llama_decode() calls",
+      "# TYPE llamacpp:n_decode_total counter",
+      "llamacpp:n_decode_total 192",
+      "# HELP llamacpp:n_tokens_max Largest observed n_tokens.",
+      "# TYPE llamacpp:n_tokens_max counter",
+      "llamacpp:n_tokens_max 337",
+      "# HELP llamacpp:prompt_tokens_seconds Average prompt throughput in tokens/s.",
+      "# TYPE llamacpp:prompt_tokens_seconds gauge",
+      "llamacpp:prompt_tokens_seconds 8.70827",
+      "# HELP llamacpp:predicted_tokens_seconds Average generation throughput in tokens/s.",
+      "# TYPE llamacpp:predicted_tokens_seconds gauge",
+      "llamacpp:predicted_tokens_seconds 3.76279",
+      "# HELP llamacpp:requests_processing Number of requests processing.",
+      "# TYPE llamacpp:requests_processing gauge",
+      "llamacpp:requests_processing 0",
+      "# HELP llamacpp:requests_deferred Number of requests deferred.",
+      "# TYPE llamacpp:requests_deferred gauge",
+      "llamacpp:requests_deferred 0",
+      "# HELP llamacpp:n_busy_slots_per_decode Average number of busy slots per llama_decode() call",
+      "# TYPE llamacpp:n_busy_slots_per_decode gauge",
+      "llamacpp:n_busy_slots_per_decode 1"
+    ]
+  },
+  "runtime_final": {
+    "passed": true,
+    "checked_before_utc": "2026-09-08T20:49:26.924431+00:00"
+  },
+  "observations": {
+    "method": "31 samples at 30s spacing; 30 CPU intervals; host proc/cgroup reads, container inspection, loopback incumbent health/recent-telemetry GET probes. CPU excludes idle+iowait. No benchmark or customer SLO.",
+    "baseline": {
+      "start_utc": "2026-09-08T20:08:46.140810+00:00",
+      "end_utc": "2026-09-08T20:23:46.202262+00:00",
+      "duration_seconds": 900.0614478010013,
+      "sample_count": 31,
+      "summary": {
+        "host_cpu_percent": {
+          "n": 30,
+          "min": 36.06530068299184,
+          "mean": 40.340808550699414,
+          "max": 52.52542090348391
+        },
+        "mem_available_bytes": {
+          "n": 31,
+          "min": 7446982656,
+          "mean": 7479206945.032258,
+          "max": 7508209664
+        },
+        "docker_fs_available_bytes": {
+          "n": 31,
+          "min": 10961776640,
+          "mean": 10999301153.032259,
+          "max": 11021393920
+        },
+        "health_probe_ms": {
+          "n": 31,
+          "min": 4.905256995698437,
+          "mean": 7.321001645440476,
+          "max": 12.59804300207179
+        },
+        "telemetry_query_probe_ms": {
+          "n": 31,
+          "min": 19.719506992259994,
+          "mean": 25.555297256834173,
+          "max": 43.974909000098705
+        },
+        "latest_sample_age_seconds": {
+          "n": 31,
+          "min": 1.954,
+          "mean": 17.19425806451613,
+          "max": 38.275
+        },
+        "max_swap_used_bytes": 0,
+        "probe_failures": 0,
+        "stop_conditions": []
+      },
+      "samples": [
+        {
+          "utc": "2026-09-08T20:08:46.140810+00:00",
+          "elapsed_seconds": 0.105305838,
+          "host_cpu_percent_interval": null,
+          "load_1m": 1.19,
+          "mem_available_bytes": 7446982656,
+          "swap_used_bytes": 0,
+          "docker_fs_available_bytes": 11012800512,
+          "health_probe": {
+            "http_status": 200,
+            "ms": 8.724230006919242,
+            "status": "ok"
+          },
+          "telemetry_query_probe": {
+            "http_status": 200,
+            "ms": 23.0513980059186,
+            "sample_count": 286,
+            "latest_sample_age_seconds": 8.292
+          },
+          "incumbent_checks": {
+            "count": 5,
+            "all_running": true,
+            "any_oom": false,
+            "any_unhealthy": false,
+            "restart_deltas": {
+              "incumbent_1": 0,
+              "incumbent_2": 0,
+              "incumbent_3": 0,
+              "incumbent_4": 0,
+              "incumbent_5": 0
+            }
+          },
+          "pilot_checks": {
+            "count": 0,
+            "all_healthy": true,
+            "restart_total": 0
+          },
+          "stop_conditions": []
+        },
+        {
+          "utc": "2026-09-08T20:09:16.123240+00:00",
+          "elapsed_seconds": 30.087741691007977,
+          "host_cpu_percent_interval": 36.06530068299184,
+          "load_1m": 1.13,
+          "mem_available_bytes": 7491137536,
+          "swap_used_bytes": 0,
+          "docker_fs_available_bytes": 11021393920,
+          "health_probe": {
+            "http_status": 200,
+            "ms": 6.031100987456739,
+            "status": "ok"
+          },
+          "telemetry_query_probe": {
+            "http_status": 200,
+            "ms": 19.719506992259994,
+            "sample_count": 275,
+            "latest_sample_age_seconds": 38.275
+          },
+          "incumbent_checks": {
+            "count": 5,
+            "all_running": true,
+            "any_oom": false,
+            "any_unhealthy": false,
+            "restart_deltas": {
+              "incumbent_1": 0,
+              "incumbent_2": 0,
+              "incumbent_3": 0,
+              "incumbent_4": 0,
+              "incumbent_5": 0
+            }
+          },
+          "pilot_checks": {
+            "count": 0,
+            "all_healthy": true,
+            "restart_total": 0
+          },
+          "stop_conditions": []
+        },
+        {
+          "utc": "2026-09-08T20:09:46.169476+00:00",
+          "elapsed_seconds": 60.13396560100955,
+          "host_cpu_percent_interval": 39.426762206298946,
+          "load_1m": 0.95,
+          "mem_available_bytes": 7482875904,
+          "swap_used_bytes": 0,
+          "docker_fs_available_bytes": 11014918144,
+          "health_probe": {
+            "http_status": 200,
+            "ms": 6.673903000773862,
+            "status": "ok"
+          },
+          "telemetry_query_probe": {
+            "http_status": 200,
+            "ms": 24.40924300753977,
+            "sample_count": 275,
+            "latest_sample_age_seconds": 27.62
+          },
+          "incumbent_checks": {
+            "count": 5,
+            "all_running": true,
+            "any_oom": false,
+            "any_unhealthy": false,
+            "restart_deltas": {
+              "incumbent_1": 0,
+              "incumbent_2": 0,
+              "incumbent_3": 0,
+              "incumbent_4": 0,
+              "incumbent_5": 0
+            }
+          },
+          "pilot_checks": {
+            "count": 0,
+            "all_healthy": true,
+            "restart_total": 0
+          },
+          "stop_conditions": []
+        },
+        {
+          "utc": "2026-09-08T20:10:16.198335+00:00",
+          "elapsed_seconds": 90.16282157201204,
+          "host_cpu_percent_interval": 36.346955796497085,
+          "load_1m": 0.78,
+          "mem_available_bytes": 7469494272,
+          "swap_used_bytes": 0,
+          "docker_fs_available_bytes": 11008438272,
+          "health_probe": {
+            "http_status": 200,
+            "ms": 11.361798999132589,
+            "status": "ok"
+          },
+          "telemetry_query_probe": {
+            "http_status": 200,
+            "ms": 33.77023499342613,
+            "sample_count": 275,
+            "latest_sample_age_seconds": 20.061
+          },
+          "incumbent_checks": {
+            "count": 5,
+            "all_running": true,
+            "any_oom": false,
+            "any_unhealthy": false,
+            "restart_deltas": {
+              "incumbent_1": 0,
+              "incumbent_2": 0,
+              "incumbent_3": 0,
+              "incumbent_4": 0,
+              "incumbent_5": 0
+            }
+          },
+          "pilot_checks": {
+            "count": 0,
+            "all_healthy": true,
+            "restart_total": 0
+          },
+          "stop_conditions": []
+        },
+        {
+          "utc": "2026-09-08T20:10:46.167409+00:00",
+          "elapsed_seconds": 120.13189674000023,
+          "host_cpu_percent_interval": 37.34156104069379,
+          "load_1m": 0.81,
+          "mem_available_bytes": 7490195456,
+          "swap_used_bytes": 0,
+          "docker_fs_available_bytes": 11008225280,
+          "health_probe": {
+            "http_status": 200,
+            "ms": 7.176824001362547,
+            "status": "ok"
+          },
+          "telemetry_query_probe": {
+            "http_status": 200,
+            "ms": 31.32354600529652,
+            "sample_count": 286,
+            "latest_sample_age_seconds": 15.466
+          },
+          "incumbent_checks": {
+            "count": 5,
+            "all_running": true,
+            "any_oom": false,
+            "any_unhealthy": false,
+            "restart_deltas": {
+              "incumbent_1": 0,
+              "incumbent_2": 0,
+              "incumbent_3": 0,
+              "incumbent_4": 0,
+              "incumbent_5": 0
+            }
+          },
+          "pilot_checks": {
+            "count": 0,
+            "all_healthy": true,
+            "restart_total": 0
+          },
+          "stop_conditions": []
+        },
+        {
+          "utc": "2026-09-08T20:11:16.178638+00:00",
+          "elapsed_seconds": 150.1431319310068,
+          "host_cpu_percent_interval": 42.714071106659986,
+          "load_1m": 0.97,
+          "mem_available_bytes": 7448215552,
+          "swap_used_bytes": 0,
+          "docker_fs_available_bytes": 10998935552,
+          "health_probe": {
+            "http_status": 200,
+            "ms": 7.441144989570603,
+            "status": "ok"
+          },
+          "telemetry_query_probe": {
+            "http_status": 200,
+            "ms": 32.017189005273394,
+            "sample_count": 286,
+            "latest_sample_age_seconds": 10.829
+          },
+          "incumbent_checks": {
+            "count": 5,
+            "all_running": true,
+            "any_oom": false,
+            "any_unhealthy": false,
+            "restart_deltas": {
+              "incumbent_1": 0,
+              "incumbent_2": 0,
+              "incumbent_3": 0,
+              "incumbent_4": 0,
+              "incumbent_5": 0
+            }
+          },
+          "pilot_checks": {
+            "count": 0,
+            "all_healthy": true,
+            "restart_total": 0
+          },
+          "stop_conditions": []
+        },
+        {
+          "utc": "2026-09-08T20:11:46.160966+00:00",
+          "elapsed_seconds": 180.12545758401393,
+          "host_cpu_percent_interval": 40.490490490490494,
+          "load_1m": 0.86,
+          "mem_available_bytes": 7461859328,
+          "swap_used_bytes": 0,
+          "docker_fs_available_bytes": 11003899904,
+          "health_probe": {
+            "http_status": 200,
+            "ms": 6.282140995608643,
+            "status": "ok"
+          },
+          "telemetry_query_probe": {
+            "http_status": 200,
+            "ms": 24.292922986205667,
+            "sample_count": 286,
+            "latest_sample_age_seconds": 7.1
+          },
+          "incumbent_checks": {
+            "count": 5,
+            "all_running": true,
+            "any_oom": false,
+            "any_unhealthy": false,
+            "restart_deltas": {
+              "incumbent_1": 0,
+              "incumbent_2": 0,
+              "incumbent_3": 0,
+              "incumbent_4": 0,
+              "incumbent_5": 0
+            }
+          },
+          "pilot_checks": {
+            "count": 0,
+            "all_healthy": true,
+            "restart_total": 0
+          },
+          "stop_conditions": []
+        },
+        {
+          "utc": "2026-09-08T20:12:16.170015+00:00",
+          "elapsed_seconds": 210.13450932700653,
+          "host_cpu_percent_interval": 38.6940547762191,
+          "load_1m": 0.9,
+          "mem_available_bytes": 7476768768,
+          "swap_used_bytes": 0,
+          "docker_fs_available_bytes": 11009601536,
+          "health_probe": {
+            "http_status": 200,
+            "ms": 5.824139007017948,
+            "status": "ok"
+          },
+          "telemetry_query_probe": {
+            "http_status": 200,
+            "ms": 24.236882993136533,
+            "sample_count": 286,
+            "latest_sample_age_seconds": 2.511
+          },
+          "incumbent_checks": {
+            "count": 5,
+            "all_running": true,
+            "any_oom": false,
+            "any_unhealthy": false,
+            "restart_deltas": {
+              "incumbent_1": 0,
+              "incumbent_2": 0,
+              "incumbent_3": 0,
+              "incumbent_4": 0,
+              "incumbent_5": 0
+            }
+          },
+          "pilot_checks": {
+            "count": 0,
+            "all_healthy": true,
+            "restart_total": 0
+          },
+          "stop_conditions": []
+        },
+        {
+          "utc": "2026-09-08T20:12:46.178787+00:00",
+          "elapsed_seconds": 240.14328399000806,
+          "host_cpu_percent_interval": 39.13842043746869,
+          "load_1m": 0.82,
+          "mem_available_bytes": 7467696128,
+          "swap_used_bytes": 0,
+          "docker_fs_available_bytes": 11003416576,
+          "health_probe": {
+            "http_status": 200,
+            "ms": 6.061660998966545,
+            "status": "ok"
+          },
+          "telemetry_query_probe": {
+            "http_status": 200,
+            "ms": 23.276759005966596,
+            "sample_count": 275,
+            "latest_sample_age_seconds": 32.519
+          },
+          "incumbent_checks": {
+            "count": 5,
+            "all_running": true,
+            "any_oom": false,
+            "any_unhealthy": false,
+            "restart_deltas": {
+              "incumbent_1": 0,
+              "incumbent_2": 0,
+              "incumbent_3": 0,
+              "incumbent_4": 0,
+              "incumbent_5": 0
+            }
+          },
+          "pilot_checks": {
+            "count": 0,
+            "all_healthy": true,
+            "restart_total": 0
+          },
+          "stop_conditions": []
+        },
+        {
+          "utc": "2026-09-08T20:13:16.141911+00:00",
+          "elapsed_seconds": 270.1064190180041,
+          "host_cpu_percent_interval": 44.21473824608203,
+          "load_1m": 0.84,
+          "mem_available_bytes": 7496892416,
+          "swap_used_bytes": 0,
+          "docker_fs_available_bytes": 11001307136,
+          "health_probe": {
+            "http_status": 200,
+            "ms": 8.102067004074343,
+            "status": "ok"
+          },
+          "telemetry_query_probe": {
+            "http_status": 200,
+            "ms": 21.667833992978558,
+            "sample_count": 275,
+            "latest_sample_age_seconds": 28.697
+          },
+          "incumbent_checks": {
+            "count": 5,
+            "all_running": true,
+            "any_oom": false,
+            "any_unhealthy": false,
+            "restart_deltas": {
+              "incumbent_1": 0,
+              "incumbent_2": 0,
+              "incumbent_3": 0,
+              "incumbent_4": 0,
+              "incumbent_5": 0
+            }
+          },
+          "pilot_checks": {
+            "count": 0,
+            "all_healthy": true,
+            "restart_total": 0
+          },
+          "stop_conditions": []
+        },
+        {
+          "utc": "2026-09-08T20:13:46.170957+00:00",
+          "elapsed_seconds": 300.1354527890071,
+          "host_cpu_percent_interval": 38.928750208576666,
+          "load_1m": 0.89,
+          "mem_available_bytes": 7482150912,
+          "swap_used_bytes": 0,
+          "docker_fs_available_bytes": 10992640000,
+          "health_probe": {
+            "http_status": 200,
+            "ms": 9.926034006639384,
+            "status": "ok"
+          },
+          "telemetry_query_probe": {
+            "http_status": 200,
+            "ms": 24.012882000533864,
+            "sample_count": 286,
+            "latest_sample_age_seconds": 24.219
+          },
+          "incumbent_checks": {
+            "count": 5,
+            "all_running": true,
+            "any_oom": false,
+            "any_unhealthy": false,
+            "restart_deltas": {
+              "incumbent_1": 0,
+              "incumbent_2": 0,
+              "incumbent_3": 0,
+              "incumbent_4": 0,
+              "incumbent_5": 0
+            }
+          },
+          "pilot_checks": {
+            "count": 0,
+            "all_healthy": true,
+            "restart_total": 0
+          },
+          "stop_conditions": []
+        },
+        {
+          "utc": "2026-09-08T20:14:16.143952+00:00",
+          "elapsed_seconds": 330.1084400900145,
+          "host_cpu_percent_interval": 41.08243130724396,
+          "load_1m": 0.84,
+          "mem_available_bytes": 7473610752,
+          "swap_used_bytes": 0,
+          "docker_fs_available_bytes": 10994233344,
+          "health_probe": {
+            "http_status": 200,
+            "ms": 6.331662007141858,
+            "status": "ok"
+          },
+          "telemetry_query_probe": {
+            "http_status": 200,
+            "ms": 23.73884100234136,
+            "sample_count": 286,
+            "latest_sample_age_seconds": 18.466
+          },
+          "incumbent_checks": {
+            "count": 5,
+            "all_running": true,
+            "any_oom": false,
+            "any_unhealthy": false,
+            "restart_deltas": {
+              "incumbent_1": 0,
+              "incumbent_2": 0,
+              "incumbent_3": 0,
+              "incumbent_4": 0,
+              "incumbent_5": 0
+            }
+          },
+          "pilot_checks": {
+            "count": 0,
+            "all_healthy": true,
+            "restart_total": 0
+          },
+          "stop_conditions": []
+        },
+        {
+          "utc": "2026-09-08T20:14:46.141949+00:00",
+          "elapsed_seconds": 360.1064434360014,
+          "host_cpu_percent_interval": 40.99399599733155,
+          "load_1m": 1.06,
+          "mem_available_bytes": 7493193728,
+          "swap_used_bytes": 0,
+          "docker_fs_available_bytes": 10990067712,
+          "health_probe": {
+            "http_status": 200,
+            "ms": 4.988817003322765,
+            "status": "ok"
+          },
+          "telemetry_query_probe": {
+            "http_status": 200,
+            "ms": 20.553549999021925,
+            "sample_count": 286,
+            "latest_sample_age_seconds": 14.346
+          },
+          "incumbent_checks": {
+            "count": 5,
+            "all_running": true,
+            "any_oom": false,
+            "any_unhealthy": false,
+            "restart_deltas": {
+              "incumbent_1": 0,
+              "incumbent_2": 0,
+              "incumbent_3": 0,
+              "incumbent_4": 0,
+              "incumbent_5": 0
+            }
+          },
+          "pilot_checks": {
+            "count": 0,
+            "all_healthy": true,
+            "restart_total": 0
+          },
+          "stop_conditions": []
+        },
+        {
+          "utc": "2026-09-08T20:15:16.170335+00:00",
+          "elapsed_seconds": 390.13482848601416,
+          "host_cpu_percent_interval": 42.37061769616026,
+          "load_1m": 1.26,
+          "mem_available_bytes": 7508209664,
+          "swap_used_bytes": 0,
+          "docker_fs_available_bytes": 11012116480,
+          "health_probe": {
+            "http_status": 200,
+            "ms": 5.517619007150643,
+            "status": "ok"
+          },
+          "telemetry_query_probe": {
+            "http_status": 200,
+            "ms": 21.099271994899027,
+            "sample_count": 286,
+            "latest_sample_age_seconds": 10.278
+          },
+          "incumbent_checks": {
+            "count": 5,
+            "all_running": true,
+            "any_oom": false,
+            "any_unhealthy": false,
+            "restart_deltas": {
+              "incumbent_1": 0,
+              "incumbent_2": 0,
+              "incumbent_3": 0,
+              "incumbent_4": 0,
+              "incumbent_5": 0
+            }
+          },
+          "pilot_checks": {
+            "count": 0,
+            "all_healthy": true,
+            "restart_total": 0
+          },
+          "stop_conditions": []
+        },
+        {
+          "utc": "2026-09-08T20:15:46.197995+00:00",
+          "elapsed_seconds": 420.16249137300474,
+          "host_cpu_percent_interval": 38.51802403204272,
+          "load_1m": 1.09,
+          "mem_available_bytes": 7461203968,
+          "swap_used_bytes": 0,
+          "docker_fs_available_bytes": 11009572864,
+          "health_probe": {
+            "http_status": 200,
+            "ms": 10.41775499470532,
+            "status": "ok"
+          },
+          "telemetry_query_probe": {
+            "http_status": 200,
+            "ms": 30.74606398877222,
+            "sample_count": 286,
+            "latest_sample_age_seconds": 6.387
+          },
+          "incumbent_checks": {
+            "count": 5,
+            "all_running": true,
+            "any_oom": false,
+            "any_unhealthy": false,
+            "restart_deltas": {
+              "incumbent_1": 0,
+              "incumbent_2": 0,
+              "incumbent_3": 0,
+              "incumbent_4": 0,
+              "incumbent_5": 0
+            }
+          },
+          "pilot_checks": {
+            "count": 0,
+            "all_healthy": true,
+            "restart_total": 0
+          },
+          "stop_conditions": []
+        },
+        {
+          "utc": "2026-09-08T20:16:16.187775+00:00",
+          "elapsed_seconds": 450.15227257100923,
+          "host_cpu_percent_interval": 37.14762301918265,
+          "load_1m": 1.14,
+          "mem_available_bytes": 7463198720,
+          "swap_used_bytes": 0,
+          "docker_fs_available_bytes": 11011788800,
+          "health_probe": {
+            "http_status": 200,
+            "ms": 10.013714010710828,
+            "status": "ok"
+          },
+          "telemetry_query_probe": {
+            "http_status": 200,
+            "ms": 27.002771996194497,
+            "sample_count": 286,
+            "latest_sample_age_seconds": 1.954
+          },
+          "incumbent_checks": {
+            "count": 5,
+            "all_running": true,
+            "any_oom": false,
+            "any_unhealthy": false,
+            "restart_deltas": {
+              "incumbent_1": 0,
+              "incumbent_2": 0,
+              "incumbent_3": 0,
+              "incumbent_4": 0,
+              "incumbent_5": 0
+            }
+          },
+          "pilot_checks": {
+            "count": 0,
+            "all_healthy": true,
+            "restart_total": 0
+          },
+          "stop_conditions": []
+        },
+        {
+          "utc": "2026-09-08T20:16:46.165313+00:00",
+          "elapsed_seconds": 480.129808608006,
+          "host_cpu_percent_interval": 40.68758344459279,
+          "load_1m": 0.88,
+          "mem_available_bytes": 7469752320,
+          "swap_used_bytes": 0,
+          "docker_fs_available_bytes": 11013263360,
+          "health_probe": {
+            "http_status": 200,
+            "ms": 7.406664997688495,
+            "status": "ok"
+          },
+          "telemetry_query_probe": {
+            "http_status": 200,
+            "ms": 25.416886986931786,
+            "sample_count": 275,
+            "latest_sample_age_seconds": 31.932
+          },
+          "incumbent_checks": {
+            "count": 5,
+            "all_running": true,
+            "any_oom": false,
+            "any_unhealthy": false,
+            "restart_deltas": {
+              "incumbent_1": 0,
+              "incumbent_2": 0,
+              "incumbent_3": 0,
+              "incumbent_4": 0,
+              "incumbent_5": 0
+            }
+          },
+          "pilot_checks": {
+            "count": 0,
+            "all_healthy": true,
+            "restart_total": 0
+          },
+          "stop_conditions": []
+        },
+        {
+          "utc": "2026-09-08T20:17:16.133043+00:00",
+          "elapsed_seconds": 510.09753865101084,
+          "host_cpu_percent_interval": 38.68223519599666,
+          "load_1m": 0.81,
+          "mem_available_bytes": 7480389632,
+          "swap_used_bytes": 0,
+          "docker_fs_available_bytes": 11010662400,
+          "health_probe": {
+            "http_status": 200,
+            "ms": 5.304498001351021,
+            "status": "ok"
+          },
+          "telemetry_query_probe": {
+            "http_status": 200,
+            "ms": 21.97483499185182,
+            "sample_count": 275,
+            "latest_sample_age_seconds": 27.84
+          },
+          "incumbent_checks": {
+            "count": 5,
+            "all_running": true,
+            "any_oom": false,
+            "any_unhealthy": false,
+            "restart_deltas": {
+              "incumbent_1": 0,
+              "incumbent_2": 0,
+              "incumbent_3": 0,
+              "incumbent_4": 0,
+              "incumbent_5": 0
+            }
+          },
+          "pilot_checks": {
+            "count": 0,
+            "all_healthy": true,
+            "restart_total": 0
+          },
+          "stop_conditions": []
+        },
+        {
+          "utc": "2026-09-08T20:17:46.184612+00:00",
+          "elapsed_seconds": 540.1490989390004,
+          "host_cpu_percent_interval": 43.73542152615795,
+          "load_1m": 0.81,
+          "mem_available_bytes": 7476756480,
+          "swap_used_bytes": 0,
+          "docker_fs_available_bytes": 10998284288,
+          "health_probe": {
+            "http_status": 200,
+            "ms": 7.386944998870604,
+            "status": "ok"
+          },
+          "telemetry_query_probe": {
+            "http_status": 200,
+            "ms": 24.718044995097443,
+            "sample_count": 286,
+            "latest_sample_age_seconds": 23.395
+          },
+          "incumbent_checks": {
+            "count": 5,
+            "all_running": true,
+            "any_oom": false,
+            "any_unhealthy": false,
+            "restart_deltas": {
+              "incumbent_1": 0,
+              "incumbent_2": 0,
+              "incumbent_3": 0,
+              "incumbent_4": 0,
+              "incumbent_5": 0
+            }
+          },
+          "pilot_checks": {
+            "count": 0,
+            "all_healthy": true,
+            "restart_total": 0
+          },
+          "stop_conditions": []
+        },
+        {
+          "utc": "2026-09-08T20:18:16.134804+00:00",
+          "elapsed_seconds": 570.0992935630056,
+          "host_cpu_percent_interval": 40.67400734067401,
+          "load_1m": 0.76,
+          "mem_available_bytes": 7501066240,
+          "swap_used_bytes": 0,
+          "docker_fs_available_bytes": 11004125184,
+          "health_probe": {
+            "http_status": 200,
+            "ms": 5.784779001260176,
+            "status": "ok"
+          },
+          "telemetry_query_probe": {
+            "http_status": 200,
+            "ms": 20.186427995213307,
+            "sample_count": 286,
+            "latest_sample_age_seconds": 18.872
+          },
+          "incumbent_checks": {
+            "count": 5,
+            "all_running": true,
+            "any_oom": false,
+            "any_unhealthy": false,
+            "restart_deltas": {
+              "incumbent_1": 0,
+              "incumbent_2": 0,
+              "incumbent_3": 0,
+              "incumbent_4": 0,
+              "incumbent_5": 0
+            }
+          },
+          "pilot_checks": {
+            "count": 0,
+            "all_healthy": true,
+            "restart_total": 0
+          },
+          "stop_conditions": []
+        },
+        {
+          "utc": "2026-09-08T20:18:46.141386+00:00",
+          "elapsed_seconds": 600.1058718980057,
+          "host_cpu_percent_interval": 38.13333333333333,
+          "load_1m": 0.77,
+          "mem_available_bytes": 7451959296,
+          "swap_used_bytes": 0,
+          "docker_fs_available_bytes": 11002789888,
+          "health_probe": {
+            "http_status": 200,
+            "ms": 6.094101001508534,
+            "status": "ok"
+          },
+          "telemetry_query_probe": {
+            "http_status": 200,
+            "ms": 24.593244001152925,
+            "sample_count": 286,
+            "latest_sample_age_seconds": 15.128
+          },
+          "incumbent_checks": {
+            "count": 5,
+            "all_running": true,
+            "any_oom": false,
+            "any_unhealthy": false,
+            "restart_deltas": {
+              "incumbent_1": 0,
+              "incumbent_2": 0,
+              "incumbent_3": 0,
+              "incumbent_4": 0,
+              "incumbent_5": 0
+            }
+          },
+          "pilot_checks": {
+            "count": 0,
+            "all_healthy": true,
+            "restart_total": 0
+          },
+          "stop_conditions": []
+        },
+        {
+          "utc": "2026-09-08T20:19:16.191869+00:00",
+          "elapsed_seconds": 630.1563594230101,
+          "host_cpu_percent_interval": 39.056509418236374,
+          "load_1m": 0.98,
+          "mem_available_bytes": 7468597248,
+          "swap_used_bytes": 0,
+          "docker_fs_available_bytes": 11004727296,
+          "health_probe": {
+            "http_status": 200,
+            "ms": 12.59804300207179,
+            "status": "ok"
+          },
+          "telemetry_query_probe": {
+            "http_status": 200,
+            "ms": 43.974909000098705,
+            "sample_count": 286,
+            "latest_sample_age_seconds": 10.86
+          },
+          "incumbent_checks": {
+            "count": 5,
+            "all_running": true,
+            "any_oom": false,
+            "any_unhealthy": false,
+            "restart_deltas": {
+              "incumbent_1": 0,
+              "incumbent_2": 0,
+              "incumbent_3": 0,
+              "incumbent_4": 0,
+              "incumbent_5": 0
+            }
+          },
+          "pilot_checks": {
+            "count": 0,
+            "all_healthy": true,
+            "restart_total": 0
+          },
+          "stop_conditions": []
+        },
+        {
+          "utc": "2026-09-08T20:19:46.143507+00:00",
+          "elapsed_seconds": 660.1080017170025,
+          "host_cpu_percent_interval": 42.502499166944354,
+          "load_1m": 0.8,
+          "mem_available_bytes": 7493136384,
+          "swap_used_bytes": 0,
+          "docker_fs_available_bytes": 11003338752,
+          "health_probe": {
+            "http_status": 200,
+            "ms": 5.641858995659277,
+            "status": "ok"
+          },
+          "telemetry_query_probe": {
+            "http_status": 200,
+            "ms": 22.41867600241676,
+            "sample_count": 286,
+            "latest_sample_age_seconds": 6.881
+          },
+          "incumbent_checks": {
+            "count": 5,
+            "all_running": true,
+            "any_oom": false,
+            "any_unhealthy": false,
+            "restart_deltas": {
+              "incumbent_1": 0,
+              "incumbent_2": 0,
+              "incumbent_3": 0,
+              "incumbent_4": 0,
+              "incumbent_5": 0
+            }
+          },
+          "pilot_checks": {
+            "count": 0,
+            "all_healthy": true,
+            "restart_total": 0
+          },
+          "stop_conditions": []
+        },
+        {
+          "utc": "2026-09-08T20:20:16.165400+00:00",
+          "elapsed_seconds": 690.129891626013,
+          "host_cpu_percent_interval": 42.56914361879374,
+          "load_1m": 0.77,
+          "mem_available_bytes": 7478423552,
+          "swap_used_bytes": 0,
+          "docker_fs_available_bytes": 10982461440,
+          "health_probe": {
+            "http_status": 200,
+            "ms": 6.405380991054699,
+            "status": "ok"
+          },
+          "telemetry_query_probe": {
+            "http_status": 200,
+            "ms": 25.08876600768417,
+            "sample_count": 286,
+            "latest_sample_age_seconds": 2.418
+          },
+          "incumbent_checks": {
+            "count": 5,
+            "all_running": true,
+            "any_oom": false,
+            "any_unhealthy": false,
+            "restart_deltas": {
+              "incumbent_1": 0,
+              "incumbent_2": 0,
+              "incumbent_3": 0,
+              "incumbent_4": 0,
+              "incumbent_5": 0
+            }
+          },
+          "pilot_checks": {
+            "count": 0,
+            "all_healthy": true,
+            "restart_total": 0
+          },
+          "stop_conditions": []
+        },
+        {
+          "utc": "2026-09-08T20:20:46.112715+00:00",
+          "elapsed_seconds": 720.0772096030123,
+          "host_cpu_percent_interval": 41.458124791458125,
+          "load_1m": 1.02,
+          "mem_available_bytes": 7499808768,
+          "swap_used_bytes": 0,
+          "docker_fs_available_bytes": 10987294720,
+          "health_probe": {
+            "http_status": 200,
+            "ms": 5.391017999500036,
+            "status": "ok"
+          },
+          "telemetry_query_probe": {
+            "http_status": 200,
+            "ms": 20.385670010000467,
+            "sample_count": 275,
+            "latest_sample_age_seconds": 32.365
+          },
+          "incumbent_checks": {
+            "count": 5,
+            "all_running": true,
+            "any_oom": false,
+            "any_unhealthy": false,
+            "restart_deltas": {
+              "incumbent_1": 0,
+              "incumbent_2": 0,
+              "incumbent_3": 0,
+              "incumbent_4": 0,
+              "incumbent_5": 0
+            }
+          },
+          "pilot_checks": {
+            "count": 0,
+            "all_healthy": true,
+            "restart_total": 0
+          },
+          "stop_conditions": []
+        },
+        {
+          "utc": "2026-09-08T20:21:16.155761+00:00",
+          "elapsed_seconds": 750.1202556240023,
+          "host_cpu_percent_interval": 40.2363908773098,
+          "load_1m": 0.93,
+          "mem_available_bytes": 7492096000,
+          "swap_used_bytes": 0,
+          "docker_fs_available_bytes": 10989314048,
+          "health_probe": {
+            "http_status": 200,
+            "ms": 9.134272011579014,
+            "status": "ok"
+          },
+          "telemetry_query_probe": {
+            "http_status": 200,
+            "ms": 28.633617010200396,
+            "sample_count": 286,
+            "latest_sample_age_seconds": 28.509
+          },
+          "incumbent_checks": {
+            "count": 5,
+            "all_running": true,
+            "any_oom": false,
+            "any_unhealthy": false,
+            "restart_deltas": {
+              "incumbent_1": 0,
+              "incumbent_2": 0,
+              "incumbent_3": 0,
+              "incumbent_4": 0,
+              "incumbent_5": 0
+            }
+          },
+          "pilot_checks": {
+            "count": 0,
+            "all_healthy": true,
+            "restart_total": 0
+          },
+          "stop_conditions": []
+        },
+        {
+          "utc": "2026-09-08T20:21:46.183284+00:00",
+          "elapsed_seconds": 780.147774033001,
+          "host_cpu_percent_interval": 39.89645958583834,
+          "load_1m": 0.9,
+          "mem_available_bytes": 7477325824,
+          "swap_used_bytes": 0,
+          "docker_fs_available_bytes": 10986065920,
+          "health_probe": {
+            "http_status": 200,
+            "ms": 5.338738003047183,
+            "status": "ok"
+          },
+          "telemetry_query_probe": {
+            "http_status": 200,
+            "ms": 21.45315200323239,
+            "sample_count": 286,
+            "latest_sample_age_seconds": 24.056
+          },
+          "incumbent_checks": {
+            "count": 5,
+            "all_running": true,
+            "any_oom": false,
+            "any_unhealthy": false,
+            "restart_deltas": {
+              "incumbent_1": 0,
+              "incumbent_2": 0,
+              "incumbent_3": 0,
+              "incumbent_4": 0,
+              "incumbent_5": 0
+            }
+          },
+          "pilot_checks": {
+            "count": 0,
+            "all_healthy": true,
+            "restart_total": 0
+          },
+          "stop_conditions": []
+        },
+        {
+          "utc": "2026-09-08T20:22:16.138541+00:00",
+          "elapsed_seconds": 810.1030357160053,
+          "host_cpu_percent_interval": 40.40993167805366,
+          "load_1m": 0.73,
+          "mem_available_bytes": 7503314944,
+          "swap_used_bytes": 0,
+          "docker_fs_available_bytes": 10985562112,
+          "health_probe": {
+            "http_status": 200,
+            "ms": 5.835298987221904,
+            "status": "ok"
+          },
+          "telemetry_query_probe": {
+            "http_status": 200,
+            "ms": 23.43051999923773,
+            "sample_count": 286,
+            "latest_sample_age_seconds": 16.981
+          },
+          "incumbent_checks": {
+            "count": 5,
+            "all_running": true,
+            "any_oom": false,
+            "any_unhealthy": false,
+            "restart_deltas": {
+              "incumbent_1": 0,
+              "incumbent_2": 0,
+              "incumbent_3": 0,
+              "incumbent_4": 0,
+              "incumbent_5": 0
+            }
+          },
+          "pilot_checks": {
+            "count": 0,
+            "all_healthy": true,
+            "restart_total": 0
+          },
+          "stop_conditions": []
+        },
+        {
+          "utc": "2026-09-08T20:22:46.124771+00:00",
+          "elapsed_seconds": 840.0892597850034,
+          "host_cpu_percent_interval": 36.957247828991314,
+          "load_1m": 0.94,
+          "mem_available_bytes": 7483064320,
+          "swap_used_bytes": 0,
+          "docker_fs_available_bytes": 10985881600,
+          "health_probe": {
+            "http_status": 200,
+            "ms": 4.905256995698437,
+            "status": "ok"
+          },
+          "telemetry_query_probe": {
+            "http_status": 200,
+            "ms": 24.2208019917598,
+            "sample_count": 286,
+            "latest_sample_age_seconds": 12.952
+          },
+          "incumbent_checks": {
+            "count": 5,
+            "all_running": true,
+            "any_oom": false,
+            "any_unhealthy": false,
+            "restart_deltas": {
+              "incumbent_1": 0,
+              "incumbent_2": 0,
+              "incumbent_3": 0,
+              "incumbent_4": 0,
+              "incumbent_5": 0
+            }
+          },
+          "pilot_checks": {
+            "count": 0,
+            "all_healthy": true,
+            "restart_total": 0
+          },
+          "stop_conditions": []
+        },
+        {
+          "utc": "2026-09-08T20:23:16.170387+00:00",
+          "elapsed_seconds": 870.1348757350061,
+          "host_cpu_percent_interval": 52.52542090348391,
+          "load_1m": 1.2,
+          "mem_available_bytes": 7466221568,
+          "swap_used_bytes": 0,
+          "docker_fs_available_bytes": 10969432064,
+          "health_probe": {
+            "http_status": 200,
+            "ms": 6.81510400318075,
+            "status": "ok"
+          },
+          "telemetry_query_probe": {
+            "http_status": 200,
+            "ms": 21.35647200339008,
+            "sample_count": 286,
+            "latest_sample_age_seconds": 8.797
+          },
+          "incumbent_checks": {
+            "count": 5,
+            "all_running": true,
+            "any_oom": false,
+            "any_unhealthy": false,
+            "restart_deltas": {
+              "incumbent_1": 0,
+              "incumbent_2": 0,
+              "incumbent_3": 0,
+              "incumbent_4": 0,
+              "incumbent_5": 0
+            }
+          },
+          "pilot_checks": {
+            "count": 0,
+            "all_healthy": true,
+            "restart_total": 0
+          },
+          "stop_conditions": []
+        },
+        {
+          "utc": "2026-09-08T20:23:46.202262+00:00",
+          "elapsed_seconds": 900.1667536390014,
+          "host_cpu_percent_interval": 39.22615076717811,
+          "load_1m": 1.5,
+          "mem_available_bytes": 7499816960,
+          "swap_used_bytes": 0,
+          "docker_fs_available_bytes": 10961776640,
+          "health_probe": {
+            "http_status": 200,
+            "ms": 12.03448099840898,
+            "status": "ok"
+          },
+          "telemetry_query_probe": {
+            "http_status": 200,
+            "ms": 39.443293993826956,
+            "sample_count": 286,
+            "latest_sample_age_seconds": 5.016
+          },
+          "incumbent_checks": {
+            "count": 5,
+            "all_running": true,
+            "any_oom": false,
+            "any_unhealthy": false,
+            "restart_deltas": {
+              "incumbent_1": 0,
+              "incumbent_2": 0,
+              "incumbent_3": 0,
+              "incumbent_4": 0,
+              "incumbent_5": 0
+            }
+          },
+          "pilot_checks": {
+            "count": 0,
+            "all_healthy": true,
+            "restart_total": 0
+          },
+          "stop_conditions": []
+        }
+      ]
+    },
+    "pilot": {
+      "start_utc": "2026-09-08T20:35:15.282726+00:00",
+      "end_utc": "2026-09-08T20:50:15.284002+00:00",
+      "duration_seconds": 900.0012731720053,
+      "sample_count": 31,
+      "summary": {
+        "host_cpu_percent": {
+          "n": 30,
+          "min": 35.79545454545454,
+          "mean": 43.656309197387934,
+          "max": 66.77702367157755
+        },
+        "mem_available_bytes": {
+          "n": 31,
+          "min": 6107975680,
+          "mean": 6182443206.193548,
+          "max": 6229151744
+        },
+        "docker_fs_available_bytes": {
+          "n": 31,
+          "min": 9485910016,
+          "mean": 9542741751.741936,
+          "max": 9617711104
+        },
+        "health_probe_ms": {
+          "n": 31,
+          "min": 5.00177699723281,
+          "mean": 7.526979130606407,
+          "max": 13.918687007389963
+        },
+        "telemetry_query_probe_ms": {
+          "n": 31,
+          "min": 19.610105999163352,
+          "mean": 30.59290241987084,
+          "max": 75.58001700090244
+        },
+        "latest_sample_age_seconds": {
+          "n": 31,
+          "min": 0.315,
+          "mean": 18.99454838709677,
+          "max": 36.112
+        },
+        "max_swap_used_bytes": 0,
+        "probe_failures": 0,
+        "stop_conditions": []
+      },
+      "samples": [
+        {
+          "utc": "2026-09-08T20:35:15.282726+00:00",
+          "elapsed_seconds": 0.14103271999920253,
+          "host_cpu_percent_interval": null,
+          "load_1m": 1.65,
+          "mem_available_bytes": 6221049856,
+          "swap_used_bytes": 0,
+          "docker_fs_available_bytes": 9617711104,
+          "health_probe": {
+            "http_status": 200,
+            "ms": 10.407555004348978,
+            "status": "ok"
+          },
+          "telemetry_query_probe": {
+            "http_status": 200,
+            "ms": 26.72537100443151,
+            "sample_count": 275,
+            "latest_sample_age_seconds": 33.837
+          },
+          "incumbent_checks": {
+            "count": 5,
+            "all_running": true,
+            "any_oom": false,
+            "any_unhealthy": false,
+            "restart_deltas": {
+              "incumbent_1": 0,
+              "incumbent_2": 0,
+              "incumbent_3": 0,
+              "incumbent_4": 0,
+              "incumbent_5": 0
+            }
+          },
+          "pilot_checks": {
+            "count": 3,
+            "all_healthy": true,
+            "restart_total": 0
+          },
+          "stop_conditions": []
+        },
+        {
+          "utc": "2026-09-08T20:35:45.342569+00:00",
+          "elapsed_seconds": 30.200874438000028,
+          "host_cpu_percent_interval": 55.98474801061008,
+          "load_1m": 2.08,
+          "mem_available_bytes": 6194999296,
+          "swap_used_bytes": 0,
+          "docker_fs_available_bytes": 9608675328,
+          "health_probe": {
+            "http_status": 200,
+            "ms": 10.777076007798314,
+            "status": "ok"
+          },
+          "telemetry_query_probe": {
+            "http_status": 200,
+            "ms": 25.111246010055766,
+            "sample_count": 286,
+            "latest_sample_age_seconds": 29.704
+          },
+          "incumbent_checks": {
+            "count": 5,
+            "all_running": true,
+            "any_oom": false,
+            "any_unhealthy": false,
+            "restart_deltas": {
+              "incumbent_1": 0,
+              "incumbent_2": 0,
+              "incumbent_3": 0,
+              "incumbent_4": 0,
+              "incumbent_5": 0
+            }
+          },
+          "pilot_checks": {
+            "count": 3,
+            "all_healthy": true,
+            "restart_total": 0
+          },
+          "stop_conditions": []
+        },
+        {
+          "utc": "2026-09-08T20:36:15.343229+00:00",
+          "elapsed_seconds": 60.20153471600497,
+          "host_cpu_percent_interval": 66.77702367157755,
+          "load_1m": 2.74,
+          "mem_available_bytes": 6183809024,
+          "swap_used_bytes": 0,
+          "docker_fs_available_bytes": 9598562304,
+          "health_probe": {
+            "http_status": 200,
+            "ms": 6.747583000105806,
+            "status": "ok"
+          },
+          "telemetry_query_probe": {
+            "http_status": 200,
+            "ms": 75.58001700090244,
+            "sample_count": 286,
+            "latest_sample_age_seconds": 25.764
+          },
+          "incumbent_checks": {
+            "count": 5,
+            "all_running": true,
+            "any_oom": false,
+            "any_unhealthy": false,
+            "restart_deltas": {
+              "incumbent_1": 0,
+              "incumbent_2": 0,
+              "incumbent_3": 0,
+              "incumbent_4": 0,
+              "incumbent_5": 0
+            }
+          },
+          "pilot_checks": {
+            "count": 3,
+            "all_healthy": true,
+            "restart_total": 0
+          },
+          "stop_conditions": []
+        },
+        {
+          "utc": "2026-09-08T20:36:45.300302+00:00",
+          "elapsed_seconds": 90.15861499099992,
+          "host_cpu_percent_interval": 45.93604263824117,
+          "load_1m": 2.01,
+          "mem_available_bytes": 6107975680,
+          "swap_used_bytes": 0,
+          "docker_fs_available_bytes": 9598021632,
+          "health_probe": {
+            "http_status": 200,
+            "ms": 6.8619829980889335,
+            "status": "ok"
+          },
+          "telemetry_query_probe": {
+            "http_status": 200,
+            "ms": 28.050494991475716,
+            "sample_count": 286,
+            "latest_sample_age_seconds": 20.145
+          },
+          "incumbent_checks": {
+            "count": 5,
+            "all_running": true,
+            "any_oom": false,
+            "any_unhealthy": false,
+            "restart_deltas": {
+              "incumbent_1": 0,
+              "incumbent_2": 0,
+              "incumbent_3": 0,
+              "incumbent_4": 0,
+              "incumbent_5": 0
+            }
+          },
+          "pilot_checks": {
+            "count": 3,
+            "all_healthy": true,
+            "restart_total": 0
+          },
+          "stop_conditions": []
+        },
+        {
+          "utc": "2026-09-08T20:37:15.370663+00:00",
+          "elapsed_seconds": 120.22904892200313,
+          "host_cpu_percent_interval": 56.316312997347474,
+          "load_1m": 1.74,
+          "mem_available_bytes": 6229151744,
+          "swap_used_bytes": 0,
+          "docker_fs_available_bytes": 9598066688,
+          "health_probe": {
+            "http_status": 200,
+            "ms": 9.702633004053496,
+            "status": "ok"
+          },
+          "telemetry_query_probe": {
+            "http_status": 200,
+            "ms": 42.18470300838817,
+            "sample_count": 286,
+            "latest_sample_age_seconds": 16.034
+          },
+          "incumbent_checks": {
+            "count": 5,
+            "all_running": true,
+            "any_oom": false,
+            "any_unhealthy": false,
+            "restart_deltas": {
+              "incumbent_1": 0,
+              "incumbent_2": 0,
+              "incumbent_3": 0,
+              "incumbent_4": 0,
+              "incumbent_5": 0
+            }
+          },
+          "pilot_checks": {
+            "count": 3,
+            "all_healthy": true,
+            "restart_total": 0
+          },
+          "stop_conditions": []
+        },
+        {
+          "utc": "2026-09-08T20:37:45.260129+00:00",
+          "elapsed_seconds": 150.1184305610077,
+          "host_cpu_percent_interval": 44.44444444444444,
+          "load_1m": 1.35,
+          "mem_available_bytes": 6161182720,
+          "swap_used_bytes": 0,
+          "docker_fs_available_bytes": 9591357440,
+          "health_probe": {
+            "http_status": 200,
+            "ms": 5.161777007742785,
+            "status": "ok"
+          },
+          "telemetry_query_probe": {
+            "http_status": 200,
+            "ms": 23.5244799987413,
+            "sample_count": 286,
+            "latest_sample_age_seconds": 11.961
+          },
+          "incumbent_checks": {
+            "count": 5,
+            "all_running": true,
+            "any_oom": false,
+            "any_unhealthy": false,
+            "restart_deltas": {
+              "incumbent_1": 0,
+              "incumbent_2": 0,
+              "incumbent_3": 0,
+              "incumbent_4": 0,
+              "incumbent_5": 0
+            }
+          },
+          "pilot_checks": {
+            "count": 3,
+            "all_healthy": true,
+            "restart_total": 0
+          },
+          "stop_conditions": []
+        },
+        {
+          "utc": "2026-09-08T20:38:15.345396+00:00",
+          "elapsed_seconds": 180.2037011830107,
+          "host_cpu_percent_interval": 56.00199236260999,
+          "load_1m": 1.6,
+          "mem_available_bytes": 6162804736,
+          "swap_used_bytes": 0,
+          "docker_fs_available_bytes": 9584435200,
+          "health_probe": {
+            "http_status": 200,
+            "ms": 9.643632991355844,
+            "status": "ok"
+          },
+          "telemetry_query_probe": {
+            "http_status": 200,
+            "ms": 28.088614999433048,
+            "sample_count": 286,
+            "latest_sample_age_seconds": 8.022
+          },
+          "incumbent_checks": {
+            "count": 5,
+            "all_running": true,
+            "any_oom": false,
+            "any_unhealthy": false,
+            "restart_deltas": {
+              "incumbent_1": 0,
+              "incumbent_2": 0,
+              "incumbent_3": 0,
+              "incumbent_4": 0,
+              "incumbent_5": 0
+            }
+          },
+          "pilot_checks": {
+            "count": 3,
+            "all_healthy": true,
+            "restart_total": 0
+          },
+          "stop_conditions": []
+        },
+        {
+          "utc": "2026-09-08T20:38:45.286957+00:00",
+          "elapsed_seconds": 210.14525999801117,
+          "host_cpu_percent_interval": 41.50817484150817,
+          "load_1m": 1.4,
+          "mem_available_bytes": 6157250560,
+          "swap_used_bytes": 0,
+          "docker_fs_available_bytes": 9587744768,
+          "health_probe": {
+            "http_status": 200,
+            "ms": 5.45281900849659,
+            "status": "ok"
+          },
+          "telemetry_query_probe": {
+            "http_status": 200,
+            "ms": 29.968460992677137,
+            "sample_count": 286,
+            "latest_sample_age_seconds": 4.082
+          },
+          "incumbent_checks": {
+            "count": 5,
+            "all_running": true,
+            "any_oom": false,
+            "any_unhealthy": false,
+            "restart_deltas": {
+              "incumbent_1": 0,
+              "incumbent_2": 0,
+              "incumbent_3": 0,
+              "incumbent_4": 0,
+              "incumbent_5": 0
+            }
+          },
+          "pilot_checks": {
+            "count": 3,
+            "all_healthy": true,
+            "restart_total": 0
+          },
+          "stop_conditions": []
+        },
+        {
+          "utc": "2026-09-08T20:39:15.370489+00:00",
+          "elapsed_seconds": 240.22879613400437,
+          "host_cpu_percent_interval": 43.62270450751252,
+          "load_1m": 1.24,
+          "mem_available_bytes": 6219444224,
+          "swap_used_bytes": 0,
+          "docker_fs_available_bytes": 9545588736,
+          "health_probe": {
+            "http_status": 200,
+            "ms": 11.109996994491667,
+            "status": "ok"
+          },
+          "telemetry_query_probe": {
+            "http_status": 200,
+            "ms": 41.61614101030864,
+            "sample_count": 286,
+            "latest_sample_age_seconds": 34.166
+          },
+          "incumbent_checks": {
+            "count": 5,
+            "all_running": true,
+            "any_oom": false,
+            "any_unhealthy": false,
+            "restart_deltas": {
+              "incumbent_1": 0,
+              "incumbent_2": 0,
+              "incumbent_3": 0,
+              "incumbent_4": 0,
+              "incumbent_5": 0
+            }
+          },
+          "pilot_checks": {
+            "count": 3,
+            "all_healthy": true,
+            "restart_total": 0
+          },
+          "stop_conditions": []
+        },
+        {
+          "utc": "2026-09-08T20:39:45.306726+00:00",
+          "elapsed_seconds": 270.1650313709979,
+          "host_cpu_percent_interval": 42.264088029343114,
+          "load_1m": 0.97,
+          "mem_available_bytes": 6220775424,
+          "swap_used_bytes": 0,
+          "docker_fs_available_bytes": 9527906304,
+          "health_probe": {
+            "http_status": 200,
+            "ms": 7.212743992567994,
+            "status": "ok"
+          },
+          "telemetry_query_probe": {
+            "http_status": 200,
+            "ms": 24.08772199123632,
+            "sample_count": 286,
+            "latest_sample_age_seconds": 29.7
+          },
+          "incumbent_checks": {
+            "count": 5,
+            "all_running": true,
+            "any_oom": false,
+            "any_unhealthy": false,
+            "restart_deltas": {
+              "incumbent_1": 0,
+              "incumbent_2": 0,
+              "incumbent_3": 0,
+              "incumbent_4": 0,
+              "incumbent_5": 0
+            }
+          },
+          "pilot_checks": {
+            "count": 3,
+            "all_healthy": true,
+            "restart_total": 0
+          },
+          "stop_conditions": []
+        },
+        {
+          "utc": "2026-09-08T20:40:15.267386+00:00",
+          "elapsed_seconds": 300.1256923309993,
+          "host_cpu_percent_interval": 41.562343515272914,
+          "load_1m": 0.97,
+          "mem_available_bytes": 6226673664,
+          "swap_used_bytes": 0,
+          "docker_fs_available_bytes": 9521733632,
+          "health_probe": {
+            "http_status": 200,
+            "ms": 6.6285030043218285,
+            "status": "ok"
+          },
+          "telemetry_query_probe": {
+            "http_status": 200,
+            "ms": 28.843658001278527,
+            "sample_count": 286,
+            "latest_sample_age_seconds": 20.389
+          },
+          "incumbent_checks": {
+            "count": 5,
+            "all_running": true,
+            "any_oom": false,
+            "any_unhealthy": false,
+            "restart_deltas": {
+              "incumbent_1": 0,
+              "incumbent_2": 0,
+              "incumbent_3": 0,
+              "incumbent_4": 0,
+              "incumbent_5": 0
+            }
+          },
+          "pilot_checks": {
+            "count": 3,
+            "all_healthy": true,
+            "restart_total": 0
+          },
+          "stop_conditions": []
+        },
+        {
+          "utc": "2026-09-08T20:40:45.294323+00:00",
+          "elapsed_seconds": 330.15262563600845,
+          "host_cpu_percent_interval": 42.40759240759241,
+          "load_1m": 1.03,
+          "mem_available_bytes": 6171910144,
+          "swap_used_bytes": 0,
+          "docker_fs_available_bytes": 9516650496,
+          "health_probe": {
+            "http_status": 200,
+            "ms": 5.645939003443345,
+            "status": "ok"
+          },
+          "telemetry_query_probe": {
+            "http_status": 200,
+            "ms": 21.8846339994343,
+            "sample_count": 286,
+            "latest_sample_age_seconds": 14.539
+          },
+          "incumbent_checks": {
+            "count": 5,
+            "all_running": true,
+            "any_oom": false,
+            "any_unhealthy": false,
+            "restart_deltas": {
+              "incumbent_1": 0,
+              "incumbent_2": 0,
+              "incumbent_3": 0,
+              "incumbent_4": 0,
+              "incumbent_5": 0
+            }
+          },
+          "pilot_checks": {
+            "count": 3,
+            "all_healthy": true,
+            "restart_total": 0
+          },
+          "stop_conditions": []
+        },
+        {
+          "utc": "2026-09-08T20:41:15.317130+00:00",
+          "elapsed_seconds": 360.17544796600123,
+          "host_cpu_percent_interval": 40.80239720326286,
+          "load_1m": 0.87,
+          "mem_available_bytes": 6217125888,
+          "swap_used_bytes": 0,
+          "docker_fs_available_bytes": 9520312320,
+          "health_probe": {
+            "http_status": 200,
+            "ms": 7.858306998969056,
+            "status": "ok"
+          },
+          "telemetry_query_probe": {
+            "http_status": 200,
+            "ms": 30.197222004062496,
+            "sample_count": 286,
+            "latest_sample_age_seconds": 4.135
+          },
+          "incumbent_checks": {
+            "count": 5,
+            "all_running": true,
+            "any_oom": false,
+            "any_unhealthy": false,
+            "restart_deltas": {
+              "incumbent_1": 0,
+              "incumbent_2": 0,
+              "incumbent_3": 0,
+              "incumbent_4": 0,
+              "incumbent_5": 0
+            }
+          },
+          "pilot_checks": {
+            "count": 3,
+            "all_healthy": true,
+            "restart_total": 0
+          },
+          "stop_conditions": []
+        },
+        {
+          "utc": "2026-09-08T20:41:45.299328+00:00",
+          "elapsed_seconds": 390.15763083900674,
+          "host_cpu_percent_interval": 39.63272120200334,
+          "load_1m": 0.91,
+          "mem_available_bytes": 6207807488,
+          "swap_used_bytes": 0,
+          "docker_fs_available_bytes": 9518473216,
+          "health_probe": {
+            "http_status": 200,
+            "ms": 6.257781002204865,
+            "status": "ok"
+          },
+          "telemetry_query_probe": {
+            "http_status": 200,
+            "ms": 25.876166997477412,
+            "sample_count": 275,
+            "latest_sample_age_seconds": 34.117
+          },
+          "incumbent_checks": {
+            "count": 5,
+            "all_running": true,
+            "any_oom": false,
+            "any_unhealthy": false,
+            "restart_deltas": {
+              "incumbent_1": 0,
+              "incumbent_2": 0,
+              "incumbent_3": 0,
+              "incumbent_4": 0,
+              "incumbent_5": 0
+            }
+          },
+          "pilot_checks": {
+            "count": 3,
+            "all_healthy": true,
+            "restart_total": 0
+          },
+          "stop_conditions": []
+        },
+        {
+          "utc": "2026-09-08T20:42:15.232614+00:00",
+          "elapsed_seconds": 420.09091890600394,
+          "host_cpu_percent_interval": 35.79545454545454,
+          "load_1m": 1.05,
+          "mem_available_bytes": 6183546880,
+          "swap_used_bytes": 0,
+          "docker_fs_available_bytes": 9511514112,
+          "health_probe": {
+            "http_status": 200,
+            "ms": 5.00177699723281,
+            "status": "ok"
+          },
+          "telemetry_query_probe": {
+            "http_status": 200,
+            "ms": 20.690189994638786,
+            "sample_count": 275,
+            "latest_sample_age_seconds": 24.716
+          },
+          "incumbent_checks": {
+            "count": 5,
+            "all_running": true,
+            "any_oom": false,
+            "any_unhealthy": false,
+            "restart_deltas": {
+              "incumbent_1": 0,
+              "incumbent_2": 0,
+              "incumbent_3": 0,
+              "incumbent_4": 0,
+              "incumbent_5": 0
+            }
+          },
+          "pilot_checks": {
+            "count": 3,
+            "all_healthy": true,
+            "restart_total": 0
+          },
+          "stop_conditions": []
+        },
+        {
+          "utc": "2026-09-08T20:42:45.248995+00:00",
+          "elapsed_seconds": 450.1073072950094,
+          "host_cpu_percent_interval": 41.451209341117604,
+          "load_1m": 0.79,
+          "mem_available_bytes": 6145630208,
+          "swap_used_bytes": 0,
+          "docker_fs_available_bytes": 9512624128,
+          "health_probe": {
+            "http_status": 200,
+            "ms": 7.226025001727976,
+            "status": "ok"
+          },
+          "telemetry_query_probe": {
+            "http_status": 200,
+            "ms": 27.090290997875854,
+            "sample_count": 275,
+            "latest_sample_age_seconds": 14.936
+          },
+          "incumbent_checks": {
+            "count": 5,
+            "all_running": true,
+            "any_oom": false,
+            "any_unhealthy": false,
+            "restart_deltas": {
+              "incumbent_1": 0,
+              "incumbent_2": 0,
+              "incumbent_3": 0,
+              "incumbent_4": 0,
+              "incumbent_5": 0
+            }
+          },
+          "pilot_checks": {
+            "count": 3,
+            "all_healthy": true,
+            "restart_total": 0
+          },
+          "stop_conditions": []
+        },
+        {
+          "utc": "2026-09-08T20:43:15.292607+00:00",
+          "elapsed_seconds": 480.15092349601036,
+          "host_cpu_percent_interval": 42.75954007665389,
+          "load_1m": 0.81,
+          "mem_available_bytes": 6218817536,
+          "swap_used_bytes": 0,
+          "docker_fs_available_bytes": 9511800832,
+          "health_probe": {
+            "http_status": 200,
+            "ms": 6.618982995860279,
+            "status": "ok"
+          },
+          "telemetry_query_probe": {
+            "http_status": 200,
+            "ms": 23.138757998822257,
+            "sample_count": 286,
+            "latest_sample_age_seconds": 6.027
+          },
+          "incumbent_checks": {
+            "count": 5,
+            "all_running": true,
+            "any_oom": false,
+            "any_unhealthy": false,
+            "restart_deltas": {
+              "incumbent_1": 0,
+              "incumbent_2": 0,
+              "incumbent_3": 0,
+              "incumbent_4": 0,
+              "incumbent_5": 0
+            }
+          },
+          "pilot_checks": {
+            "count": 3,
+            "all_healthy": true,
+            "restart_total": 0
+          },
+          "stop_conditions": []
+        },
+        {
+          "utc": "2026-09-08T20:43:45.377535+00:00",
+          "elapsed_seconds": 510.2358390370064,
+          "host_cpu_percent_interval": 38.3730621770295,
+          "load_1m": 0.67,
+          "mem_available_bytes": 6187671552,
+          "swap_used_bytes": 0,
+          "docker_fs_available_bytes": 9509371904,
+          "health_probe": {
+            "http_status": 200,
+            "ms": 9.396551991812885,
+            "status": "ok"
+          },
+          "telemetry_query_probe": {
+            "http_status": 200,
+            "ms": 42.04054300498683,
+            "sample_count": 275,
+            "latest_sample_age_seconds": 36.112
+          },
+          "incumbent_checks": {
+            "count": 5,
+            "all_running": true,
+            "any_oom": false,
+            "any_unhealthy": false,
+            "restart_deltas": {
+              "incumbent_1": 0,
+              "incumbent_2": 0,
+              "incumbent_3": 0,
+              "incumbent_4": 0,
+              "incumbent_5": 0
+            }
+          },
+          "pilot_checks": {
+            "count": 3,
+            "all_healthy": true,
+            "restart_total": 0
+          },
+          "stop_conditions": []
+        },
+        {
+          "utc": "2026-09-08T20:44:15.361737+00:00",
+          "elapsed_seconds": 540.2200400370057,
+          "host_cpu_percent_interval": 44.153023722018034,
+          "load_1m": 0.62,
+          "mem_available_bytes": 6195511296,
+          "swap_used_bytes": 0,
+          "docker_fs_available_bytes": 9510531072,
+          "health_probe": {
+            "http_status": 200,
+            "ms": 13.918687007389963,
+            "status": "ok"
+          },
+          "telemetry_query_probe": {
+            "http_status": 200,
+            "ms": 38.734730987926014,
+            "sample_count": 275,
+            "latest_sample_age_seconds": 29.462
+          },
+          "incumbent_checks": {
+            "count": 5,
+            "all_running": true,
+            "any_oom": false,
+            "any_unhealthy": false,
+            "restart_deltas": {
+              "incumbent_1": 0,
+              "incumbent_2": 0,
+              "incumbent_3": 0,
+              "incumbent_4": 0,
+              "incumbent_5": 0
+            }
+          },
+          "pilot_checks": {
+            "count": 3,
+            "all_healthy": true,
+            "restart_total": 0
+          },
+          "stop_conditions": []
+        },
+        {
+          "utc": "2026-09-08T20:44:45.316921+00:00",
+          "elapsed_seconds": 570.1752306179987,
+          "host_cpu_percent_interval": 41.3119679519279,
+          "load_1m": 0.92,
+          "mem_available_bytes": 6173564928,
+          "swap_used_bytes": 0,
+          "docker_fs_available_bytes": 9509920768,
+          "health_probe": {
+            "http_status": 200,
+            "ms": 11.133958003483713,
+            "status": "ok"
+          },
+          "telemetry_query_probe": {
+            "http_status": 200,
+            "ms": 33.40991299774032,
+            "sample_count": 275,
+            "latest_sample_age_seconds": 20.28
+          },
+          "incumbent_checks": {
+            "count": 5,
+            "all_running": true,
+            "any_oom": false,
+            "any_unhealthy": false,
+            "restart_deltas": {
+              "incumbent_1": 0,
+              "incumbent_2": 0,
+              "incumbent_3": 0,
+              "incumbent_4": 0,
+              "incumbent_5": 0
+            }
+          },
+          "pilot_checks": {
+            "count": 3,
+            "all_healthy": true,
+            "restart_total": 0
+          },
+          "stop_conditions": []
+        },
+        {
+          "utc": "2026-09-08T20:45:15.249341+00:00",
+          "elapsed_seconds": 600.1076575220068,
+          "host_cpu_percent_interval": 41.351125938281896,
+          "load_1m": 0.99,
+          "mem_available_bytes": 6131908608,
+          "swap_used_bytes": 0,
+          "docker_fs_available_bytes": 9507868672,
+          "health_probe": {
+            "http_status": 200,
+            "ms": 5.976221000310034,
+            "status": "ok"
+          },
+          "telemetry_query_probe": {
+            "http_status": 200,
+            "ms": 21.332952004740946,
+            "sample_count": 275,
+            "latest_sample_age_seconds": 9.564
+          },
+          "incumbent_checks": {
+            "count": 5,
+            "all_running": true,
+            "any_oom": false,
+            "any_unhealthy": false,
+            "restart_deltas": {
+              "incumbent_1": 0,
+              "incumbent_2": 0,
+              "incumbent_3": 0,
+              "incumbent_4": 0,
+              "incumbent_5": 0
+            }
+          },
+          "pilot_checks": {
+            "count": 3,
+            "all_healthy": true,
+            "restart_total": 0
+          },
+          "stop_conditions": []
+        },
+        {
+          "utc": "2026-09-08T20:45:45.250391+00:00",
+          "elapsed_seconds": 630.1086905390111,
+          "host_cpu_percent_interval": 38.83138564273789,
+          "load_1m": 0.86,
+          "mem_available_bytes": 6196248576,
+          "swap_used_bytes": 0,
+          "docker_fs_available_bytes": 9510785024,
+          "health_probe": {
+            "http_status": 200,
+            "ms": 5.140737004694529,
+            "status": "ok"
+          },
+          "telemetry_query_probe": {
+            "http_status": 200,
+            "ms": 25.405926993698813,
+            "sample_count": 275,
+            "latest_sample_age_seconds": 0.377
+          },
+          "incumbent_checks": {
+            "count": 5,
+            "all_running": true,
+            "any_oom": false,
+            "any_unhealthy": false,
+            "restart_deltas": {
+              "incumbent_1": 0,
+              "incumbent_2": 0,
+              "incumbent_3": 0,
+              "incumbent_4": 0,
+              "incumbent_5": 0
+            }
+          },
+          "pilot_checks": {
+            "count": 3,
+            "all_healthy": true,
+            "restart_total": 0
+          },
+          "stop_conditions": []
+        },
+        {
+          "utc": "2026-09-08T20:46:15.295713+00:00",
+          "elapsed_seconds": 660.1540246660006,
+          "host_cpu_percent_interval": 39.23692102632456,
+          "load_1m": 1.08,
+          "mem_available_bytes": 6206730240,
+          "swap_used_bytes": 0,
+          "docker_fs_available_bytes": 9517273088,
+          "health_probe": {
+            "http_status": 200,
+            "ms": 6.725143000949174,
+            "status": "ok"
+          },
+          "telemetry_query_probe": {
+            "http_status": 200,
+            "ms": 39.78689499490429,
+            "sample_count": 264,
+            "latest_sample_age_seconds": 30.422
+          },
+          "incumbent_checks": {
+            "count": 5,
+            "all_running": true,
+            "any_oom": false,
+            "any_unhealthy": false,
+            "restart_deltas": {
+              "incumbent_1": 0,
+              "incumbent_2": 0,
+              "incumbent_3": 0,
+              "incumbent_4": 0,
+              "incumbent_5": 0
+            }
+          },
+          "pilot_checks": {
+            "count": 3,
+            "all_healthy": true,
+            "restart_total": 0
+          },
+          "stop_conditions": []
+        },
+        {
+          "utc": "2026-09-08T20:46:45.282045+00:00",
+          "elapsed_seconds": 690.1403533530101,
+          "host_cpu_percent_interval": 40.48056065409644,
+          "load_1m": 1.6,
+          "mem_available_bytes": 6170886144,
+          "swap_used_bytes": 0,
+          "docker_fs_available_bytes": 9493815296,
+          "health_probe": {
+            "http_status": 200,
+            "ms": 5.90137999097351,
+            "status": "ok"
+          },
+          "telemetry_query_probe": {
+            "http_status": 200,
+            "ms": 47.80760200810619,
+            "sample_count": 275,
+            "latest_sample_age_seconds": 20.242
+          },
+          "incumbent_checks": {
+            "count": 5,
+            "all_running": true,
+            "any_oom": false,
+            "any_unhealthy": false,
+            "restart_deltas": {
+              "incumbent_1": 0,
+              "incumbent_2": 0,
+              "incumbent_3": 0,
+              "incumbent_4": 0,
+              "incumbent_5": 0
+            }
+          },
+          "pilot_checks": {
+            "count": 3,
+            "all_healthy": true,
+            "restart_total": 0
+          },
+          "stop_conditions": []
+        },
+        {
+          "utc": "2026-09-08T20:47:15.293676+00:00",
+          "elapsed_seconds": 720.1519852450001,
+          "host_cpu_percent_interval": 45.31666666666667,
+          "load_1m": 1.43,
+          "mem_available_bytes": 6130479104,
+          "swap_used_bytes": 0,
+          "docker_fs_available_bytes": 9485910016,
+          "health_probe": {
+            "http_status": 200,
+            "ms": 7.57090600382071,
+            "status": "ok"
+          },
+          "telemetry_query_probe": {
+            "http_status": 200,
+            "ms": 23.82404099626001,
+            "sample_count": 275,
+            "latest_sample_age_seconds": 10.869
+          },
+          "incumbent_checks": {
+            "count": 5,
+            "all_running": true,
+            "any_oom": false,
+            "any_unhealthy": false,
+            "restart_deltas": {
+              "incumbent_1": 0,
+              "incumbent_2": 0,
+              "incumbent_3": 0,
+              "incumbent_4": 0,
+              "incumbent_5": 0
+            }
+          },
+          "pilot_checks": {
+            "count": 3,
+            "all_healthy": true,
+            "restart_total": 0
+          },
+          "stop_conditions": []
+        },
+        {
+          "utc": "2026-09-08T20:47:45.285439+00:00",
+          "elapsed_seconds": 750.1437554310105,
+          "host_cpu_percent_interval": 41.905396402398395,
+          "load_1m": 1.29,
+          "mem_available_bytes": 6154727424,
+          "swap_used_bytes": 0,
+          "docker_fs_available_bytes": 9550143488,
+          "health_probe": {
+            "http_status": 200,
+            "ms": 6.170821012347005,
+            "status": "ok"
+          },
+          "telemetry_query_probe": {
+            "http_status": 200,
+            "ms": 23.90248099982273,
+            "sample_count": 275,
+            "latest_sample_age_seconds": 4.286
+          },
+          "incumbent_checks": {
+            "count": 5,
+            "all_running": true,
+            "any_oom": false,
+            "any_unhealthy": false,
+            "restart_deltas": {
+              "incumbent_1": 0,
+              "incumbent_2": 0,
+              "incumbent_3": 0,
+              "incumbent_4": 0,
+              "incumbent_5": 0
+            }
+          },
+          "pilot_checks": {
+            "count": 3,
+            "all_healthy": true,
+            "restart_total": 0
+          },
+          "stop_conditions": []
+        },
+        {
+          "utc": "2026-09-08T20:48:15.287942+00:00",
+          "elapsed_seconds": 780.1462585720001,
+          "host_cpu_percent_interval": 40.23313905079101,
+          "load_1m": 0.96,
+          "mem_available_bytes": 6147153920,
+          "swap_used_bytes": 0,
+          "docker_fs_available_bytes": 9548226560,
+          "health_probe": {
+            "http_status": 200,
+            "ms": 6.421302008675411,
+            "status": "ok"
+          },
+          "telemetry_query_probe": {
+            "http_status": 200,
+            "ms": 23.226959005114622,
+            "sample_count": 264,
+            "latest_sample_age_seconds": 34.288
+          },
+          "incumbent_checks": {
+            "count": 5,
+            "all_running": true,
+            "any_oom": false,
+            "any_unhealthy": false,
+            "restart_deltas": {
+              "incumbent_1": 0,
+              "incumbent_2": 0,
+              "incumbent_3": 0,
+              "incumbent_4": 0,
+              "incumbent_5": 0
+            }
+          },
+          "pilot_checks": {
+            "count": 3,
+            "all_healthy": true,
+            "restart_total": 0
+          },
+          "stop_conditions": []
+        },
+        {
+          "utc": "2026-09-08T20:48:45.287623+00:00",
+          "elapsed_seconds": 810.1459279039991,
+          "host_cpu_percent_interval": 40.91060707138092,
+          "load_1m": 0.66,
+          "mem_available_bytes": 6195314688,
+          "swap_used_bytes": 0,
+          "docker_fs_available_bytes": 9550188544,
+          "health_probe": {
+            "http_status": 200,
+            "ms": 5.086577002657577,
+            "status": "ok"
+          },
+          "telemetry_query_probe": {
+            "http_status": 200,
+            "ms": 19.610105999163352,
+            "sample_count": 264,
+            "latest_sample_age_seconds": 19.943
+          },
+          "incumbent_checks": {
+            "count": 5,
+            "all_running": true,
+            "any_oom": false,
+            "any_unhealthy": false,
+            "restart_deltas": {
+              "incumbent_1": 0,
+              "incumbent_2": 0,
+              "incumbent_3": 0,
+              "incumbent_4": 0,
+              "incumbent_5": 0
+            }
+          },
+          "pilot_checks": {
+            "count": 3,
+            "all_healthy": true,
+            "restart_total": 0
+          },
+          "stop_conditions": []
+        },
+        {
+          "utc": "2026-09-08T20:49:15.238135+00:00",
+          "elapsed_seconds": 840.0964421500103,
+          "host_cpu_percent_interval": 40.23391812865496,
+          "load_1m": 0.57,
+          "mem_available_bytes": 6197592064,
+          "swap_used_bytes": 0,
+          "docker_fs_available_bytes": 9553883136,
+          "health_probe": {
+            "http_status": 200,
+            "ms": 5.1629780064104125,
+            "status": "ok"
+          },
+          "telemetry_query_probe": {
+            "http_status": 200,
+            "ms": 21.22035200591199,
+            "sample_count": 264,
+            "latest_sample_age_seconds": 10.137
+          },
+          "incumbent_checks": {
+            "count": 5,
+            "all_running": true,
+            "any_oom": false,
+            "any_unhealthy": false,
+            "restart_deltas": {
+              "incumbent_1": 0,
+              "incumbent_2": 0,
+              "incumbent_3": 0,
+              "incumbent_4": 0,
+              "incumbent_5": 0
+            }
+          },
+          "pilot_checks": {
+            "count": 3,
+            "all_healthy": true,
+            "restart_total": 0
+          },
+          "stop_conditions": []
+        },
+        {
+          "utc": "2026-09-08T20:49:45.339565+00:00",
+          "elapsed_seconds": 870.1978677870065,
+          "host_cpu_percent_interval": 37.35622603767295,
+          "load_1m": 0.79,
+          "mem_available_bytes": 6197702656,
+          "swap_used_bytes": 0,
+          "docker_fs_available_bytes": 9554202624,
+          "health_probe": {
+            "http_status": 200,
+            "ms": 10.077793995151296,
+            "status": "ok"
+          },
+          "telemetry_query_probe": {
+            "http_status": 200,
+            "ms": 43.866269013960846,
+            "sample_count": 264,
+            "latest_sample_age_seconds": 0.315
+          },
+          "incumbent_checks": {
+            "count": 5,
+            "all_running": true,
+            "any_oom": false,
+            "any_unhealthy": false,
+            "restart_deltas": {
+              "incumbent_1": 0,
+              "incumbent_2": 0,
+              "incumbent_3": 0,
+              "incumbent_4": 0,
+              "incumbent_5": 0
+            }
+          },
+          "pilot_checks": {
+            "count": 3,
+            "all_healthy": true,
+            "restart_total": 0
+          },
+          "stop_conditions": []
+        },
+        {
+          "utc": "2026-09-08T20:50:15.284002+00:00",
+          "elapsed_seconds": 900.1423058920045,
+          "host_cpu_percent_interval": 42.728485657104734,
+          "load_1m": 0.71,
+          "mem_available_bytes": 6140293120,
+          "swap_used_bytes": 0,
+          "docker_fs_available_bytes": 9551695872,
+          "health_probe": {
+            "http_status": 200,
+            "ms": 6.338182007311843,
+            "status": "ok"
+          },
+          "telemetry_query_probe": {
+            "http_status": 200,
+            "ms": 21.553033002419397,
+            "sample_count": 264,
+            "latest_sample_age_seconds": 30.26
+          },
+          "incumbent_checks": {
+            "count": 5,
+            "all_running": true,
+            "any_oom": false,
+            "any_unhealthy": false,
+            "restart_deltas": {
+              "incumbent_1": 0,
+              "incumbent_2": 0,
+              "incumbent_3": 0,
+              "incumbent_4": 0,
+              "incumbent_5": 0
+            }
+          },
+          "pilot_checks": {
+            "count": 3,
+            "all_healthy": true,
+            "restart_total": 0
+          },
+          "stop_conditions": []
+        }
+      ]
+    }
+  }
+}

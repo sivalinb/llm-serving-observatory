@@ -1,6 +1,16 @@
 # Validation record
 
-## Shared-host OCI pilot profile (2026-09-08)
+## Private Phoenix deployment (2026-09-08)
+
+The shared assistant is now deployed on the existing A1 ARM64 host. The [OCI pilot report](oci-private-pilot.md) records actual runtime controls, three sequential real-inference receipts, before/during host observations, backup verification and remaining release gates. It explicitly separates transport success from answer quality: every answer reached the 64-token cap and two lacked citations. It is a private beta, not a public endpoint or a throughput/HA result.
+
+Deployed code `800842e05e409259ed5733ecdff34851daa6edde` passed [all four CI jobs](https://github.com/sivalinb/llm-serving-observatory/actions/runs/34273067398). Local validation includes 85 Python tests and Ruff. The host-specific fixes retain fail-closed gates: bounded SHA-256 reads support Oracle Linux's Python 3.9, and Docker capability detection uses the actual JSON `CpuCfsQuota` key. No admission threshold was relaxed.
+
+The academy remains a separate, unchanged public static publication; this deployment does not enable its live chat link. No public firewall/NSG change, new VM/disk, paid inference, GPU/HBM measurement, alert delivery or persisted trace backend is claimed.
+
+The sections below are **historical point-in-time validation records**. Their “not deployed” statements describe those earlier releases, not the current private pilot. They remain to preserve the distinction between local, CI, simulated and OCI evidence.
+
+## Shared-host profile before deployment (2026-09-08)
 
 - Adds a standalone assistant-only deployment: half-CPU / 2.5 GiB model, 256 MiB gateway, optional 256 MiB Prometheus, private networking, separate loopback ports and volumes, no lab workers or trace stack. The [runbook](../docs/oci-shared-host.md) includes an architecture map, capacity gates, real-metric boundaries, canary checks, search-only fallback and rollback.
 - Local validation passes: **83 Python tests**, **25 Node tests**, Ruff, assistant JavaScript syntax, static portfolio export and whitespace checks. New regressions cover absent lab routes/schema/database, full-lab compatibility, output-cap enforcement before admission, deployment defaults, search-only behavior, standalone limits/isolation and fail-closed host gates. Two upstream test-library deprecation warnings remain.
@@ -8,14 +18,14 @@
 - The initial Linux integration run caught a real connectivity defect: containers were healthy on an internal-only network, but loopback publishing was unreachable. The corrected topology gives gateway/Prometheus a separate project-owned access bridge and keeps the model exclusively on the internal backend. Runtime checks explicitly verify those network memberships; the host-facing smoke must pass before calling this usable.
 - **Verified CI:** [run 34270910559](https://github.com/sivalinb/llm-serving-observatory/actions/runs/34270910559), code revision `3b114bad9ed063fdac1cdb6f520def132a5aa70e`, passed test, Terraform validation, full CPU and shared CPU jobs. The shared runtime checker passed with actual CPU/RAM/swap limits, health/no restarts, private network memberships, API boundaries and both Prometheus targets/rules. Its [raw receipt](shared-cpu-smoke.json) measured 274 input and 64 output tokens, **17,601.68 ms TTFT / 26,112.92 ms total**. One x86 runner sample, not an OCI result; output ended at the configured length limit.
 - Docker Engine is unavailable on this laptop. No local container execution, OCI deployment, ARM model performance, incumbent-workload impact, public API exposure, alert delivery or persisted distributed traces are claimed. Runtime CPU limits do not limit Docker builds or downloads.
-- The public Sites export is unchanged by this infrastructure-only addition. The animated academy remains public; real inference is not yet deployed on OCI.
+- At this pre-deployment release, the public Sites export was unchanged and real inference was not yet deployed on OCI. The later private deployment is recorded above.
 
 ## End-to-end Serving Academy (2026-09-08)
 
 - Adds 20 ordered modules and self-checks, five tracks, primary readings, per-module signals/traps/practice, two cross-layer maps and four browser-only exercises.
 - Regression checks cover curriculum structure/order, HTML escaping, export links/assets/controller IDs, memory and transfer units, invalid inputs, token subsets/unknowns, deterministic bounded queues, goodput/cost denominators and search matching.
 - Local validation passes: 73 Python tests, 25 Node tests (9 animation + 16 academy), Ruff, JavaScript syntax, static export and whitespace checks. The local `/learn/` route returns HTTP 200. GitHub CI and Sites record their separate final publication results.
-- The public academy generates no real inference, GPU utilization, telemetry, user-data persistence or OCI resources. Exercise measurements are explicitly analytical or simulated. Live assistant deployment remains pending OCI.
+- The public academy generates no real inference, GPU utilization, telemetry, user-data persistence or OCI resources. Exercise measurements are explicitly analytical or simulated. At this academy release, live assistant deployment was still pending OCI.
 - Browser interaction/visual QA, real GPU/kernel optimization, cluster autoscaling, HA, held-out model quality and new OCI benchmarks are not claimed. Sources and exercise contracts are recorded in [the learning path](../docs/learning-path.md).
 
 ## Public portfolio export (2026-09-07)

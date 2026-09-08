@@ -4,7 +4,7 @@
 
 The public export also includes the [Serving Academy](learning-path.md) at `/learn/`: 20 ordered modules, 20 self-checks, four browser exercises, a control/request/operations map and a layer-by-layer observability map. `sites/curriculum.json` is validated and escaped into static HTML; pure browser functions handle exercises without APIs or persistence. This is not a new FastAPI route or a real GPU-serving implementation.
 
-The table below describes the **full FastAPI/OCI application**, not the temporary public ChatGPT Sites export. The [Sites portfolio](sites-publishing.md) serves only the animated introduction, concepts and architecture diagrams, with live AI chat explicitly pending OCI deployment. Its artifact contains no API, model, database or live telemetry. The full application's capabilities are unchanged.
+The table below describes the **full FastAPI/OCI application**, not the temporary public ChatGPT Sites export. The [Sites portfolio](sites-publishing.md) serves the animated introduction, academy and architecture diagrams, with public AI chat still pending. Its artifact contains no API, model, database or live telemetry. A separate [private shared-host OCI pilot](oci-shared-host.md) now runs the bounded CPU assistant and small Prometheus, not the full lab/trace stack described below. The full application's capabilities are unchanged.
 
 | Route | Purpose | Public HTTPS access |
 |---|---|---|

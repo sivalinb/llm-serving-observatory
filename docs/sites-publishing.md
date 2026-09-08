@@ -1,4 +1,4 @@
-# Public portfolio now, OCI service later
+# Public portfolio and separate private OCI pilot
 
 Portfolio URL: https://llm-serving-observatory.siva-babu.chatgpt.site
 
@@ -33,7 +33,7 @@ flowchart TB
 
 There is **no network connection from this portfolio to OCI or a model API**. We do not report browser animation timings as TTFT, invent a live token ledger, or expose operator dashboards to make the static publication look active. Platform-level hosting logs are separate from application telemetry; this export installs no analytics tracker and makes no model/API requests.
 
-For the first deployment onto an already-used OCI VM, the [shared-host pilot](oci-shared-host.md) is a smaller alternative to the full-stack diagram above: assistant + CPU model, optional Prometheus, no lab API or trace backend, and no public edge. It is prepared but not deployed. This infrastructure addition does not change the public static export or turn the Sites website into a live chat service.
+For deployment onto an already-used OCI VM, the [shared-host pilot](oci-shared-host.md) is a smaller alternative to the **future full-stack/public design** above: assistant + CPU model, optional Prometheus, no lab API or trace backend, and no public edge. It was deployed privately on Phoenix ARM64 on September 8; [actual evidence](../reports/oci-private-pilot.md) is separate from the static academy. This private infrastructure deployment did not republish Sites, change the public export or turn it into a live chat service. Its existing pending-chat notice refers to public availability; there is no public OCI URL to substitute yet.
 
 ## Build and validate
 

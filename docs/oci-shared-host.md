@@ -2,7 +2,7 @@
 
 This is the **recommended first OCI pilot for an already-used A1 VM**, not a second VM or the full observability stack. It adds an invite-only real CPU assistant beside the existing application, with independent containers, storage and private networking. The public [Serving Academy](https://llm-serving-observatory.siva-babu.chatgpt.site/learn/) stays on Sites.
 
-**Status: implementation prepared; not deployed on OCI.** Local tests and GitHub runner checks are not Phoenix performance results. A fresh capacity check and explicit deployment approval are required before executing installation commands on the shared host. Do not run `scripts/deploy.sh`, Terraform, cloud-init or the full Compose overlays on that existing Oracle Linux 9 host.
+**Status: deployed as a private Phoenix A1 ARM64 pilot on 2026-09-08.** See [actual OCI receipts, host observations and limitations](../reports/oci-private-pilot.md). Local tests and GitHub runner checks remain separate from Phoenix measurements. A fresh capacity check and explicit deployment approval are still required for a new installation; the commands below are not a request to reinstall an existing pilot. Do not run `scripts/deploy.sh`, Terraform, cloud-init or the full Compose overlays on that existing Oracle Linux 9 host.
 
 ## Architecture and request flow
 
@@ -44,7 +44,7 @@ The model joins only the internal `backend` network. Gateway and Prometheus also
 | Prometheus, optional | 0.25 logical CPU | 256 MiB | `127.0.0.1:19090`; own time series only |
 | Total without / with metrics | 0.75 / 1.0 CPU | 2.75 / 3.0 GiB | Ceilings, not reservations or measured usage |
 
-All three have read-only root filesystems, dropped capabilities, bounded temporary filesystems, 64-PID limits, 5 MiB × 2 rotated logs, and no extra container swap allowance. Restart-on-failure is limited to three consecutive failed restarts; it is not an unlimited self-recovery mechanism. Docker's restart-policy semantics still apply. No privileged containers, host mounts, Docker socket, GPU, public proxy, automatic updates or new cloud resources are added. `:Z` labels apply only to this checkout's dedicated model/config bind mounts for SELinux; never point these mounts at another project's files.
+All three have read-only root filesystems, dropped capabilities, bounded temporary filesystems, 64-PID limits, 5 MiB × 2 rotated logs, and no extra container swap allowance. Restart-on-failure is limited to three consecutive failed restarts; it is not an unlimited self-recovery mechanism. Docker's restart-policy semantics still apply. No privileged containers, sensitive host-directory mounts, Docker socket, GPU, public proxy, automatic updates or new compute/storage resources are added. `:Z` labels apply only to this checkout's dedicated model/config bind mounts for SELinux; never point these mounts at another project's files.
 
 The model uses the same pinned image and checksum-verified 1.12 GB GGUF as the full CPU profile. Context is 4,096 tokens. The gateway uses a conservative UTF-8-byte reservation, **not measured input tokenization**. Actual usage is reconciled from engine-reported tokens. Outputs default to and are capped at **64 tokens**, with a 90-second generation deadline and 100,000 estimated/reconciled tokens per UTC calendar month across users. Per-user daily quotas still apply. Failed, cancelled and unknown-usage work retains its reservation. A second simultaneous AI answer gets 429, not an unbounded queue.
 
@@ -65,6 +65,8 @@ df -h .
 ```
 
 The checker requires at least 5 GiB `MemAvailable`, 8 GiB free on **both** the checkout and Docker data filesystems, no swap currently used, at least two CPUs, one-minute load no higher than 75% of logical CPU count, supported resource controls, unused ports 18000/19090 and no existing `observatory-shared` containers. It fails closed on missing tools/permissions. If Docker's data directory requires elevated read permission, review the script and run it with the host's approved administrative access; do not change directory permissions to make the check pass.
+
+On this Oracle Linux host, Docker requires existing administrative access. Prefix Docker commands with `sudo -n`, and run checks that call Docker as `sudo -n python3 scripts/shared_preflight.py` or `sudo -n python3 scripts/check_shared_runtime.py`. For the canary, preserve only its required Compose selection: `sudo -n env COMPOSE_FILE=compose.shared.yaml python3 scripts/smoke_assistant.py --url http://127.0.0.1:18000`. The downloader should run as the checkout owner, not root. Do not change Docker socket permissions or add users to privileged groups for this deployment.
 
 These are conservative **pilot gates, not a capacity model or an automatic go decision**. Load average is not CPU utilization. Compare at least 15 minutes of the incumbent's CPU, latency, error rate and container restarts before and during the pilot. Investigate unexplained restarts first. Never resize disks, prune images/build cache, stop the incumbent, increase quotas, or upgrade the cloud account just to satisfy a gate. A 100 GB boot volume does not mean its root filesystem has 100 GB available.
 
@@ -175,6 +177,8 @@ Do not use `down -v`, Docker system prune, broad process kills, or the incumbent
 ## Evidence and next release
 
 The [corrected integration run](https://github.com/sivalinb/llm-serving-observatory/actions/runs/34270910559) passed all four jobs, including full and shared real inference. Its [shared-profile receipt](../reports/shared-cpu-smoke.json) recorded **274 input / 64 output tokens, 17.60 s TTFT and 26.11 s total**, with the model limited to half a CPU and 2.5 GiB RAM. This is one x86 GitHub-runner request, **not** an OCI/ARM result, throughput benchmark or service-level promise. It hit the output cap, so the answer may be incomplete. Runtime checks also verified actual limits, healthy containers without restarts, network memberships, host-facing auth/lab boundaries and both metrics targets.
+
+The later [OCI pilot record](../reports/oci-private-pilot.md) uses deployed code `800842e05e409259ed5733ecdff34851daa6edde`, whose [four CI jobs also passed](https://github.com/sivalinb/llm-serving-observatory/actions/runs/34273067398). Real ARM requests measured 31.27 s first-request TTFT and 0.24–0.25 s for two identical warm prefixes, each capped at 64 output tokens. That difference demonstrates measured prefix reuse, not general subsecond chat performance. All responses were length-limited and two lacked citations. The report keeps actual receipts, engine-work accounting, resource evidence and host observations separate from simulation and CI.
 
 Record the reviewed commit, image/model pins, OCI shape/region (without secrets), before/after incumbent health, actual enforced resource limits, one cold and several sequential warm receipts, failures, RSS/cgroup memory, disk headroom and recovery outcome. Keep the pilot small; do not extrapolate one request into a throughput or availability claim.
 

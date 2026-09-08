@@ -45,7 +45,7 @@ This release does not enable OCI Generative AI. The older lab's upstream adapter
 - Keep `create_budget=false`. An optional advisory budget does not enforce a zero-dollar ceiling.
 - Keep `public_https=false` for the first SSH-only validation. Follow [OCI deployment](oci-deployment.md) for Terraform plan review and VM creation.
 
-No live OCI tenancy was accessed during implementation. These checks require the account owner's authenticated environment.
+The initial full-stack implementation did not access a live OCI tenancy. A later, separately approved [private shared-host pilot](../reports/oci-private-pilot.md) was deployed on the existing Phoenix ARM64 VM. These full-stack/new-capacity checks still require the account owner's authenticated environment and separate review; the slim pilot does not validate a public edge or this larger deployment.
 
 ## Start the real CPU service
 

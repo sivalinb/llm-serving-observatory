@@ -18,7 +18,7 @@ The website now opens with an **animated visual homepage**: follow a request thr
 
 New coverage includes model/artifact lifecycle, tokenization/sampling, continuous batching, chunked prefill, paged/prefix/offloaded KV, quantization/kernels/speculative decoding, parallelism/topology, OCI/Kubernetes infrastructure, routing/autoscaling, SLOs, recovery, security, RAG/tools, multimodal/LoRA/MoE, quality releases and cost. See the [learning path and capstone checklist](docs/learning-path.md).
 
-The public website includes the academy, animated tour, four full-size architecture diagrams and links to this repository. **Live AI chat is coming with OCI deployment.** The academy's memory, latency, token-ledger and bounded-queue/SLO/cost exercises are analytical or simulated. This static export does not host FastAPI, llama.cpp, the private experiment lab, authentication, request history, live metrics or dashboards. ChatGPT Sites supplies hosting, not ChatGPT-powered answers. No OCI resources are created by publishing it.
+The public website includes the academy, animated tour, four full-size architecture diagrams and links to this repository. **Public AI chat is not available; an invite-only OCI pilot is now deployed separately.** The academy's memory, latency, token-ledger and bounded-queue/SLO/cost exercises are analytical or simulated. This static export does not host FastAPI, llama.cpp, the private experiment lab, authentication, request history, live metrics or dashboards. ChatGPT Sites supplies hosting, not ChatGPT-powered answers. No OCI resources are created by publishing it. This private deployment did not republish the academy or change its pending-public-chat notice.
 
 Build with `python scripts/build_portfolio.py`; preview with `python -m http.server 8766 --bind 127.0.0.1 --directory dist`. Only allowlisted public assets enter `dist/`. See [Sites publishing and the OCI transition](docs/sites-publishing.md). GitHub pushes validate the export but do **not** automatically redeploy Sites.
 
@@ -26,7 +26,7 @@ Documentation: [Learning path](docs/learning-path.md) · [Architecture](docs/arc
 
 ## New: ServingOps Cloud — real traffic on Phoenix Free Tier
 
-**Already sharing an OCI VM with another application? Start with the [slim shared-host pilot](docs/oci-shared-host.md), not the full-stack commands below.** Its standalone `compose.shared.yaml` runs the assistant on loopback port 18000, a half-CPU / 2.5 GiB model, and optional small Prometheus. It disables lab/benchmark APIs, caps output at 64 tokens and isolates all storage/networking. Includes capacity gates, actual-limit checks, a visual architecture, search-only fallback and rollback. **Prepared, not yet deployed on OCI; no public inference endpoint is claimed.**
+**Already sharing an OCI VM with another application? Start with the [slim shared-host pilot](docs/oci-shared-host.md), not the full-stack commands below.** Its standalone `compose.shared.yaml` runs the assistant on loopback port 18000, a half-CPU / 2.5 GiB model, and optional small Prometheus. It disables lab/benchmark APIs, caps output at 64 tokens and uses separate storage/networks while sharing the host's hardware. Includes capacity gates, actual-limit checks, a visual architecture, search-only fallback and rollback. **Deployed privately on Phoenix A1 ARM64 on September 8; no public inference endpoint.** See [actual OCI receipts and deployment evidence](reports/oci-private-pilot.md), including the identical-prefix cache effect and missing-citation/truncation limitations.
 
 The repository now includes an **invite-only documentation assistant** at `/assistant`: real streamed CPU inference, retrieved references, per-user access keys and isolated history, atomic quotas, cancellation/deadlines, and a separate real-traffic Grafana dashboard. No model configured? It offers document search and explicitly disables AI answers; it never substitutes simulated answers.
 
@@ -84,7 +84,7 @@ Open [the visual introduction](http://localhost:8000) or [the learning lab](http
 | GPU telemetry integration | Private DCGM discovery, collector field list, GPU/DRAM/SM and VRAM panels | External compatible GPU/exporter required; no fake samples |
 | Observability | Prometheus, five lab dashboards plus one real-service dashboard, OTel collector, Tempo, JSON logs | Source labels keep simulated / upstream data distinct |
 | Invite-only assistant | Curated lexical retrieval, real CPU stream, hashed keys, isolated metadata, quotas | Small-model answers require source verification; no private uploads |
-| Shared-host pilot | Standalone limited CPU assistant, optional Prometheus, preflight/runtime checks and rollback | Private pilot; no full lab, trace backend, public edge or OCI performance claim |
+| Shared-host pilot | Deployed ARM64 CPU assistant with Prometheus, enforced limits, private API and real receipts | Three sequential OCI canaries, not a load/HA test; no full lab, trace backend or public edge |
 | Experiment storage | SQLite WAL, bounded retention, JSON export | No prompts or generated text retained |
 | OCI integration | A1 Terraform, private Object Storage, optional budget, export to Monitoring/ADB | Credentials and an OCI apply are required |
 | Rich diagrams | Downloadable SVG architecture and lifecycle, live serving-path view | Diagrams document actual boundaries |
@@ -223,7 +223,7 @@ sites/                   Reviewed curriculum, academy template/styles and pure b
 .github/workflows/       Python/Node checks, real CPU inference, public edge, telemetry, Terraform
 ```
 
-This is a single-node learning system and invite-only service beta. The assistant already has personal keys, isolated request metadata, quotas and bounded admission; the private lab still has shared experiment state. Use exactly one gateway worker: counters and simulator state are process-local, and SQLite is not a cross-host distributed store. Shared storage/admission, stronger edge protection, multi-replica recovery and measured capacity are still required for a larger production service. No completed OCI deployment or HA guarantee is claimed.
+This is a single-node learning system and invite-only service beta. The assistant already has personal keys, isolated request metadata, quotas and bounded admission; the private lab still has shared experiment state. Use exactly one gateway worker: counters and simulator state are process-local, and SQLite is not a cross-host distributed store. Shared storage/admission, stronger edge protection, multi-replica recovery and measured capacity are still required for a larger production service. The documented private OCI pilot does not establish public-service readiness or an HA guarantee.
 
 ## Sources
 
