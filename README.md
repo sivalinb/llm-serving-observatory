@@ -8,6 +8,26 @@ A working LLM serving laboratory for learning **TTFT, prefill, decode, KV-cache 
 
 New here? Follow the [eight-minute portfolio walkthrough](docs/portfolio-walkthrough.md) or the [hardware and memory guide](docs/hardware-memory.md).
 
+## New: ServingOps Cloud — real traffic on Phoenix Free Tier
+
+The repository now includes an **invite-only documentation assistant** at `/assistant`: real streamed CPU inference, retrieved references, per-user access keys and isolated history, atomic quotas, cancellation/deadlines, and a separate real-traffic Grafana dashboard. No model configured? It offers document search and explicitly disables AI answers; it never substitutes simulated answers.
+
+![Phoenix service architecture](observatory/static/service-architecture.svg)
+
+The default deployment uses a checksum-pinned Qwen 1.5B quantized model and a digest-pinned ARM-compatible llama.cpp container. It targets **one Always Free eligible A1 VM in `us-phoenix-1`**, with no managed inference calls, GPU or HBM. Verify current free allowance, home region and existing allocations before provisioning. This is a single-node beta, not an HA or zero-cost guarantee.
+
+```bash
+python3 scripts/download_model.py
+docker compose -f compose.yaml -f compose.cpu.yaml up -d --build --wait --wait-timeout 300
+docker compose exec -T gateway python -m observatory.admin invite
+```
+
+Open `http://localhost:8000/assistant` through an SSH tunnel, redeem the invite, and save the returned personal key. Follow the [complete Phoenix service runbook](docs/servingops-runbook.md) for HTTPS, monitoring, privacy, backups, rollback and the portfolio demo. The public Caddy profile now exposes **only the assistant**; the lab and operations console stay private.
+
+The assistant performs real combined prefill/decode. It does **not** claim real cross-worker KV transfer or GPU disaggregation. Citations are source-ID checks, not factual validation. All real latency and token fields come from actual streams; missing usage details remain unknown.
+
+## Learning lab
+
 ![System architecture](observatory/static/architecture.svg)
 
 ## Start in two minutes
@@ -44,7 +64,8 @@ Open [localhost:8000](http://localhost:8000). No cloud account, API key, model d
 | Hardware planning | Interactive weight/KV/workspace budget, capacity sweep, bounds, baseline comparison and export | Hypothetical single device; no model allocations or GPU benchmark claims |
 | CPU/RAM telemetry | Per-service CPU cores, RSS, host RAM and optional cgroup-v2 limits/throttling | Measured process/container aggregates, not per-request attribution |
 | GPU telemetry integration | Private DCGM discovery, collector field list, GPU/DRAM/SM and VRAM panels | External compatible GPU/exporter required; no fake samples |
-| Observability | Prometheus, five Grafana dashboards, OTel collector, Tempo, JSON logs | Source labels keep simulated / upstream data distinct |
+| Observability | Prometheus, five lab dashboards plus one real-service dashboard, OTel collector, Tempo, JSON logs | Source labels keep simulated / upstream data distinct |
+| Invite-only assistant | Curated lexical retrieval, real CPU stream, hashed keys, isolated metadata, quotas | Small-model answers require source verification; no private uploads |
 | Experiment storage | SQLite WAL, bounded retention, JSON export | No prompts or generated text retained |
 | OCI integration | A1 Terraform, private Object Storage, optional budget, export to Monitoring/ADB | Credentials and an OCI apply are required |
 | Rich diagrams | Downloadable SVG architecture and lifecycle, live serving-path view | Diagrams document actual boundaries |

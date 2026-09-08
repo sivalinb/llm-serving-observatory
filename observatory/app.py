@@ -12,6 +12,8 @@ from fastapi.staticfiles import StaticFiles
 from opentelemetry.propagate import extract
 from prometheus_client import CONTENT_TYPE_LATEST, REGISTRY, generate_latest
 
+from .assistant import create_assistant
+from .assistant import router as assistant_router
 from .hardware import HardwareRequest, estimate_with_sweep
 from .models import BenchmarkRequest, ChatRequest, LabRequest
 from .resources import ResourceMonitor
@@ -27,13 +29,21 @@ def require_key(authorization: str = Header(default="")):
         raise HTTPException(401, "Bearer API key required")
 
 
-def create_app(db_path=None, service=None):
+def create_app(db_path=None, service=None, assistant_service=None):
     @asynccontextmanager
     async def lifespan(app):
         app.state.service = service or Service(
             Store(db_path or os.getenv("LAB_DB", "data/lab.sqlite"))
         )
         app.state.resources = ResourceMonitor()
+        assistant_path = (
+            str(Path(db_path).with_name("assistant.sqlite"))
+            if db_path and str(db_path) != ":memory:"
+            else ":memory:"
+            if db_path
+            else os.getenv("ASSISTANT_DB", "data/assistant.sqlite")
+        )
+        app.state.assistant = assistant_service or create_assistant(assistant_path)
         REGISTRY.register(app.state.resources)
         await app.state.resources.start()
         try:
@@ -43,8 +53,11 @@ def create_app(db_path=None, service=None):
             REGISTRY.unregister(app.state.resources)
             await app.state.service.client.aclose()
             app.state.service.store.close()
+            await app.state.assistant.client.aclose()
+            app.state.assistant.store.close()
 
-    app = FastAPI(title="LLM Serving Observatory", version="0.2.0", lifespan=lifespan)
+    app = FastAPI(title="LLM Serving Observatory", version="0.3.0", lifespan=lifespan)
+    app.include_router(assistant_router)
     static = Path(__file__).parent / "static"
     app.mount("/static", StaticFiles(directory=static, check_dir=False), name="static")
 
@@ -53,6 +66,8 @@ def create_app(db_path=None, service=None):
         response = await call_next(request)
         response.headers["X-Content-Type-Options"] = "nosniff"
         response.headers["Referrer-Policy"] = "no-referrer"
+        if request.url.path.startswith("/api/service"):
+            response.headers["Cache-Control"] = "no-store"
         response.headers["Content-Security-Policy"] = (
             "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; object-src 'none'; frame-ancestors 'none'"
         )
@@ -93,7 +108,7 @@ def create_app(db_path=None, service=None):
 
     @app.get("/healthz")
     def health():
-        return {"status": "ok", "version": "0.2.0"}
+        return {"status": "ok", "version": "0.3.0"}
 
     @app.post("/api/hardware/estimate", dependencies=[Depends(require_key)])
     def hardware_estimate(req: HardwareRequest):

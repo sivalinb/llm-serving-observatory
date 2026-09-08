@@ -13,16 +13,38 @@ jobs:
         with: {python-version: '3.12'}
       - run: pip install -r requirements.lock && pip install -e '.[dev]'
       - run: ruff check . && pytest -q
-      - run: node --check observatory/static/app.js && node --check observatory/static/hardware.js
+      - run: python scripts/evaluate_retrieval.py
+      - run: node --check observatory/static/app.js && node --check observatory/static/hardware.js && node --check observatory/static/assistant.js
       - run: docker run --rm --entrypoint promtool -v "$PWD/observability:/etc/prometheus:ro" prom/prometheus:v3.2.1 check config /etc/prometheus/prometheus.yaml
       - run: docker compose config --quiet
       - run: GRAFANA_PASSWORD=ci-only docker compose -f compose.yaml -f compose.observability.yaml config --quiet
+      - run: docker compose -f compose.yaml -f compose.cpu.yaml -f compose.observability.yaml -f compose.cpu-observability.yaml config --quiet
       - run: docker compose -f compose.yaml -f compose.observability.yaml up -d --build --wait
       - run: python scripts/smoke.py --url http://127.0.0.1:8000
       - run: python scripts/check_observability.py
+      - run: LAB_API_KEY=ci-only DOMAIN=http://localhost ACME_EMAIL=ci@example.com docker compose -f compose.yaml -f compose.public.yaml up -d caddy
+      - run: python scripts/check_public.py --url http://localhost
       - run: docker compose -f compose.yaml -f compose.observability.yaml logs --tail=60
         if: failure()
-      - run: docker compose -f compose.yaml -f compose.observability.yaml down
+      - run: LAB_API_KEY=ci-only DOMAIN=http://localhost ACME_EMAIL=ci@example.com docker compose -f compose.yaml -f compose.observability.yaml -f compose.public.yaml down
+        if: always()
+  real-cpu:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - uses: actions/cache@v4
+        with:
+          path: models/qwen2.5-1.5b-instruct-q4_k_m.gguf
+          key: qwen-cpu-6a1a2eb6d15622bf
+      - run: python scripts/download_model.py
+      - run: docker compose -f compose.yaml -f compose.cpu.yaml up -d --build --wait --wait-timeout 300
+      - run: python scripts/smoke_assistant.py
+      - run: docker compose -f compose.yaml -f compose.cpu.yaml logs --tail=40
+        if: failure()
+      - run: docker compose -f compose.yaml -f compose.cpu.yaml down
         if: always()
   terraform:
     runs-on: ubuntu-latest

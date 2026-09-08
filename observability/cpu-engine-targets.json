@@ -1,0 +1,1 @@
+[{"targets":["model:8080"],"labels":{"engine":"llama.cpp","hardware":"cpu","source":"measured"}}]

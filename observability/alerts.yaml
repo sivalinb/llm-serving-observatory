@@ -51,3 +51,22 @@ groups:
         labels: {severity: warning}
         annotations:
           summary: 'Process resource telemetry is missing or stale'
+      - alert: AssistantFailures
+        expr: sum(increase(assistant_requests_total{status=~"error|timeout"}[15m])) >= 3
+        for: 1m
+        labels: {severity: warning}
+        annotations:
+          summary: 'Three or more real assistant failures in 15 minutes'
+          description: 'Inspect model health and CPU/RAM pressure; turn off CPU inference if needed. Search remains available.'
+      - alert: AssistantSlowFirstContent
+        expr: histogram_quantile(0.95, sum by (le) (rate(assistant_ttft_seconds_bucket[15m]))) > 30
+        for: 5m
+        labels: {severity: warning}
+        annotations:
+          summary: 'CPU beta p95 TTFT is above the provisional 30-second target'
+      - alert: CPUModelUnavailable
+        expr: up{job="inference-engine",hardware="cpu"} == 0
+        for: 1m
+        labels: {severity: warning}
+        annotations:
+          summary: 'Configured CPU model is not responding to scrapes'

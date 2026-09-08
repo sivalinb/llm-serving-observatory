@@ -1,0 +1,33 @@
+# Phoenix Free Tier beta. Download the pinned model with scripts/download_model.py first.
+services:
+  gateway:
+    environment:
+      ASSISTANT_ENABLE_CPU: 'true'
+      ASSISTANT_CPU_URL: http://model:8080/v1
+      ASSISTANT_CPU_MODEL: servingops-cpu
+      ASSISTANT_DEADLINE_SECONDS: ${ASSISTANT_DEADLINE_SECONDS:-90}
+      ASSISTANT_MONTHLY_TOKENS: ${ASSISTANT_MONTHLY_TOKENS:-1000000}
+    stop_grace_period: 100s
+    depends_on:
+      model: {condition: service_healthy}
+  model:
+    image: ghcr.io/ggml-org/llama.cpp:server-b10015@sha256:6bc9134e3278a0ecab23d7ef2f6a46b4595740014fe9bc2f67e8ba7dca8395b4
+    command: ['--model', '/models/qwen2.5-1.5b-instruct-q4_k_m.gguf', '--alias', 'servingops-cpu', '--host', '0.0.0.0', '--port', '8080', '--ctx-size', '4096', '--parallel', '1', '--threads', '2', '--threads-batch', '2', '--n-gpu-layers', '0', '--metrics', '--no-webui', '--log-disable']
+    volumes: ['./models:/models:ro']
+    # No host port: only containers on the private Compose network can reach the model.
+    mem_limit: 4g
+    cpus: 1.5
+    read_only: true
+    tmpfs: [/tmp:size=64m]
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    restart: unless-stopped
+    healthcheck:
+      test: ['CMD', 'curl', '-fsS', 'http://127.0.0.1:8080/health']
+      interval: 10s
+      timeout: 3s
+      retries: 30
+      start_period: 30s
+    logging:
+      driver: json-file
+      options: {max-size: 10m, max-file: '2'}

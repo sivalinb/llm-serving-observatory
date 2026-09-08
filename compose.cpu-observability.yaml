@@ -1,0 +1,5 @@
+# Add after compose.observability.yaml and compose.cpu.yaml to scrape the real CPU engine.
+services:
+  prometheus:
+    volumes:
+      - ./observability/cpu-engine-targets.json:/etc/prometheus/engine-targets.json:ro

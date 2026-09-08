@@ -26,6 +26,7 @@ services:
       UPSTREAM_MODEL: ${UPSTREAM_MODEL:-}
       UPSTREAM_API_KEY: ${UPSTREAM_API_KEY:-}
       UPSTREAM_KIND: ${UPSTREAM_KIND:-llama.cpp}
+      ASSISTANT_DB: ${ASSISTANT_DB:-data/assistant.sqlite}
     volumes: [lab-data:/app/data]
     depends_on:
       prefill: {condition: service_healthy}
