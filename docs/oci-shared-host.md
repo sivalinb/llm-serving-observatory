@@ -35,7 +35,7 @@ flowchart TB
   class metrics,ledger ops;
 ```
 
-The network does **not** connect to the incumbent application's Docker network, volumes, credentials, Grafana or collector. Isolation is not dedicated hardware: CPU caches, memory bandwidth, disk I/O and the Linux kernel are still shared. Resource limits reduce interference; they do not prove it cannot happen.
+The model joins only the internal `backend` network. Gateway and Prometheus also join this project's own ordinary `access` bridge so Docker can publish their loopback ports; publishing from an internal-only network did not work in the Linux CI test. This bridge permits outbound connectivity from those two containers; it is **not** an egress firewall. Neither network connects to the incumbent application's Docker network, volumes, credentials, Grafana or collector. Isolation is not dedicated hardware: CPU caches, memory bandwidth, disk I/O and the Linux kernel are still shared. Resource limits reduce interference; they do not prove it cannot happen.
 
 | Container | CPU ceiling | RAM ceiling | Exposure / role |
 |---|---:|---:|---|

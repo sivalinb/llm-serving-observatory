@@ -29,6 +29,16 @@ def main():
             assert not bindings or all(b["HostIp"] == "127.0.0.1" for b in bindings), name
         if name == "model":
             assert not any(container["NetworkSettings"]["Ports"].values())
+        networks = container["NetworkSettings"]["Networks"]
+        assert set(networks) == (
+            {"observatory-shared_backend"}
+            if name == "model"
+            else {"observatory-shared_backend", "observatory-shared_access"}
+        ), name
+    backend = json.loads(
+        subprocess.check_output(["docker", "network", "inspect", "observatory-shared_backend"])
+    )[0]
+    assert backend["Internal"], "Model backend must remain internal"
     with urlopen("http://127.0.0.1:18000/healthz", timeout=10) as response:
         assert json.load(response)["profile"] == "assistant-only"
     with urlopen("http://127.0.0.1:18000/api/service/status", timeout=10) as response:

@@ -130,7 +130,7 @@ def test_server_output_limit_default_and_explicit_admission(tmp_path):
 def test_shared_compose_is_standalone_and_bounded():
     config = yaml.safe_load((ROOT / "compose.shared.yaml").read_text())
     assert config["name"] == "observatory-shared"
-    assert config["networks"] == {"backend": {"internal": True}}
+    assert config["networks"] == {"backend": {"internal": True}, "access": {}}
     assert set(config["volumes"]) == {"assistant-data", "metrics-data"}
     services = config["services"]
     assert set(services) == {"gateway", "model", "prometheus"}
@@ -142,7 +142,7 @@ def test_shared_compose_is_standalone_and_bounded():
         assert service["read_only"] and service["cap_drop"] == ["ALL"]
         assert service["security_opt"] == ["no-new-privileges:true"]
         assert service["pids_limit"] == 64 and service["restart"] == "on-failure:3"
-        assert service["networks"] == ["backend"]
+        assert service["networks"] == (["backend"] if name == "model" else ["backend", "access"])
         assert len(service["tmpfs"]) == 1 and service["tmpfs"][0].startswith("/tmp:size=")
         assert "privileged" not in service and "network_mode" not in service
         assert "docker.sock" not in str(service)
