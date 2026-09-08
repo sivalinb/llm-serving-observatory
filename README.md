@@ -46,6 +46,8 @@ The assistant performs real combined prefill/decode. It does **not** claim real 
 
 ## Private in-website observability
 
+New users: open **Assistant → How it works** (`/assistant#system`) for a seven-step animated walkthrough of keys, workspaces, authentication, questions, search/AI, receipts and the dashboard. Examples only fill the question box; they do not submit it. [First-visit guide](docs/using-the-service.md).
+
 **Live on the private OCI website as of September 8, 2026.** Open `http://127.0.0.1:18000/observability` through an approved active Bastion/SSH tunnel. [Deployment checks and memory-incident resolution](reports/observability-release.md). This is not a public endpoint; the Sites academy stays separate.
 
 The shared OCI service includes **`/observability`**, a native metrics explorer, overview/alert view, request timeline and sanitized-event viewer. Reuse your assistant key for personal records; service-wide metrics require a separate host-granted operator role. It uses existing Prometheus and SQLite storage, performs no model calls and stays outside the public academy. [Access, architecture, privacy and operating guide](docs/observability-dashboard.md). Raw container logs, stored traces, model/host resource history and GPU/HBM readings are not added by this release.

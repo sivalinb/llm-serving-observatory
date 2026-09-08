@@ -2,11 +2,11 @@
 
 **Existing shared Oracle Linux A1 host:** use the [shared-host pilot runbook](oci-shared-host.md). Do not apply this guide's Ubuntu bootstrap, Terraform or full-stack deploy script to a VM running another application. The slim profile was deployed privately on Phoenix ARM64 on September 8; see [actual pilot evidence](../reports/oci-private-pilot.md). This does not validate the separate new-VM/full-stack procedure below.
 
-For the current **Phoenix Free Tier assistant**, follow the [ServingOps service runbook](servingops-runbook.md). This guide covers shared infrastructure, the private learning lab and optional aggregate exports. The public routes are `/` (animated introduction) and `/assistant`; `/lab` and operations endpoints remain private.
+For the **currently deployed Phoenix assistant and native dashboard**, follow the [shared-host runbook](oci-shared-host.md) and [first-visit guide](using-the-service.md). It uses the existing Oracle Linux 9 ARM host, loopback 18000/19090, an approved tunnel and no public ingress. The remainder of this document describes an **optional dedicated Ubuntu/full-stack deployment**, not the running shared pilot. In that optional design, Caddy can expose `/` and `/assistant`; `/lab`, `/observability` and operations APIs stay private.
 
 ## CPU lab
 
-The long-lived deployment is an Ubuntu ARM VM, three lightweight application containers, and optionally the local observability stack. The lab serves its own HTML/CSS/JavaScript; no separate web hosting service is needed. Resource estimates are not guarantees: inspect the Always Free label and your **aggregate** current usage in the OCI console before applying the configuration.
+The optional full-stack design uses a new Ubuntu ARM VM, three lightweight lab application containers, and optionally the local observability stack. This is not the current Oracle Linux shared-host deployment. The lab serves its own HTML/CSS/JavaScript; no separate web hosting service is needed. Resource estimates are not guarantees: inspect the Always Free label and your **aggregate** current usage in the OCI console before applying the configuration.
 
 Prerequisites: an active OCI tenancy, home-region A1 capacity, an existing compartment, an SSH public key, your current public IPv4 address, a region-specific official Ubuntu 24.04 ARM image OCID, Terraform 1.6+, and a configured OCI API profile. Do not place the OCI private key or profile in this repository. Terraform's OCI provider can use your normal OCI CLI configuration or supported environment variables.
 

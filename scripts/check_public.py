@@ -31,6 +31,8 @@ def main():
         "/assistant",
         "/api/service/status",
         "/static/assistant.js",
+        "/static/guide.js",
+        "/static/guide.css",
         "/static/home.js",
         "/static/home.css",
     ]:

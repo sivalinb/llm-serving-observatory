@@ -8,11 +8,21 @@ For a public, no-setup introduction, share [the ChatGPT Sites portfolio](https:/
 
 > I built an LLM-serving observatory with an animated beginner's guide, an invite-only CPU documentation assistant, and a private experiment lab. It separates real inference, simulated KV handoffs, analytical GPU-memory estimates, and measured CPU/RAM telemetry. Personal keys, quotas, streaming receipts and traceable validation make it a small but inspectable service with a Phoenix deployment path.
 
-Say “deployed on OCI” or “benchmarked on GPUs” **only after doing so** and attaching the evidence. The committed simulation report is a local experiment; the hardware report is deterministic analytical output. The [real CPU receipt](../reports/real-cpu-smoke.json) comes from a GitHub runner, not OCI. It demonstrates working inference, not answer quality or production scale.
+The private CPU assistant and native dashboard are now deployed on the existing Phoenix ARM host. Attach the [actual OCI pilot evidence](../reports/oci-private-pilot.md) and [dashboard release evidence](../reports/observability-release.md) when saying “deployed on OCI.” Do not say “benchmarked on GPUs”: no GPU deployment is claimed. The simulation report is local, the hardware report analytical, and the separate [CI CPU receipt](../reports/real-cpu-smoke.json) is from a GitHub runner. These remain distinct evidence sources, not answer-quality or production-scale claims.
+
+## Current private OCI demo
+
+1. Open `/assistant#system` and follow the seven-step **How it works** guide. Explain a personal key, account workspace and the authentication/authorization distinction before showing private data.
+2. Connect with your own key. Select an example to fill the question box, then explicitly choose Search guides or Ask AI. The walkthrough itself submits nothing.
+3. For an approved real answer, explain TTFT, token subsets, truncation and source verification. Alternatively inspect an existing receipt without creating traffic.
+4. Reconnect at `/observability`. Show My requests/My events; with an explicit operator grant, show Overview & alerts, Metric explorer and All project filters.
+5. Explain the measured CPU/RAM signals and missing raw logs, stored traces, GPU/HBM and model-cgroup history. The shared pilot does not have `/lab`, Grafana or Tempo. Use the separate full-lab demonstration below only where that stack is actually running.
+
+See the [first-visit guide](using-the-service.md) for playback, keyboard/reduced-motion support, safe questions, access and troubleshooting.
 
 Start at `/` to explain the system without an invite. The animation makes no model calls; compare modes, pause or select a stage. Continue to `/assistant` for the real service, and open `/lab` through your local connection or SSH tunnel for the demo below. Public HTTPS intentionally blocks the lab. For an assistant-focused demo covering identity, quotas, citations and recovery, use the [five-minute service walkthrough](servingops-runbook.md#portfolio-demonstration-five-minutes).
 
-## Eight-minute live demo
+## Eight-minute full isolated lab demo (not the shared OCI pilot)
 
 | Time | Show | Explain / verify |
 |---|---|---|
@@ -68,4 +78,4 @@ Do not claim a throughput improvement, production scale, customer impact or cost
 
 ## Next validation milestone—not a claim of completion
 
-Deploy the CPU stack in the user's OCI tenancy, run the smoke test, capture a Grafana dashboard and trace, and save the environment with the report. Only then, with compatible GPUs and cost approval, execute the real inference/disaggregation runbook and add measurements alongside the analytical estimates.
+The private shared CPU deployment and native-dashboard checks are complete with the evidence linked above; the full lab and GPU stack are not deployed on that host. Next validate small-model answer quality, explicitly approved capacity tests, off-host recovery and alert delivery. Capture Grafana/Tempo evidence only in a separately approved isolated full lab. Real GPU disaggregation still requires compatible hardware, cost approval and measured transfer/correctness results.

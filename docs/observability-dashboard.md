@@ -4,6 +4,8 @@
 
 Open **`/observability` on the private OCI gateway**, beside `/assistant`. This is a native dashboard, not an embedded Grafana iframe. It reuses the existing shared-profile Prometheus and assistant SQLite ledger: no additional container, cloud service, paid model call or public route is required.
 
+First visit? Choose **How it works** in the dashboard navigation to open the assistant's animated seven-step guide at `/assistant#system`. It explains personal keys, account workspaces, permissions, useful questions, receipts and how to use each dashboard view. [Text guide and troubleshooting](using-the-service.md). The walkthrough itself makes no model/API calls and never reads your key.
+
 For access through an active approved tunnel, use `http://127.0.0.1:18000/observability`. A localhost URL is not a public website; it stops working when its SSH/Bastion session expires. The public Sites academy stays static and disconnected from this API.
 
 ## Follow the signals

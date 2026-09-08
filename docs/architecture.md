@@ -4,13 +4,15 @@
 
 The public export also includes the [Serving Academy](learning-path.md) at `/learn/`: 20 ordered modules, 20 self-checks, four browser exercises, a control/request/operations map and a layer-by-layer observability map. `sites/curriculum.json` is validated and escaped into static HTML; pure browser functions handle exercises without APIs or persistence. This is not a new FastAPI route or a real GPU-serving implementation.
 
-The table below describes the **full FastAPI/OCI application**, not the temporary public ChatGPT Sites export. The [Sites portfolio](sites-publishing.md) serves the animated introduction, academy and architecture diagrams, with public AI chat still pending. Its artifact contains no API, model, database or live telemetry. A separate [private shared-host OCI pilot](oci-shared-host.md) now runs the bounded CPU assistant and small Prometheus, not the full lab/trace stack described below. The full application's capabilities are unchanged.
+The table below describes the **FastAPI application's routes and optional full-stack Caddy boundary**, not the public ChatGPT Sites export. The [Sites portfolio](sites-publishing.md) serves the animated introduction, academy and architecture diagrams, with public AI chat still pending. Its artifact contains no API, model, database or live telemetry. The current [private shared-host OCI pilot](oci-shared-host.md) runs the bounded CPU assistant, native dashboard and small Prometheus over an approved tunnel; it has no public Caddy edge or full lab/trace stack.
 
 | Route | Purpose | Public HTTPS access |
 |---|---|---|
 | `/` | Animated beginner introduction; combined/disaggregated conceptual tour | Yes; no authentication or model calls |
 | `/assistant` | Curated documentation search and optional real CPU answers | Page is public; search/answers require a personal key |
 | `/api/service/*` | Status, invite redemption, authenticated usage/history and streaming | Explicitly allowed; individual route authentication applies |
+| `/assistant#system` | Seven-step animated first-visit guide; example buttons only fill the question box | Same assistant page; new explanatory assets are allowlisted, no credentials or live telemetry in the guide |
+| `/observability`, `/api/observability/*` | Native metrics/alerts, request receipts and sanitized events | Blocked by public Caddy; private key required for data, separate operator role for global data |
 | `/lab` | Experimental serving, hardware planner and benchmarks | No; local connection or SSH tunnel only |
 | `/metrics`, API docs, lab APIs | Operator telemetry and experiments | Blocked by the public Caddy allowlist |
 
@@ -19,6 +21,8 @@ The homepage is a static HTML/CSS/JavaScript state machine. Its sequence is expl
 ![Real CPU service architecture](../observatory/static/service-architecture.svg)
 
 The real assistant uses `Assistant.prepare` and a separate SQLite identity/admission ledger, not the lab's `Service.run` or shared experiment history. The path is: authenticate → retrieve approved excerpts → reserve quota/capacity atomically → stream from the private llama.cpp model → reconcile usage and retain metadata. Exactly one real assistant answer is admitted at a time; failures and cancellations retain conservative quota reservations. Questions and generated text are not persisted. The CPU engine performs real combined prefill/decode; its KV cache stays in that engine's host RAM.
+
+The same SQLite volume now includes `operator_grants` and bounded `service_events`. An invitation grants personal access, not global observability. Host-side role grants allow a read-only, bounded Prometheus adapter and all-project metadata queries; authorization is rechecked on privileged calls. Events use a closed schema and omit prompt/answer/key text. There is no arbitrary PromQL proxy, raw-log backend or stored distributed trace in the shared profile. See the [dashboard architecture](observability-dashboard.md) and [user walkthrough](using-the-service.md).
 
 Read the [service runbook](servingops-runbook.md) for deployment, privacy, retention, source-citation limitations and recovery. The remaining diagrams and lifecycle descriptions below describe the **learning lab**, whose disaggregated transfer is modeled rather than a real tensor handoff.
 

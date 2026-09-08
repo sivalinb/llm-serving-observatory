@@ -18,6 +18,7 @@ jobs:
       - run: node --check observatory/static/home.js && node --test tests/home-tour.test.cjs
       - run: node --check sites/academy.js && node --test tests/academy.test.cjs
       - run: node --check observatory/static/observability.js && node --test tests/observability.test.cjs
+      - run: node --check observatory/static/guide.js && node --test tests/guide.test.cjs
       - run: python scripts/build_portfolio.py
       - run: docker run --rm --entrypoint promtool -v "$PWD/observability:/etc/prometheus:ro" prom/prometheus:v3.2.1 check config /etc/prometheus/prometheus.yaml
       - run: docker run --rm --entrypoint promtool -v "$PWD/observability:/etc/prometheus:ro" prom/prometheus:v3.2.1 check config /etc/prometheus/prometheus-shared.yaml
