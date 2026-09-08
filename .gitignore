@@ -19,3 +19,4 @@ models/
 .terraform/
 reports/local-*
 .DS_Store
+dist/

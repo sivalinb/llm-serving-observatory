@@ -8,7 +8,15 @@ A working LLM serving laboratory for learning **TTFT, prefill, decode, KV-cache 
 
 New here? Follow the [eight-minute portfolio walkthrough](docs/portfolio-walkthrough.md) or the [hardware and memory guide](docs/hardware-memory.md).
 
-The website now opens with an **animated visual homepage**: follow a request through prefill, optional KV handoff, first visible output, decode and observability. Switch architectures, pause, restart or select any stage. The tour is explanatory, makes no model calls, and respects reduced-motion preferences. Open `/assistant` for the real service or `/lab` through your local/SSH connection for experiments.
+The website now opens with an **animated visual homepage**: follow a request through prefill, optional KV handoff, first visible output, decode and observability. Switch architectures, pause, restart or select any stage. The tour is explanatory, makes no model calls, and respects reduced-motion preferences. In the full application, open `/assistant` for the real service or `/lab` through your local/SSH connection for experiments.
+
+## Public portfolio on ChatGPT Sites
+
+[Open the public learning portfolio](https://llm-serving-observatory.siva-babu.chatgpt.site).
+
+The temporary public website includes the animated tour, serving/memory/token concepts, four full-size architecture diagrams and links to this repository. **Live AI chat is coming with OCI deployment.** This static export does not host FastAPI, llama.cpp, the interactive lab, authentication, request history, live metrics or dashboards. ChatGPT Sites supplies hosting, not ChatGPT-powered answers. No OCI resources are created by publishing it.
+
+Build with `python scripts/build_portfolio.py`; preview with `python -m http.server 8766 --bind 127.0.0.1 --directory dist`. Only allowlisted public assets enter `dist/`. See [Sites publishing and the OCI transition](docs/sites-publishing.md). GitHub pushes validate the export but do **not** automatically redeploy Sites.
 
 Documentation: [Architecture](docs/architecture.md) · [Observability contract](docs/observability.md) · [Phoenix service runbook](docs/servingops-runbook.md) · [Portfolio walkthrough](docs/portfolio-walkthrough.md) · [Validation evidence](reports/validation.md).
 
@@ -188,6 +196,7 @@ node --check observatory/static/hardware.js
 node --check observatory/static/assistant.js
 node --check observatory/static/home.js
 node --test tests/home-tour.test.cjs
+python scripts/build_portfolio.py
 python scripts/evaluate_retrieval.py
 terraform -chdir=infra/oci init -backend=false
 terraform -chdir=infra/oci validate
@@ -201,6 +210,8 @@ infra/oci/               Terraform and Ubuntu cloud-init
 scripts/                 Model download, real CPU/public-edge smokes, retrieval eval, lab/OCI tools
 tests/                   Python service/security checks and Node homepage-animation tests
 docs/                    Architecture, measurements, Phoenix service/OCI/GPU runbooks, portfolio guide
+sites/                   Public-portfolio styling; export reuses the animated homepage
+.openai/hosting.json      Sites project binding and static-output configuration (no credentials)
 .github/workflows/       Python/Node checks, real CPU inference, public edge, telemetry, Terraform
 ```
 

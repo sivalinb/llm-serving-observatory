@@ -2,6 +2,8 @@
 
 ## Current application surfaces
 
+The table below describes the **full FastAPI/OCI application**, not the temporary public ChatGPT Sites export. The [Sites portfolio](sites-publishing.md) serves only the animated introduction, concepts and architecture diagrams, with live AI chat explicitly pending OCI deployment. Its artifact contains no API, model, database or live telemetry. The full application's capabilities are unchanged.
+
 | Route | Purpose | Public HTTPS access |
 |---|---|---|
 | `/` | Animated beginner introduction; combined/disaggregated conceptual tour | Yes; no authentication or model calls |

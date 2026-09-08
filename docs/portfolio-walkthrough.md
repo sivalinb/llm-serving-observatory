@@ -2,6 +2,8 @@
 
 ## The 30-second introduction
 
+For a public, no-setup introduction, share [the ChatGPT Sites portfolio](https://llm-serving-observatory.siva-babu.chatgpt.site). It includes the tour and architecture diagrams, not live inference or the interactive lab. The demonstrations below require the full local/OCI application. See [publication boundaries](sites-publishing.md).
+
 > I built an LLM-serving observatory with an animated beginner's guide, an invite-only CPU documentation assistant, and a private experiment lab. It separates real inference, simulated KV handoffs, analytical GPU-memory estimates, and measured CPU/RAM telemetry. Personal keys, quotas, streaming receipts and traceable validation make it a small but inspectable service with a Phoenix deployment path.
 
 Say “deployed on OCI” or “benchmarked on GPUs” **only after doing so** and attaching the evidence. The committed simulation report is a local experiment; the hardware report is deterministic analytical output. The [real CPU receipt](../reports/real-cpu-smoke.json) comes from a GitHub runner, not OCI. It demonstrates working inference, not answer quality or production scale.

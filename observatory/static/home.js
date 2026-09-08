@@ -57,7 +57,8 @@
 
   // Preserve old local lab bookmarks while giving the root route a real homepage.
   const legacy = ['lab', 'hardware', 'architecture', 'benchmarks', 'learn'];
-  if (legacy.includes(root.location.hash.slice(1))) {
+  const portfolio = root.document.documentElement.dataset.deployment === 'portfolio';
+  if (!portfolio && legacy.includes(root.location.hash.slice(1))) {
     root.location.replace('/lab' + root.location.hash);
     return;
   }
@@ -117,5 +118,5 @@
   }) : null;
   observer?.observe(panel);
   root.addEventListener('pagehide', () => { tour.pause(); });
-  if (['localhost', '127.0.0.1', '[::1]'].includes(root.location.hostname)) $('local-lab-link').hidden = false;
+  if (!portfolio && ['localhost', '127.0.0.1', '[::1]'].includes(root.location.hostname)) $('local-lab-link').hidden = false;
 })(typeof window === 'undefined' ? globalThis : window);

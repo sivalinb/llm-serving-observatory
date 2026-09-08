@@ -1,5 +1,9 @@
 # Validation record
 
+## Public portfolio export (2026-09-07)
+
+The Sites export is separately built from allowlisted public assets. New regression checks cover deployment-boundary copy, link/anchor/controller wiring, all four diagrams, deterministic output, unchanged full-service entry points, stale-file/symlink rejection and source-contract failures. The export adds no model requests, live telemetry, user-data store or backend. Its local HTTP preview returns 200; browser visual/interaction QA is not claimed. Publication status and the exact source SHA are recorded by Sites, separately from GitHub CI. See [the publishing guide](../docs/sites-publishing.md).
+
 ## Animated introduction (2026-09-07 local)
 
 - The root route serves a visual beginner homepage; the private lab moved to `/lab`. The public-edge check verifies the root does not redirect and continues to block lab/operations routes.
@@ -7,7 +11,7 @@
 - [Homepage release CI](https://github.com/sivalinb/llm-serving-observatory/actions/runs/34179964956), commit `77fe465`, passed all three jobs: Python/Node plus public-edge/observability checks, real CPU inference, and Terraform validation. This is automated validation, not a live OCI deployment.
 - The tour performs no network requests or real inference and labels all motion as explanatory. Motion stops when the page is hidden or the tour leaves view; reduced-motion users start paused.
 - The local root returned HTTP 200 and was handed off for preview. No browser-interaction, screenshot, responsive-viewport or visual-rendering QA is claimed for this update.
-- The existing OCI hosting architecture is unchanged; no separate hosting service or cloud deployment was created.
+- In this earlier homepage release, the OCI hosting architecture was unchanged and no hosting service was created. The later public Sites export is documented above; it does not deploy OCI.
 
 ## Real-traffic CPU service (v0.3, 2026-09-07 local / 2026-09-08 UTC)
 
