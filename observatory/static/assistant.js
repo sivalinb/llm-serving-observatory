@@ -88,7 +88,8 @@
   for (const button of document.querySelectorAll('[data-question]')) button.onclick = () => {
     $('question').value = button.dataset.question; $('question').focus();
   };
-  const questionBody = () => JSON.stringify({question: $('question').value.trim(), max_tokens: 192});
+  // Omit max_tokens so the server's deployment-specific default is authoritative.
+  const questionBody = () => JSON.stringify({question: $('question').value.trim()});
   $('search-button').onclick = async () => {
     if (!$('question-form').reportValidity()) return;
     try {
@@ -144,7 +145,7 @@
   api('status').then(r => r.json()).then(status => {
     configured = status.inference === 'configured';
     text('backend-status', configured ? 'CPU model configured' : 'Document search ready');
-    text('backend-note', configured ? 'Real llama.cpp inference is enabled. First answers may take time on CPU.' : 'AI answers are off until an operator starts the CPU model. Search is available with an invite.');
+    text('backend-note', configured ? `Real llama.cpp inference is enabled. First answers may take time on CPU. Up to ${status.max_output_tokens} output tokens, one answer at a time, ${status.deadline_seconds}s deadline.` : 'AI answers are off until an operator starts the CPU model. Search is available with an invite.');
     controls();
   }).catch(() => { text('backend-status', 'Service unavailable'); text('backend-note', 'Try reloading after the service recovers.'); });
 })();

@@ -6,7 +6,7 @@ import time
 from contextlib import aclosing, asynccontextmanager
 from pathlib import Path
 
-from fastapi import Depends, FastAPI, Header, HTTPException, Request, Response
+from fastapi import APIRouter, Depends, FastAPI, Header, HTTPException, Request, Response
 from fastapi.responses import FileResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 from opentelemetry.propagate import extract
@@ -29,11 +29,16 @@ def require_key(authorization: str = Header(default="")):
         raise HTTPException(401, "Bearer API key required")
 
 
-def create_app(db_path=None, service=None, assistant_service=None):
+def create_app(db_path=None, service=None, assistant_service=None, assistant_only=None):
+    if assistant_only is None:
+        assistant_only = os.getenv("OBSERVATORY_ASSISTANT_ONLY", "false").lower() == "true"
+
     @asynccontextmanager
     async def lifespan(app):
-        app.state.service = service or Service(
-            Store(db_path or os.getenv("LAB_DB", "data/lab.sqlite"))
+        app.state.service = (
+            None
+            if assistant_only
+            else service or Service(Store(db_path or os.getenv("LAB_DB", "data/lab.sqlite")))
         )
         app.state.resources = ResourceMonitor()
         assistant_path = (
@@ -51,12 +56,14 @@ def create_app(db_path=None, service=None, assistant_service=None):
         finally:
             await app.state.resources.stop()
             REGISTRY.unregister(app.state.resources)
-            await app.state.service.client.aclose()
-            app.state.service.store.close()
+            if app.state.service is not None:
+                await app.state.service.client.aclose()
+                app.state.service.store.close()
             await app.state.assistant.client.aclose()
             app.state.assistant.store.close()
 
     app = FastAPI(title="LLM Serving Observatory", version="0.3.0", lifespan=lifespan)
+    lab = APIRouter()
     app.include_router(assistant_router)
     static = Path(__file__).parent / "static"
     app.mount("/static", StaticFiles(directory=static, check_dir=False), name="static")
@@ -106,24 +113,28 @@ def create_app(db_path=None, service=None, assistant_service=None):
     def home():
         return FileResponse(static / "home.html")
 
-    @app.get("/lab")
+    @lab.get("/lab")
     def index():
         return FileResponse(static / "index.html")
 
     @app.get("/healthz")
     def health():
-        return {"status": "ok", "version": "0.3.0"}
+        return {
+            "status": "ok",
+            "version": "0.3.0",
+            "profile": "assistant-only" if assistant_only else "full-lab",
+        }
 
-    @app.post("/api/hardware/estimate", dependencies=[Depends(require_key)])
+    @lab.post("/api/hardware/estimate", dependencies=[Depends(require_key)])
     def hardware_estimate(req: HardwareRequest):
         return estimate_with_sweep(req)
 
-    @app.get("/api/hardware/resources", dependencies=[Depends(require_key)])
+    @lab.get("/api/hardware/resources", dependencies=[Depends(require_key)])
     def hardware_resources(request: Request, response: Response):
         response.headers["Cache-Control"] = "no-store"
         return request.app.state.resources.snapshot()
 
-    @app.get("/api/config")
+    @lab.get("/api/config")
     def config(service=Depends(svc)):
         return service.config()
 
@@ -132,12 +143,12 @@ def create_app(db_path=None, service=None, assistant_service=None):
         # Bound to localhost / private Docker network; Caddy blocks this path.
         return Response(generate_latest(), media_type=CONTENT_TYPE_LATEST)
 
-    @app.post("/api/run", dependencies=[Depends(require_key)])
+    @lab.post("/api/run", dependencies=[Depends(require_key)])
     async def run(req: LabRequest, request: Request, service=Depends(svc)):
         check(req, service)
         return streamed(service.run(req, extract(request.headers)))
 
-    @app.post("/api/benchmark", dependencies=[Depends(require_key)])
+    @lab.post("/api/benchmark", dependencies=[Depends(require_key)])
     async def benchmark(req: BenchmarkRequest, service=Depends(svc)):
         check(req.request, service)
         if service.benchmark_busy:
@@ -145,7 +156,7 @@ def create_app(db_path=None, service=None, assistant_service=None):
         service.benchmark_busy = True
         return streamed(service.benchmark(req))
 
-    @app.get("/api/records", dependencies=[Depends(require_key)])
+    @lab.get("/api/records", dependencies=[Depends(require_key)])
     def records(service=Depends(svc)):
         records = service.store.list(limit=100)
         return {
@@ -154,18 +165,18 @@ def create_app(db_path=None, service=None, assistant_service=None):
             "note": "Last 100 retained requests; use benchmarks or Prometheus for rates.",
         }
 
-    @app.get("/api/benchmarks", dependencies=[Depends(require_key)])
+    @lab.get("/api/benchmarks", dependencies=[Depends(require_key)])
     def benchmarks(service=Depends(svc)):
         return service.store.list("benchmark", 20)
 
-    @app.get("/api/records/{record_id}", dependencies=[Depends(require_key)])
+    @lab.get("/api/records/{record_id}", dependencies=[Depends(require_key)])
     def record(record_id: str, service=Depends(svc)):
         result = service.store.get(record_id)
         if result is None:
             raise HTTPException(404, "Record not found")
         return result
 
-    @app.post("/v1/chat/completions", dependencies=[Depends(require_key)])
+    @lab.post("/v1/chat/completions", dependencies=[Depends(require_key)])
     async def chat(req: ChatRequest, request: Request, service=Depends(svc)):
         real = req.model != "simulator"
         if real and req.model != os.getenv("UPSTREAM_MODEL"):
@@ -280,6 +291,8 @@ def create_app(db_path=None, service=None, assistant_service=None):
             "lab_source": r["source"],
         }
 
+    if not assistant_only:
+        app.include_router(lab)
     return app
 
 

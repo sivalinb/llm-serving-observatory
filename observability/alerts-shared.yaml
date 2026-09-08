@@ -1,0 +1,23 @@
+groups:
+  - name: shared-host
+    rules:
+      - alert: SharedTargetDown
+        expr: up{job=~"shared-assistant|shared-model"} == 0
+        for: 2m
+        labels: {severity: warning}
+        annotations:
+          summary: 'Shared-host target {{ $labels.job }} is unavailable'
+          description: 'Inspect only observatory-shared containers. A stopped model in search-only mode is expected.'
+      - alert: SharedAnswerFailures
+        expr: sum(increase(assistant_requests_total{status=~"error|timeout"}[10m])) >= 2
+        labels: {severity: warning}
+        annotations:
+          summary: 'At least two real answers failed or timed out in ten minutes'
+          description: 'Check CPU contention, OOM/restarts and model health; switch this service to search-only if necessary.'
+      - alert: SharedGatewayMemoryPressure
+        expr: lab_resource_cgroup_namespace_root_memory_current_bytes / lab_resource_cgroup_namespace_root_memory_limit_bytes > 0.85
+        for: 5m
+        labels: {severity: warning}
+        annotations:
+          summary: 'Gateway container memory is over 85% of its limit'
+          description: 'Gateway cgroup namespace only, not model or host RAM. Check sample availability and docker stats.'

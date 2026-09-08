@@ -26,6 +26,8 @@ Documentation: [Learning path](docs/learning-path.md) · [Architecture](docs/arc
 
 ## New: ServingOps Cloud — real traffic on Phoenix Free Tier
 
+**Already sharing an OCI VM with another application? Start with the [slim shared-host pilot](docs/oci-shared-host.md), not the full-stack commands below.** Its standalone `compose.shared.yaml` runs the assistant on loopback port 18000, a half-CPU / 2.5 GiB model, and optional small Prometheus. It disables lab/benchmark APIs, caps output at 64 tokens and isolates all storage/networking. Includes capacity gates, actual-limit checks, a visual architecture, search-only fallback and rollback. **Prepared, not yet deployed on OCI; no public inference endpoint is claimed.**
+
 The repository now includes an **invite-only documentation assistant** at `/assistant`: real streamed CPU inference, retrieved references, per-user access keys and isolated history, atomic quotas, cancellation/deadlines, and a separate real-traffic Grafana dashboard. No model configured? It offers document search and explicitly disables AI answers; it never substitutes simulated answers.
 
 ![Phoenix service architecture](observatory/static/service-architecture.svg)
@@ -82,6 +84,7 @@ Open [the visual introduction](http://localhost:8000) or [the learning lab](http
 | GPU telemetry integration | Private DCGM discovery, collector field list, GPU/DRAM/SM and VRAM panels | External compatible GPU/exporter required; no fake samples |
 | Observability | Prometheus, five lab dashboards plus one real-service dashboard, OTel collector, Tempo, JSON logs | Source labels keep simulated / upstream data distinct |
 | Invite-only assistant | Curated lexical retrieval, real CPU stream, hashed keys, isolated metadata, quotas | Small-model answers require source verification; no private uploads |
+| Shared-host pilot | Standalone limited CPU assistant, optional Prometheus, preflight/runtime checks and rollback | Private pilot; no full lab, trace backend, public edge or OCI performance claim |
 | Experiment storage | SQLite WAL, bounded retention, JSON export | No prompts or generated text retained |
 | OCI integration | A1 Terraform, private Object Storage, optional budget, export to Monitoring/ADB | Credentials and an OCI apply are required |
 | Rich diagrams | Downloadable SVG architecture and lifecycle, live serving-path view | Diagrams document actual boundaries |

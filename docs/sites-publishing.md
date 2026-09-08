@@ -33,6 +33,8 @@ flowchart TB
 
 There is **no network connection from this portfolio to OCI or a model API**. We do not report browser animation timings as TTFT, invent a live token ledger, or expose operator dashboards to make the static publication look active. Platform-level hosting logs are separate from application telemetry; this export installs no analytics tracker and makes no model/API requests.
 
+For the first deployment onto an already-used OCI VM, the [shared-host pilot](oci-shared-host.md) is a smaller alternative to the full-stack diagram above: assistant + CPU model, optional Prometheus, no lab API or trace backend, and no public edge. It is prepared but not deployed. This infrastructure addition does not change the public static export or turn the Sites website into a live chat service.
+
 ## Build and validate
 
 Python 3.11+ is sufficient for the export; no additional packages are required:

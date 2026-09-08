@@ -2,6 +2,8 @@
 
 An invite-only documentation assistant that exercises a real inference path. It is a **single-node portfolio beta**, not an HA platform or a promise of free capacity. The simulator remains an independent operator lab.
 
+This is the **full-stack runbook for a dedicated lab environment**. For an existing VM shared with another application, follow the [slim shared-host runbook](oci-shared-host.md), which uses separate ports, tighter resource limits, 64-token answers, optional small Prometheus and no simulation/benchmark routes. Do not merge the profiles.
+
 ![Service architecture](../observatory/static/service-architecture.svg)
 
 ## What a visitor can do

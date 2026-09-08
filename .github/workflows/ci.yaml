@@ -19,6 +19,8 @@ jobs:
       - run: node --check sites/academy.js && node --test tests/academy.test.cjs
       - run: python scripts/build_portfolio.py
       - run: docker run --rm --entrypoint promtool -v "$PWD/observability:/etc/prometheus:ro" prom/prometheus:v3.2.1 check config /etc/prometheus/prometheus.yaml
+      - run: docker run --rm --entrypoint promtool -v "$PWD/observability:/etc/prometheus:ro" prom/prometheus:v3.2.1 check config /etc/prometheus/prometheus-shared.yaml
+      - run: docker compose -f compose.shared.yaml --profile metrics config --quiet
       - run: docker compose config --quiet
       - run: GRAFANA_PASSWORD=ci-only docker compose -f compose.yaml -f compose.observability.yaml config --quiet
       - run: docker compose -f compose.yaml -f compose.cpu.yaml -f compose.observability.yaml -f compose.cpu-observability.yaml config --quiet
@@ -34,6 +36,21 @@ jobs:
   real-cpu:
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - profile: full
+            files: compose.yaml:compose.cpu.yaml
+            port: 8000
+            metrics: ''
+          - profile: shared
+            files: compose.shared.yaml
+            port: 18000
+            metrics: metrics
+    env:
+      COMPOSE_FILE: ${{ matrix.files }}
+      COMPOSE_PROFILES: ${{ matrix.metrics }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -43,11 +60,13 @@ jobs:
           path: models/qwen2.5-1.5b-instruct-q4_k_m.gguf
           key: qwen-cpu-6a1a2eb6d15622bf
       - run: python scripts/download_model.py
-      - run: docker compose -f compose.yaml -f compose.cpu.yaml up -d --build --wait --wait-timeout 300
-      - run: python scripts/smoke_assistant.py
-      - run: docker compose -f compose.yaml -f compose.cpu.yaml logs --tail=40
+      - run: docker compose up -d --build --wait --wait-timeout 660
+      - run: python scripts/smoke_assistant.py --url http://127.0.0.1:${{ matrix.port }}
+      - if: matrix.profile == 'shared'
+        run: python scripts/check_shared_runtime.py
+      - run: docker compose logs --tail=40
         if: failure()
-      - run: docker compose -f compose.yaml -f compose.cpu.yaml down
+      - run: docker compose down
         if: always()
   terraform:
     runs-on: ubuntu-latest

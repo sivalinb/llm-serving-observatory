@@ -1,5 +1,13 @@
 # Validation record
 
+## Shared-host OCI pilot profile (2026-09-08)
+
+- Adds a standalone assistant-only deployment: half-CPU / 2.5 GiB model, 256 MiB gateway, optional 256 MiB Prometheus, private networking, separate loopback ports and volumes, no lab workers or trace stack. The [runbook](../docs/oci-shared-host.md) includes an architecture map, capacity gates, real-metric boundaries, canary checks, search-only fallback and rollback.
+- Local validation passes: **83 Python tests**, **25 Node tests**, Ruff, assistant JavaScript syntax, static portfolio export and whitespace checks. New regressions cover absent lab routes/schema/database, full-lab compatibility, output-cap enforcement before admission, deployment defaults, search-only behavior, standalone limits/isolation and fail-closed host gates. Two upstream test-library deprecation warnings remain.
+- CI now checks the shared Prometheus configuration and runs the real CPU smoke in both full and shared profiles. The shared job also inspects actual Docker CPU/RAM/swap limits, health/restarts, private bindings, disabled lab/auth boundaries and Prometheus targets/rules. Consult the workflow result for the committed revision; configuring a job is not evidence that it passed.
+- Docker Engine is unavailable on this laptop. No local container execution, OCI deployment, ARM model performance, incumbent-workload impact, public API exposure, alert delivery or persisted distributed traces are claimed. Runtime CPU limits do not limit Docker builds or downloads.
+- The public Sites export is unchanged by this infrastructure-only addition. The animated academy remains public; real inference is not yet deployed on OCI.
+
 ## End-to-end Serving Academy (2026-09-08)
 
 - Adds 20 ordered modules and self-checks, five tracks, primary readings, per-module signals/traps/practice, two cross-layer maps and four browser-only exercises.

@@ -44,6 +44,7 @@ class Settings:
     deadline: float = 90
     monthly_tokens: int = 1000000
     context: int = 4096
+    max_output_tokens: int = 256
 
     def __post_init__(self):
         parsed = urlsplit(self.url)
@@ -56,7 +57,12 @@ class Settings:
             or parsed.fragment
         ):
             raise ValueError("Assistant URL must be an operator-configured HTTP(S) base URL")
-        if not (1 <= self.deadline <= 300 and self.monthly_tokens > 0 and self.context >= 1024):
+        if not (
+            1 <= self.deadline <= 300
+            and self.monthly_tokens > 0
+            and self.context >= 1024
+            and 16 <= self.max_output_tokens <= 256
+        ):
             raise ValueError("Invalid assistant capacity settings")
 
     @classmethod
@@ -68,12 +74,14 @@ class Settings:
             model=os.getenv("ASSISTANT_CPU_MODEL", "servingops-cpu"),
             deadline=float(os.getenv("ASSISTANT_DEADLINE_SECONDS", "90")),
             monthly_tokens=int(os.getenv("ASSISTANT_MONTHLY_TOKENS", "1000000")),
+            context=int(os.getenv("ASSISTANT_CONTEXT_TOKENS", "4096")),
+            max_output_tokens=int(os.getenv("ASSISTANT_MAX_OUTPUT_TOKENS", "256")),
         )
 
 
 class Question(BaseModel):
     question: str = Field(min_length=3, max_length=800)
-    max_tokens: int = Field(default=192, ge=16, le=256)
+    max_tokens: int | None = Field(default=None, ge=16, le=256)
 
 
 class Redemption(BaseModel):
@@ -146,6 +154,10 @@ class Assistant:
             "inference": "configured" if self.settings.enabled else "disabled",
             "backend": "self-hosted CPU",
             "max_concurrent_answers": 1,
+            "max_output_tokens": self.settings.max_output_tokens,
+            "default_output_tokens": min(192, self.settings.max_output_tokens),
+            "context_tokens": self.settings.context,
+            "deadline_seconds": self.settings.deadline,
             "corpus_version": CORPUS_VERSION,
             "availability": "single-node beta; no HA guarantee",
             "hardware": "CPU and host RAM; no GPU/HBM in this profile",
@@ -155,13 +167,21 @@ class Assistant:
         started = time.perf_counter()
         if not self.settings.enabled:
             raise Rejected("AI answers disabled; document search is available", 503)
+        output_tokens = (
+            min(192, self.settings.max_output_tokens) if req.max_tokens is None else req.max_tokens
+        )
+        if output_tokens > self.settings.max_output_tokens:
+            DENIED.labels("output_tokens").inc()
+            raise Rejected(
+                f"This profile allows at most {self.settings.max_output_tokens} output tokens", 422
+            )
         sources = search(req.question)
         retrieval_ms = (time.perf_counter() - started) * 1000
         if not sources:
             raise Rejected("No relevant approved sources; try a serving-related question", 422)
         messages = prompt(req.question, sources)
         # UTF-8 bytes + framing allowance are deliberately conservative, not tokenizer measurement.
-        reserved = len(json.dumps(messages, ensure_ascii=False).encode()) + 256 + req.max_tokens
+        reserved = len(json.dumps(messages, ensure_ascii=False).encode()) + 256 + output_tokens
         if reserved > self.settings.context:
             raise Rejected("Question and references exceed the conservative context budget", 422)
         try:
@@ -178,6 +198,7 @@ class Assistant:
             "created": time.time(),
             "corpus_version": CORPUS_VERSION,
             "reserved_tokens_estimate": reserved,
+            "max_output_tokens": output_tokens,
             "tokens": normalize_usage({}),
             "ttft_ms": None,
             "duration_ms": None,
@@ -217,7 +238,7 @@ class Assistant:
                     body = {
                         "model": self.settings.model,
                         "messages": messages,
-                        "max_tokens": req.max_tokens,
+                        "max_tokens": output_tokens,
                         "temperature": 0,
                         "stream": True,
                         "stream_options": {"include_usage": True},
@@ -241,7 +262,8 @@ class Assistant:
                                             saw_finish = True
                                             reason = choice["finish_reason"]
                                             record["finish_reason"] = (
-                                                reason if reason in {"stop", "length", "content_filter"}
+                                                reason
+                                                if reason in {"stop", "length", "content_filter"}
                                                 else "other"
                                             )
                                         content = choice.get("delta", {}).get("content")

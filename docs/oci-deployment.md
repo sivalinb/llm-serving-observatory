@@ -1,5 +1,7 @@
 # OCI deployment
 
+**Existing shared Oracle Linux A1 host:** use the [shared-host pilot runbook](oci-shared-host.md). Do not apply this guide's Ubuntu bootstrap, Terraform or full-stack deploy script to a VM running another application. The slim profile is prepared but has not been deployed on OCI.
+
 For the current **Phoenix Free Tier assistant**, follow the [ServingOps service runbook](servingops-runbook.md). This guide covers shared infrastructure, the private learning lab and optional aggregate exports. The public routes are `/` (animated introduction) and `/assistant`; `/lab` and operations endpoints remain private.
 
 ## CPU lab

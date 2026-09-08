@@ -1,0 +1,18 @@
+global:
+  scrape_interval: 30s
+  scrape_timeout: 5s
+  evaluation_interval: 30s
+rule_files: [/etc/prometheus/alerts-shared.yaml]
+scrape_configs:
+  - job_name: shared-assistant
+    sample_limit: 2000
+    static_configs:
+      - targets: [gateway:8000]
+    metric_relabel_configs:
+      - source_labels: [__name__]
+        regex: 'assistant_.*|lab_resource_.*|process_.*|python_info'
+        action: keep
+  - job_name: shared-model
+    sample_limit: 2000
+    static_configs:
+      - targets: [model:8080]
