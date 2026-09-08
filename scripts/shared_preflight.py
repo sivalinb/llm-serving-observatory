@@ -19,6 +19,11 @@ def free_bytes(path):
     return fs.f_bavail * fs.f_frsize
 
 
+def limits_supported(info):
+    # Docker's JSON API key is CpuCfsQuota, not the Go template field CPUCfsQuota.
+    return all(info.get(key) is True for key in ("MemoryLimit", "SwapLimit", "CpuCfsQuota"))
+
+
 def evaluate(snapshot):
     """Conservative installation gates, not a scheduling or Free Tier guarantee."""
     problems = []
@@ -77,9 +82,7 @@ def snapshot():
             )
         ),
         "cgroup_version": info.get("CgroupVersion"),
-        "limits_supported": all(
-            info.get(key) for key in ("MemoryLimit", "SwapLimit", "CPUCfsQuota")
-        ),
+        "limits_supported": limits_supported(info),
     }
 
 

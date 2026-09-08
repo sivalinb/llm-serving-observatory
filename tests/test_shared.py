@@ -25,6 +25,17 @@ def test_model_checksum_uses_bounded_reads_on_older_host_python(tmp_path):
     assert script["checksum"](path) == hashlib.sha256(b"").hexdigest()
 
 
+def test_preflight_uses_docker_json_capability_names():
+    script = runpy.run_path(str(ROOT / "scripts/shared_preflight.py"))
+    supports = script["limits_supported"]
+    reported = {"MemoryLimit": True, "SwapLimit": True, "CpuCfsQuota": True}
+    assert supports(reported)
+    for key in reported:
+        assert not supports({**reported, key: False})
+        assert not supports({k: v for k, v in reported.items() if k != key})
+    assert not supports({"MemoryLimit": True, "SwapLimit": True, "CPUCfsQuota": True})
+
+
 def test_assistant_only_does_not_construct_or_expose_lab(tmp_path, monkeypatch):
     def forbidden(*args):
         pytest.fail("Assistant-only mode must not instantiate the lab")
