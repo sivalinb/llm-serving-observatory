@@ -6,9 +6,7 @@
     max_size 16KB
   }
   # Deny by default. The simulator lab, worker APIs, metrics and API docs are private.
-  @root path /
-  redir @root /assistant 302
-  @assistant path /assistant /api/service/* /static/assistant.css /static/assistant.js /static/icon.svg /static/service-architecture.svg
+  @assistant path / /assistant /api/service/* /static/home.css /static/home.js /static/assistant.css /static/assistant.js /static/icon.svg /static/service-architecture.svg
   handle @assistant {
     reverse_proxy gateway:8000 {
       flush_interval -1

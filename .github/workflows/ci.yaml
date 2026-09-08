@@ -15,6 +15,7 @@ jobs:
       - run: ruff check . && pytest -q
       - run: python scripts/evaluate_retrieval.py
       - run: node --check observatory/static/app.js && node --check observatory/static/hardware.js && node --check observatory/static/assistant.js
+      - run: node --check observatory/static/home.js && node --test tests/home-tour.test.cjs
       - run: docker run --rm --entrypoint promtool -v "$PWD/observability:/etc/prometheus:ro" prom/prometheus:v3.2.1 check config /etc/prometheus/prometheus.yaml
       - run: docker compose config --quiet
       - run: GRAFANA_PASSWORD=ci-only docker compose -f compose.yaml -f compose.observability.yaml config --quiet

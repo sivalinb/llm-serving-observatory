@@ -26,11 +26,22 @@ def main():
         except HTTPError as error:
             return error.code
 
-    for path in ["/", "/assistant", "/api/service/status", "/static/assistant.js"]:
+    for path in [
+        "/",
+        "/assistant",
+        "/api/service/status",
+        "/static/assistant.js",
+        "/static/home.js",
+        "/static/home.css",
+    ]:
         assert status(path) == 200, path
+    with urlopen(args.url.rstrip("/") + "/", timeout=10) as response:
+        assert response.geturl().rstrip("/") == args.url.rstrip("/"), "Root must not redirect"
+        assert "Make it visible." in response.read().decode(), "Homepage not served at public root"
     assert status("/api/service/me") == 401
     for path in [
         "/metrics",
+        "/lab",
         "/docs",
         "/redoc",
         "/openapi.json",
@@ -44,7 +55,9 @@ def main():
         "/healthz",
     ]:
         assert status(path) == 404, path
-    print("Public assistant allowlist verified; lab and operations routes are blocked.")
+    print(
+        "Public homepage and assistant allowlist verified; lab and operations routes are blocked."
+    )
 
 
 if __name__ == "__main__":

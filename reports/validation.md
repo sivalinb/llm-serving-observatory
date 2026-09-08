@@ -1,5 +1,13 @@
 # Validation record
 
+## Animated introduction (2026-09-07 local)
+
+- The root route serves a visual beginner homepage; the private lab moved to `/lab`. The public-edge check verifies the root does not redirect and continues to block lab/operations routes.
+- 65 Python tests and 9 Node animation-state tests pass locally. Coverage includes combined versus disaggregated sequences, first-output timing in the illustration, pause/restart, manual stepping, reduced motion, timer cleanup, static asset/anchor/controller wiring and valid SVG geometry.
+- The tour performs no network requests or real inference and labels all motion as explanatory. Motion stops when the page is hidden or the tour leaves view; reduced-motion users start paused.
+- The local root returned HTTP 200 and was handed off for preview. No browser-interaction, screenshot, responsive-viewport or visual-rendering QA is claimed for this update.
+- The existing OCI hosting architecture is unchanged; no separate hosting service or cloud deployment was created.
+
 ## Real-traffic CPU service (v0.3, 2026-09-07 local / 2026-09-08 UTC)
 
 - 62 local pytest tests pass, including single-use/expired invites, key rotation/revocation, separate-user history, atomic admission across SQLite connections, daily/monthly limits, duplicate request IDs, cancellation, deadlines, malformed/oversized streams, conservative unknown usage, and online backup recovery.

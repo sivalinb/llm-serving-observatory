@@ -8,6 +8,8 @@ A working LLM serving laboratory for learning **TTFT, prefill, decode, KV-cache 
 
 New here? Follow the [eight-minute portfolio walkthrough](docs/portfolio-walkthrough.md) or the [hardware and memory guide](docs/hardware-memory.md).
 
+The website now opens with an **animated visual homepage**: follow a request through prefill, optional KV handoff, first visible output, decode and observability. Switch architectures, pause, restart or select any stage. The tour is explanatory, makes no model calls, and respects reduced-motion preferences. Open `/assistant` for the real service or `/lab` through your local/SSH connection for experiments.
+
 ## New: ServingOps Cloud — real traffic on Phoenix Free Tier
 
 The repository now includes an **invite-only documentation assistant** at `/assistant`: real streamed CPU inference, retrieved references, per-user access keys and isolated history, atomic quotas, cancellation/deadlines, and a separate real-traffic Grafana dashboard. No model configured? It offers document search and explicitly disables AI answers; it never substitutes simulated answers.
@@ -22,7 +24,7 @@ docker compose -f compose.yaml -f compose.cpu.yaml up -d --build --wait --wait-t
 docker compose exec -T gateway python -m observatory.admin invite
 ```
 
-Open `http://localhost:8000/assistant` through an SSH tunnel, redeem the invite, and save the returned personal key. Follow the [complete Phoenix service runbook](docs/servingops-runbook.md) for HTTPS, monitoring, privacy, backups, rollback and the portfolio demo. The public Caddy profile now exposes **only the assistant**; the lab and operations console stay private.
+Open `http://localhost:8000/assistant` through an SSH tunnel, redeem the invite, and save the returned personal key. Follow the [complete Phoenix service runbook](docs/servingops-runbook.md) for HTTPS, monitoring, privacy, backups, rollback and the portfolio demo. The public Caddy profile exposes **the homepage and assistant**; the lab and operations console stay private.
 
 The assistant performs real combined prefill/decode. It does **not** claim real cross-worker KV transfer or GPU disaggregation. Citations are source-ID checks, not factual validation. All real latency and token fields come from actual streams; missing usage details remain unknown.
 
@@ -42,7 +44,7 @@ pip install -e '.[dev]'
 uvicorn observatory.app:app --host 127.0.0.1 --port 8000
 ```
 
-Open [localhost:8000](http://localhost:8000). No cloud account, API key, model download, or GPU is needed for simulation.
+Open [the visual introduction](http://localhost:8000) or [the learning lab](http://localhost:8000/lab). No cloud account, API key, model download, or GPU is needed for simulation. Existing root bookmarks such as `/#hardware` continue to the matching `/lab` view when JavaScript is enabled.
 
 1. Run a request in **Disaggregated** mode and inspect the waterfall.
 2. Run it again to see prefix-cache reuse reduce prefill work.
@@ -101,7 +103,8 @@ The base Compose file runs gateway, prefill, and decode services. The second com
 
 | Surface | Local URL |
 |---|---|
-| Lab | http://localhost:8000 |
+| Visual homepage | http://localhost:8000 |
+| Lab (private) | http://localhost:8000/lab |
 | API schema | http://localhost:8000/docs |
 | Prometheus | http://localhost:9090 |
 | Grafana | http://localhost:3000 — `admin` / your configured password |

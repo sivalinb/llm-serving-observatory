@@ -113,7 +113,7 @@ docker compose -f compose.yaml -f compose.cpu.yaml -f compose.observability.yaml
 python3 scripts/check_public.py --url https://YOUR_DOMAIN
 ```
 
-Caddy redirects `/` to `/assistant`, permits the assistant API/assets, and denies everything else. Ports 8000, 3000 and 9090 remain loopback-bound. The model has **no host port**. Do not change the gateway bind address or expose Docker sockets. This is an invite-only beta, not a hardened anonymous high-volume endpoint; volumetric DDoS protection, an edge WAF, organization SSO and multi-region failover are outside this release.
+Caddy serves the animated introduction at `/`, permits `/assistant` and its API plus explicitly allowed homepage/assistant assets, and denies everything else, including `/lab`. The homepage animation is illustrative and makes no inference requests. Operators open `/lab` over a local connection or SSH tunnel. Ports 8000, 3000 and 9090 remain loopback-bound. The model has **no host port**. Do not change the gateway bind address or expose Docker sockets. This is an invite-only beta, not a hardened anonymous high-volume endpoint; volumetric DDoS protection, an edge WAF, organization SSO and multi-region failover are outside this release.
 
 ## Admission, cancellation and privacy contract
 

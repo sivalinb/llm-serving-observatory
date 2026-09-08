@@ -103,6 +103,10 @@ def create_app(db_path=None, service=None, assistant_service=None):
         )
 
     @app.get("/")
+    def home():
+        return FileResponse(static / "home.html")
+
+    @app.get("/lab")
     def index():
         return FileResponse(static / "index.html")
 
