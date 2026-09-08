@@ -16,6 +16,8 @@ from .assistant import create_assistant
 from .assistant import router as assistant_router
 from .hardware import HardwareRequest, estimate_with_sweep
 from .models import BenchmarkRequest, ChatRequest, LabRequest
+from .observability import DashboardLimit, PrometheusReader
+from .observability import router as observability_router
 from .resources import ResourceMonitor
 from .service import Service, summarize
 from .store import Store
@@ -29,7 +31,7 @@ def require_key(authorization: str = Header(default="")):
         raise HTTPException(401, "Bearer API key required")
 
 
-def create_app(db_path=None, service=None, assistant_service=None, assistant_only=None):
+def create_app(db_path=None, service=None, assistant_service=None, assistant_only=None, telemetry=None):
     if assistant_only is None:
         assistant_only = os.getenv("OBSERVATORY_ASSISTANT_ONLY", "false").lower() == "true"
 
@@ -49,11 +51,15 @@ def create_app(db_path=None, service=None, assistant_service=None, assistant_onl
             else os.getenv("ASSISTANT_DB", "data/assistant.sqlite")
         )
         app.state.assistant = assistant_service or create_assistant(assistant_path)
+        app.state.telemetry = telemetry or PrometheusReader()
+        app.state.dashboard_limit = DashboardLimit()
+        app.state.assistant.store.event("service_started", code="assistant_only" if assistant_only else "full_lab")
         REGISTRY.register(app.state.resources)
         await app.state.resources.start()
         try:
             yield
         finally:
+            await app.state.telemetry.close()
             await app.state.resources.stop()
             REGISTRY.unregister(app.state.resources)
             if app.state.service is not None:
@@ -65,6 +71,7 @@ def create_app(db_path=None, service=None, assistant_service=None, assistant_onl
     app = FastAPI(title="LLM Serving Observatory", version="0.3.0", lifespan=lifespan)
     lab = APIRouter()
     app.include_router(assistant_router)
+    app.include_router(observability_router)
     static = Path(__file__).parent / "static"
     app.mount("/static", StaticFiles(directory=static, check_dir=False), name="static")
 
@@ -73,8 +80,9 @@ def create_app(db_path=None, service=None, assistant_service=None, assistant_onl
         response = await call_next(request)
         response.headers["X-Content-Type-Options"] = "nosniff"
         response.headers["Referrer-Policy"] = "no-referrer"
-        if request.url.path.startswith("/api/service"):
+        if request.url.path.startswith(("/api/service", "/api/observability")):
             response.headers["Cache-Control"] = "no-store"
+            response.headers["Vary"] = "Authorization"
         response.headers["Content-Security-Policy"] = (
             "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; object-src 'none'; frame-ancestors 'none'"
         )

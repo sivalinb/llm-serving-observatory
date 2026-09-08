@@ -44,6 +44,10 @@ Open `http://localhost:8000/assistant` through an SSH tunnel, redeem the invite,
 
 The assistant performs real combined prefill/decode. It does **not** claim real cross-worker KV transfer or GPU disaggregation. Citations are source-ID checks, not factual validation. All real latency and token fields come from actual streams; missing usage details remain unknown.
 
+## Private in-website observability
+
+The shared OCI service includes **`/observability`**, a native metrics explorer, overview/alert view, request timeline and sanitized-event viewer. Reuse your assistant key for personal records; service-wide metrics require a separate host-granted operator role. It uses existing Prometheus and SQLite storage, performs no model calls and stays outside the public academy. [Access, architecture, privacy and operating guide](docs/observability-dashboard.md). Raw container logs, stored traces, model/host resource history and GPU/HBM readings are not added by this release.
+
 ## Learning lab
 
 ![System architecture](observatory/static/architecture.svg)
@@ -83,6 +87,7 @@ Open [the visual introduction](http://localhost:8000) or [the learning lab](http
 | CPU/RAM telemetry | Per-service CPU cores, RSS, host RAM and optional cgroup-v2 limits/throttling | Measured process/container aggregates, not per-request attribution |
 | GPU telemetry integration | Private DCGM discovery, collector field list, GPU/DRAM/SM and VRAM panels | External compatible GPU/exporter required; no fake samples |
 | Observability | Prometheus, five lab dashboards plus one real-service dashboard, OTel collector, Tempo, JSON logs | Source labels keep simulated / upstream data distinct |
+| Native private dashboard | Shared-profile metric catalog/charts, alert states, request receipts, sanitized events | Operator-gated global data; no raw logs, stored traces or invented GPU readings |
 | Invite-only assistant | Curated lexical retrieval, real CPU stream, hashed keys, isolated metadata, quotas | Small-model answers require source verification; no private uploads |
 | Shared-host pilot | Deployed ARM64 CPU assistant with Prometheus, enforced limits, private API and real receipts | Three sequential OCI canaries, not a load/HA test; no full lab, trace backend or public edge |
 | Experiment storage | SQLite WAL, bounded retention, JSON export | No prompts or generated text retained |
@@ -204,6 +209,8 @@ node --check observatory/static/assistant.js
 node --check observatory/static/home.js
 node --test tests/home-tour.test.cjs
 node --test tests/academy.test.cjs
+node --check observatory/static/observability.js
+node --test tests/observability.test.cjs
 python scripts/build_portfolio.py
 python scripts/evaluate_retrieval.py
 terraform -chdir=infra/oci init -backend=false

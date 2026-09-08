@@ -19,6 +19,9 @@ def main():
     revoke.add_argument("user_id")
     backup = commands.add_parser("backup")
     backup.add_argument("destination")
+    operator = commands.add_parser("operator", help="Host-only read-only observability grants")
+    operator.add_argument("action", choices=["grant", "revoke"])
+    operator.add_argument("user_id")
     args = parser.parse_args()
     store = AssistantStore(args.db)
     try:
@@ -29,6 +32,9 @@ def main():
         elif args.command == "backup":
             store.backup(args.destination)
             print("Backup created and integrity checked; protect it as credential material.")
+        elif args.command == "operator":
+            store.set_operator(args.user_id, args.action == "grant")
+            print(json.dumps({"operator_access": args.action, "user_id": args.user_id}))
     finally:
         store.close()
 

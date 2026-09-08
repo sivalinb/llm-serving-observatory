@@ -115,6 +115,8 @@ It requests 64 output tokens, records timing/token metadata without the question
 
 ## 4. Observability with a small footprint
 
+The native **`/observability`** page now displays a bounded metric catalog/charts, target health, alert states, gateway resources, per-request timelines and sanitized application events. Ordinary keys see personal metadata only; global data requires an explicit host CLI operator grant. It reuses the two existing data stores, adds no container and makes no model calls. Follow the [dashboard field guide](observability-dashboard.md) for access, architecture, retention, limits and absent instrumentation. Prometheus's own UI remains optional/private.
+
 Open private Prometheus through the tunnel. It scrapes only this gateway and model every 30 seconds; there is no Grafana, Tempo, OTel collector, Alertmanager or node exporter in this profile. The three alert rules appear in the Prometheus UI, but **do not send email or paging notifications**. Stopping Prometheus also stops these checks. A separate external monitor would require a later design and approval.
 
 | Question | Signal | Interpretation / boundary |
@@ -173,6 +175,27 @@ docker compose -f compose.shared.yaml --profile metrics stop
 ```
 
 Do not use `down -v`, Docker system prune, broad process kills, or the incumbent's service-control commands. The runtime check expects no prior restarts; investigate any recorded restart before accepting the pilot. `on-failure:3` also means operator verification/start is required after a Docker daemon or host restart; this beta does not promise unattended recovery.
+
+## 6. Upgrade the private dashboard
+
+This is an upgrade of an approved existing pilot, not permission to reinstall it. Do not rerun the new-install preflight against an active stack: it intentionally rejects occupied ports/existing containers. Instead, inspect current available RAM, disk, swap, incumbent health/restarts and this project's enforced limits. Investigate unhealthy/restarting services or less than 2 GiB available RAM / 4 GiB disk; builds are not constrained by runtime container limits. Preserve the incumbent and model/Prometheus containers.
+
+1. Record the old gateway image ID and checkout commit. Wait for any active answer to finish; the dashboard upgrade briefly interrupts the gateway.
+2. Run the online backup command above with a new dated filename **before** recreating the gateway. Do not overwrite a prior backup.
+3. Fetch/review the exact tested revision in this project's dedicated checkout. Preserve any local changes and pause if they overlap.
+4. Build only the gateway, then recreate only that service:
+
+```bash
+sudo -n docker compose -f compose.shared.yaml build gateway
+sudo -n docker compose -f compose.shared.yaml up -d --no-deps --wait gateway
+sudo -n python3 scripts/check_shared_runtime.py
+sudo -n env COMPOSE_FILE=compose.shared.yaml COMPOSE_PROFILES=metrics \
+  python3 scripts/smoke_dashboard.py --url http://127.0.0.1:18000
+```
+
+5. Compare incumbent health, latency, available RAM/disk/swap and restart counters before/after. Verify gateway/model/Prometheus health, private ports, limits, no OOM/restarts and actual metric freshness. A temporary dashboard smoke role/key must be revoked. Do not generate load to prove a dashboard works.
+
+Rollback by restoring the recorded gateway code/image and recreating **only gateway** after preserving evidence. The new tables are additive; the previous application ignores them, so do not replace the live database just to roll back the UI. A DB restore is a separate recovery action that can lose newer quotas/history/keys and needs a deliberate maintenance plan. Never run `down -v`, delete volumes, prune images broadly or restart the incumbent. Keep the pre-upgrade image/backup until verification is complete. See [dashboard schema and privacy](observability-dashboard.md#privacy-deletion-and-storage).
 
 ## Evidence and next release
 

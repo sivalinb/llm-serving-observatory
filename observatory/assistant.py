@@ -352,7 +352,8 @@ def redeem(req: Redemption, svc=Depends(assistant)):
 
 @router.get("/api/service/me")
 def me(user=Depends(identity), svc=Depends(assistant)):
-    return {"user": user, "usage": svc.store.usage(user["id"])}
+    return {"user": user, "usage": svc.store.usage(user["id"]),
+            "is_operator": svc.store.is_operator(user["id"])}
 
 
 @router.post("/api/service/search")
@@ -371,6 +372,11 @@ async def answer(
     try:
         return svc.prepare(user, req, idempotency_key, extract(request.headers))
     except Rejected as exc:
+        code = "disabled" if exc.status == 503 else exc.reason
+        if code not in {"capacity", "daily_requests", "daily_tokens", "monthly_tokens",
+                        "rate_limit", "duplicate_request", "disabled"}:
+            code = "validation"
+        svc.store.event("request_rejected", uid=user["id"], code=code)
         raise translate(exc) from None
 
 

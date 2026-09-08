@@ -41,6 +41,12 @@ def main():
     assert status("/api/service/me") == 401
     for path in [
         "/metrics",
+        "/observability",
+        "/api/observability/session",
+        "/api/observability/overview",
+        "/static/observability.html",
+        "/static/observability.js",
+        "/static/observability.css",
         "/lab",
         "/docs",
         "/redoc",

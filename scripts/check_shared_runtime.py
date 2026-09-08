@@ -50,6 +50,9 @@ def main():
         ("/api/benchmark", "POST", 404),
         ("/v1/chat/completions", "POST", 404),
         ("/api/service/answer", "POST", 401),
+        ("/api/observability/session", "GET", 401),
+        ("/api/observability/overview", "GET", 401),
+        ("/api/observability/events?scope=all", "GET", 401),
     ]:
         try:
             urlopen(Request("http://127.0.0.1:18000" + path, method=method), timeout=10)
@@ -73,7 +76,7 @@ def main():
         groups = json.load(response)["data"]["groups"]
         assert len(groups) == 1 and len(groups[0]["rules"]) == 3
     print(
-        "Shared runtime checks passed: enforced limits, health, private ports, disabled lab, private metrics."
+        "Shared runtime checks passed: enforced limits, health, private ports, disabled lab, authenticated dashboard, private metrics."
     )
 
 

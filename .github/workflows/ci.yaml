@@ -17,6 +17,7 @@ jobs:
       - run: node --check observatory/static/app.js && node --check observatory/static/hardware.js && node --check observatory/static/assistant.js
       - run: node --check observatory/static/home.js && node --test tests/home-tour.test.cjs
       - run: node --check sites/academy.js && node --test tests/academy.test.cjs
+      - run: node --check observatory/static/observability.js && node --test tests/observability.test.cjs
       - run: python scripts/build_portfolio.py
       - run: docker run --rm --entrypoint promtool -v "$PWD/observability:/etc/prometheus:ro" prom/prometheus:v3.2.1 check config /etc/prometheus/prometheus.yaml
       - run: docker run --rm --entrypoint promtool -v "$PWD/observability:/etc/prometheus:ro" prom/prometheus:v3.2.1 check config /etc/prometheus/prometheus-shared.yaml
@@ -64,6 +65,8 @@ jobs:
       - run: python scripts/smoke_assistant.py --url http://127.0.0.1:${{ matrix.port }}
       - if: matrix.profile == 'shared'
         run: python scripts/check_shared_runtime.py
+      - if: matrix.profile == 'shared'
+        run: python scripts/smoke_dashboard.py --url http://127.0.0.1:18000
       - run: docker compose logs --tail=40
         if: failure()
       - run: docker compose down

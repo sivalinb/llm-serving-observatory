@@ -1,5 +1,11 @@
 # Validation record
 
+## Native private observability (2026-09-08, local validation)
+
+The `/observability` implementation passes **96 Python tests, 28 Node tests and Ruff** locally. New coverage includes operator default-deny/fresh revocation, cross-user request/event isolation, enum-only event sanitization and bounded retention, backup recovery, Prometheus catalog and query budgets, stale/unavailable responses, invalid expressions, null-versus-zero math and public-export exclusion. Two existing dependency deprecation warnings remain. The local shell responds HTTP 200; no browser interaction, screenshot or responsive-rendering QA is claimed.
+
+The shared CI job now runs a no-inference dashboard smoke against actual Prometheus, granting/revoking a temporary operator and key. The public-edge test explicitly blocks dashboard routes and assets. Those configured checks are not yet a claim of a passing CI run or an OCI upgrade; deployment evidence will be recorded separately after verification. No new backend/container, public publication, GPU data, raw log storage or persisted trace backend is introduced.
+
 ## Private Phoenix deployment (2026-09-08)
 
 The shared assistant is now deployed on the existing A1 ARM64 host. The [OCI pilot report](oci-private-pilot.md) records actual runtime controls, three sequential real-inference receipts, before/during host observations, backup verification and remaining release gates. It explicitly separates transport success from answer quality: every answer reached the 64-token cap and two lacked citations. It is a private beta, not a public endpoint or a throughput/HA result.

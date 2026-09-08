@@ -35,6 +35,7 @@ services:
       ASSISTANT_MONTHLY_TOKENS: '100000'
       # No collector or paid provider in this profile; spans are not exported.
       OTEL_EXPORTER_OTLP_ENDPOINT: ''
+      OBSERVATORY_PROMETHEUS_URL: http://prometheus:9090
     command: [uvicorn, observatory.app:app, --host, 0.0.0.0, --port, '8000', --workers, '1', --limit-concurrency, '16', --no-access-log]
     volumes: [assistant-data:/app/data]
     stop_grace_period: 100s
