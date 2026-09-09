@@ -1,0 +1,25 @@
+# Only combine with compose.shared.yaml. No web route, model change or host port.
+services:
+  reliability:
+    profiles: [reliability]
+    build:
+      context: .
+      dockerfile: Dockerfile.reliability
+    image: observatory-reliability:local
+    user: '10001:10001'
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    cpus: 0.1
+    mem_limit: 192m
+    memswap_limit: 192m
+    pids_limit: 32
+    tmpfs: ['/tmp:size=16m,mode=1777']
+    networks: [access]
+    volumes:
+      - assistant-data:/source:ro
+      - ${RELIABILITY_PRIVATE_DIR:?Set a dedicated protected directory}:/private:rw,z
+    logging:
+      driver: json-file
+      options: {max-size: 1m, max-file: '2'}
+    command: [--config, /private/config.json, probe]

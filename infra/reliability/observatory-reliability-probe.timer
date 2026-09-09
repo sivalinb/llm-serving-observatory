@@ -1,0 +1,11 @@
+[Unit]
+Description=Publish Observatory health without model requests
+
+[Timer]
+OnBootSec=2min
+OnUnitActiveSec=5min
+AccuracySec=15s
+Unit=observatory-reliability@probe.service
+
+[Install]
+WantedBy=timers.target

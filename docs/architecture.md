@@ -1,5 +1,9 @@
 # Architecture and design decisions
 
+The [Cloud Reliability Lab](cloud-reliability.md) adds an optional isolated worker and supporting OCI services around the existing private assistant. [Deployment evidence](../reports/cloud-reliability-release.md) distinguishes implemented paths from verified integrations. Its animated public `/reliability/` page contains no operational API access.
+
+![Cloud reliability technology boundaries](../observatory/static/reliability-architecture.svg)
+
 ## Current application surfaces
 
 The public export also includes the [Serving Academy](learning-path.md) at `/learn/`: 20 ordered modules, 20 self-checks, four browser exercises, a control/request/operations map and a layer-by-layer observability map. `sites/curriculum.json` is validated and escaped into static HTML; pure browser functions handle exercises without APIs or persistence. This is not a new FastAPI route or a real GPU-serving implementation.

@@ -1,5 +1,7 @@
 # Observability contract
 
+For the private Phoenix pilot, the opt-in [Cloud Reliability Lab](cloud-reliability.md) defines sanitized direct-to-APM spans, bounded OCI health/freshness metrics, six alarms and safe notification/restore drills. It does not install Grafana, Tempo or a collector on the shared host. See [release evidence](../reports/cloud-reliability-release.md) before assuming export or email delivery is active; the default shared profile remains unchanged until explicitly overlaid.
+
 ## Separate the learning and service surfaces
 
 - **Homepage:** explanatory animation only. It emits no inference measurements or telemetry requests.

@@ -20,3 +20,5 @@ models/
 reports/local-*
 .DS_Store
 dist/
+.reliability/
+*.obk

@@ -19,7 +19,11 @@ PROVIDER = TracerProvider(
         }
     )
 )
-if os.getenv("OTEL_EXPORTER_OTLP_ENDPOINT"):
+if os.getenv("OCI_APM_ENDPOINT"):
+    from observatory.cloud_tracing import processor
+
+    PROVIDER.add_span_processor(processor(os.environ["OCI_APM_ENDPOINT"], os.environ["OCI_APM_KEY_FILE"]))
+elif os.getenv("OTEL_EXPORTER_OTLP_ENDPOINT"):
     PROVIDER.add_span_processor(BatchSpanProcessor(OTLPSpanExporter()))
 trace.set_tracer_provider(PROVIDER)
 TRACER = trace.get_tracer("observatory", "0.2.0")

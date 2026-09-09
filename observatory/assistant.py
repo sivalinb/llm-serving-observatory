@@ -165,6 +165,7 @@ class Assistant:
 
     def prepare(self, user, req, idem, context):
         started = time.perf_counter()
+        started_ns = time.time_ns()
         if not self.settings.enabled:
             raise Rejected("AI answers disabled; document search is available", 503)
         output_tokens = (
@@ -175,7 +176,9 @@ class Assistant:
             raise Rejected(
                 f"This profile allows at most {self.settings.max_output_tokens} output tokens", 422
             )
+        retrieval_start = time.time_ns()
         sources = search(req.question)
+        retrieval_end = time.time_ns()
         retrieval_ms = (time.perf_counter() - started) * 1000
         if not sources:
             raise Rejected("No relevant approved sources; try a serving-related question", 422)
@@ -184,6 +187,7 @@ class Assistant:
         reserved = len(json.dumps(messages, ensure_ascii=False).encode()) + 256 + output_tokens
         if reserved > self.settings.context:
             raise Rejected("Question and references exceed the conservative context budget", 422)
+        admission_start = time.time_ns()
         try:
             rid = self.store.reserve(
                 user, idem, reserved, self.settings.monthly_tokens, self.settings.deadline
@@ -191,6 +195,7 @@ class Assistant:
         except Rejected as exc:
             DENIED.labels(exc.reason).inc()
             raise
+        admission_end = time.time_ns()
         record = {
             "id": rid,
             "status": "cancelled",
@@ -226,11 +231,22 @@ class Assistant:
 
         async def events():
             answer, saw_finish, last = "", False, None
-            with TRACER.start_as_current_span("assistant.request", context=context) as span:
+            with TRACER.start_as_current_span(
+                "assistant.request", context=context, start_time=started_ns,
+                record_exception=False, set_status_on_exception=False,
+            ) as span:
                 record["trace_id"] = f"{span.get_span_context().trace_id:032x}"
                 span.set_attribute("assistant.backend", "selfhosted_cpu")
                 span.set_attribute("assistant.corpus", CORPUS_VERSION)
                 span.set_attribute("assistant.retrieval_ms", retrieval_ms)
+                # Real wall-clock boundaries captured before the streaming generator starts.
+                # Rejected pre-stream attempts remain metrics/events, not successful traces.
+                for name, begin, end in (
+                    ("assistant.retrieval", retrieval_start, retrieval_end),
+                    ("assistant.admission", admission_start, admission_end),
+                ):
+                    child = TRACER.start_span(name, start_time=begin, record_exception=False)
+                    child.end(end_time=end)
                 try:
                     yield encode({"type": "sources", "request_id": rid, "sources": sources})
                     headers = {}
@@ -244,7 +260,10 @@ class Assistant:
                         "stream_options": {"include_usage": True},
                     }
                     async with asyncio.timeout(self.settings.deadline):
-                        with TRACER.start_as_current_span("assistant.model_stream"):
+                        with TRACER.start_as_current_span(
+                            "assistant.model_stream", record_exception=False,
+                            set_status_on_exception=False,
+                        ):
                             async with self.client.stream(
                                 "POST",
                                 self.settings.url.rstrip("/") + "/chat/completions",
@@ -300,6 +319,11 @@ class Assistant:
                         }
                     )
                 finally:
+                    span.set_attribute("assistant.status", record["status"])
+                    if record["ttft_ms"] is not None:
+                        span.set_attribute("assistant.ttft_ms", record["ttft_ms"])
+                    if record["tokens"].get("output") is not None:
+                        span.set_attribute("assistant.output_tokens", record["tokens"]["output"])
                     finish()
                 yield encode({"type": "result", "record": record})
 

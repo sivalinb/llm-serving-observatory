@@ -12,10 +12,10 @@ ROOT = Path(__file__).resolve().parents[1]
 STATIC = ROOT / "observatory/static"
 ASSETS = (
     "home.css", "home.js", "icon.svg", "architecture.svg", "request-flow.svg",
-    "hardware-flow.svg", "service-architecture.svg",
+    "hardware-flow.svg", "service-architecture.svg", "reliability-architecture.svg",
 )
 REPO = "https://github.com/sivalinb/llm-serving-observatory"
-SITE_ASSETS = ("portfolio.css", "academy.css", "academy.js")
+SITE_ASSETS = ("portfolio.css", "academy.css", "academy.js", "reliability.css", "reliability.js")
 
 
 def replace_once(text: str, old: str, new: str) -> str:
@@ -30,30 +30,30 @@ def render() -> str:
         ('<html lang="en">', '<html lang="en" data-deployment="portfolio">'),
         ('<a href="#concepts">The concepts</a>', '<a href="/learn/">Serving Academy</a>'),
         ('then explore the real CPU assistant and private experiment lab.',
-         'explore architecture diagrams and the source. Live AI chat is pending OCI deployment.'),
+         'explore architecture diagrams and the source. The OCI assistant runs privately, through approved access.'),
         ('href="/assistant">Open assistant', 'href="#live-service">AI service status'),
         ('A learning lab + a real CPU-powered documentation assistant.<br>Designed for a small OCI Phoenix deployment.',
-         'Public learning portfolio · hosted with ChatGPT Sites.<br>Live AI chat is coming with OCI deployment.'),
+         'Public learning portfolio · hosted with ChatGPT Sites.<br>Private CPU assistant · deployed on OCI Phoenix.'),
         ('A real service and an experimental lab, with a clear line between measured results and modeled behavior.',
          'Explore the implementation and run it locally. This public portfolio has no live model, request history or operational dashboards.'),
         ('<article class="experience assistant-experience">',
          '<article id="live-service" class="experience assistant-experience">'),
         ('<span class="experience-tag">THE REAL SERVICE</span>',
-         '<span class="experience-tag">COMING WITH OCI DEPLOYMENT</span>'),
-        ('<h3>Ask the documentation assistant.</h3>', '<h3>Live AI chat is not online yet.</h3>'),
+         '<span class="experience-tag">DEPLOYED PRIVATELY ON OCI</span>'),
+        ('<h3>Ask the documentation assistant.</h3>', '<h3>The assistant runs privately.</h3>'),
         ('Get source references and streamed answers about serving concepts. Inspect your own timing and token receipt.',
-         'The repository includes a real CPU-powered documentation assistant. It needs a running backend; this ChatGPT-hosted portfolio does not run the model or accept questions.'),
+         'A real CPU-powered documentation assistant runs on an OCI Phoenix VM. Approved users connect through Bastion; this public learning site does not run the model or accept questions.'),
         ('<li>Invite-only access and personal request history</li><li>A small, real CPU model when configured</li><li>Document search even when AI answers are off</li>',
-         '<li>Available in the code: invite-only access and token receipts</li><li>Deployment target: a small OCI Phoenix CPU VM</li><li>No model calls, API keys or user data collected by this portfolio</li>'),
+         '<li>Private pilot: personal keys, token receipts and an operator dashboard</li><li>Deployment: a shared OCI Phoenix CPU VM; no GPU</li><li>No model calls, API keys or user data collected by this portfolio</li>'),
         ('href="/assistant">Open the assistant',
          f'href="{REPO}/blob/main/docs/servingops-runbook.md" target="_blank" rel="noopener noreferrer">Read the service runbook'),
         ('Small models can be wrong. Citation IDs are checked; factual support is not guaranteed.',
-         'ChatGPT Sites provides hosting here, not ChatGPT-powered answers. When deployed, small-model answers still need source verification.'),
+         'ChatGPT Sites provides hosting here, not ChatGPT-powered answers. The private pilot uses a small CPU model; answers still need source verification.'),
         ('Operators use <code>/lab</code> through a local connection or SSH tunnel. The public site blocks it.',
          'The lab and dashboards are not included in this public export. Run them locally or privately on OCI.'),
         ('href="/lab" hidden', 'href="#explore" hidden'),
         ('Deployment target, not a live-status claim.',
-         'Future OCI deployment target. Only the learning portfolio is hosted on ChatGPT Sites today.'),
+         'The private pilot runs on OCI. This diagram also includes optional public-edge components that are not deployed. Only learning content is hosted on ChatGPT Sites.'),
     ]
     for old, new in replacements:
         page = replace_once(page, old, new)
@@ -62,7 +62,8 @@ def render() -> str:
         ("request-flow", "Follow the request", "Latency boundaries, prefill, KV handoff and token accounting."),
         ("hardware-flow", "Understand memory", "CPU RAM, GPU HBM, model weights, KV cache and bandwidth."),
         ("architecture", "Explore the learning lab", "Simulated workers, real-engine adapters and the observability pipeline."),
-        ("service-architecture", "Plan the OCI service", "Public HTTPS, private CPU inference and operator-only telemetry."),
+        ("service-architecture", "Compare the public-edge design", "Optional public HTTPS design; the deployed pilot uses private Bastion access."),
+        ("reliability-architecture", "Connect the reliability stack", "Encrypted recovery, alert delivery, sanitized traces and reviewed infrastructure."),
     ]:
         cards.append(
             f'<article class="diagram-card"><a href="/static/{name}.svg" '
@@ -90,7 +91,8 @@ def render() -> str:
         '<li>Scale → place, route and grow capacity</li><li>Operate → measure, protect and recover</li>'
         '<li>Applications → evaluate outcomes and cost</li></ol>'
         '<p>Includes self-checks and four browser exercises. No GPU or cloud account required. '
-        'Exercises are explanatory, not live inference.</p></section>'
+        'Exercises are explanatory, not live inference.</p>'
+        '<p><a href="/reliability/">New: follow the four Cloud Reliability Lab journeys →</a></p></section>'
     )
     page = replace_once(page, '<section class="purpose"', academy + '<section class="purpose"')
     return page
@@ -98,7 +100,7 @@ def render() -> str:
 
 def build(destination: Path) -> None:
     """Write an allowlisted artifact and reject stale/unrecognized output files."""
-    expected = {"index.html", "404.html", "learn/index.html"} | {f"static/{a}" for a in ASSETS + SITE_ASSETS}
+    expected = {"index.html", "404.html", "learn/index.html", "reliability/index.html"} | {f"static/{a}" for a in ASSETS + SITE_ASSETS}
     if destination.exists():
         unexpected = {str(p.relative_to(destination)) for p in destination.rglob("*") if p.is_file()} - expected
         symlinks = [p for p in destination.rglob("*") if p.is_symlink()]
@@ -113,6 +115,12 @@ def build(destination: Path) -> None:
         shutil.copyfile(ROOT / "sites" / asset, destination / "static" / asset)
     (destination / "learn").mkdir(exist_ok=True)
     (destination / "learn/index.html").write_text(academy)
+    reliability = replace_once(
+        (ROOT / "sites/reliability.html").read_text(), "__ARCHITECTURE__",
+        (STATIC / "reliability-architecture.svg").read_text(),
+    )
+    (destination / "reliability").mkdir(exist_ok=True)
+    (destination / "reliability/index.html").write_text(reliability)
     (destination / "index.html").write_text(page)
     (destination / "404.html").write_text(
         '<!doctype html><html lang="en"><head><meta charset="utf-8">'

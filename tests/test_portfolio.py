@@ -33,8 +33,8 @@ def test_public_portfolio_is_honest_and_all_links_resolve(tmp_path):
     source = (tmp_path / "index.html").read_text()
     page = PortfolioPage(source)
     assert 'data-deployment="portfolio"' in source
-    assert "Live AI chat is not online yet." in source
-    assert "COMING WITH OCI DEPLOYMENT" in source
+    assert "The assistant runs privately." in source
+    assert "DEPLOYED PRIVATELY ON OCI" in source
     assert "Not live traffic" in source
     assert "not ChatGPT-powered answers" in source
     assert len(page.ids) == len(set(page.ids))
@@ -63,7 +63,7 @@ def test_public_portfolio_is_honest_and_all_links_resolve(tmp_path):
 def test_export_is_allowlisted_and_deterministic(tmp_path):
     build(tmp_path)
     snapshot = {str(p.relative_to(tmp_path)): p.read_bytes() for p in tmp_path.rglob("*") if p.is_file()}
-    assert set(snapshot) == {"index.html", "404.html", "learn/index.html"} | {f"static/{a}" for a in ASSETS + SITE_ASSETS}
+    assert set(snapshot) == {"index.html", "404.html", "learn/index.html", "reliability/index.html"} | {f"static/{a}" for a in ASSETS + SITE_ASSETS}
     build(tmp_path)
     assert snapshot == {str(p.relative_to(tmp_path)): p.read_bytes() for p in tmp_path.rglob("*") if p.is_file()}
     # Exporting does not disable the real application or leak its interactive assets.

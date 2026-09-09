@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1240 1010" role="img" aria-labelledby="title desc">
+<title id="title">Cloud Reliability Lab — how the technology connects</title>
+<desc id="desc">A public static learning site is separate from private OCI inference. Approved users enter through Bastion. The FastAPI gateway talks to llama.cpp and SQLite, exposes private Prometheus metrics, and can export bounded OpenTelemetry spans to Always Free APM. A host-side reliability runner uses narrow instance permissions and Vault secrets for encrypted Object Storage backups, isolated restore checks and OCI Monitoring datapoints. Monitoring alarms notify the subscribed operator. Reviewed Terraform in Resource Manager provisions only supporting reliability resources, not the existing VM. Reliability integrations are deployment-gated; this diagram describes their architecture, not proof they are live.</desc>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="context-stroke"/></marker><style>text{font-family:ui-sans-serif,system-ui,sans-serif;fill:#ecf5ff}.label{font-size:18px;font-weight:650}.small{font-size:14px;fill:#b4c5d8}.tiny{font-size:13px;fill:#b4c5d8}.heading{font-size:24px;font-weight:700}.line{fill:none;stroke-width:2;marker-end:url(#arrow)}.node{fill:#142338;stroke:#354a65;stroke-width:1.5}.boundary{fill:#0e192a;stroke:#425777;stroke-width:1.5;stroke-dasharray:7 6}.recover{stroke:#f1bc67}.detect{stroke:#66d9e8}.trace{stroke:#c2a0ff}.reproduce{stroke:#8ce0a1}.pill{fill:#203047}</style></defs>
+<rect width="1240" height="1010" rx="22" fill="#091321"/>
+<text x="38" y="47" class="heading">One private service. Four reliability paths.</text>
+<text x="38" y="75" class="small">Read the boundaries first. Colored arrows show data; dashed green lines show provisioning.</text>
+<rect x="38" y="100" width="1164" height="95" rx="14" class="node"/>
+<text x="60" y="132" class="label">PUBLIC LEARNING PLANE</text><text x="60" y="158" class="small">ChatGPT Sites · static HTML / CSS / JavaScript · animated lessons + reviewed release evidence</text>
+<text x="60" y="179" class="tiny">No user keys, model requests, database access or live operational telemetry. No connection to the private backend.</text>
+<rect x="38" y="222" width="730" height="576" rx="18" class="boundary"/>
+<text x="60" y="254" class="label">PRIVATE OCI PHOENIX · EXISTING A1 HOST</text>
+<text x="60" y="277" class="small">2 OCPU / 12 GB shared hardware · separate application containers and volumes</text>
+<rect x="60" y="300" width="310" height="71" rx="12" class="node"/><text x="77" y="327" class="label">Invited user → OCI Bastion</text><text x="77" y="351" class="small">Time-limited SSH · browser loopback</text>
+<path d="M215 371V409" class="line" stroke="#a6b9d4"/><text x="228" y="396" class="tiny">personal-key authentication</text>
+<rect x="60" y="411" width="310" height="100" rx="12" class="node"/><text x="77" y="441" class="label">FastAPI / Uvicorn gateway</text><text x="77" y="468" class="small">Retrieval · admission · stream · receipts</text><text x="77" y="491" class="tiny">0.25 CPU / 256 MiB · private dashboard</text>
+<path d="M370 449H424" class="line" stroke="#a6b9d4"/>
+<rect x="426" y="411" width="316" height="100" rx="12" class="node"/><text x="444" y="441" class="label">llama.cpp + Qwen 1.5B</text><text x="444" y="468" class="small">Real CPU prefill / decode · RAM KV cache</text><text x="444" y="491" class="tiny">0.5 CPU / 2.5 GiB · one answer at a time</text>
+<path d="M130 511V546" class="line" stroke="#a6b9d4"/>
+<rect x="60" y="548" width="310" height="90" rx="12" class="node"/><text x="77" y="578" class="label">SQLite + private data volume</text><text x="77" y="603" class="small">Account hashes · quota ledger · events</text><text x="77" y="624" class="tiny">No stored question or answer text</text>
+<path d="M586 511V546" class="line detect"/><path d="M370 493L425 572" class="line detect"/>
+<rect x="426" y="548" width="316" height="90" rx="12" class="node"/><text x="444" y="578" class="label">Private Prometheus</text><text x="444" y="603" class="small">Gateway + engine metrics · 24h retention</text><text x="444" y="624" class="tiny">0.25 CPU / 256 MiB · no public port</text>
+<path d="M215 638V676" class="line recover"/><path d="M580 638V665H390V677" class="line detect"/>
+<rect x="60" y="679" width="682" height="90" rx="12" class="node"/><text x="77" y="708" class="label">Host-side reliability runner · Python / OCI SDK</text><text x="77" y="733" class="small">Online snapshot → authenticated encryption → upload → isolated restore verification</text><text x="77" y="755" class="tiny">Bounded probes / datapoints · no model call for health checks · no Docker socket in web app</text>
+<rect x="798" y="222" width="404" height="576" rx="18" class="boundary"/>
+<text x="819" y="254" class="label">OCI MANAGED SERVICES</text><text x="819" y="277" class="small">Dedicated reliability resources · limited quotas</text>
+<rect x="819" y="300" width="362" height="80" rx="12" class="node"/><text x="838" y="329" class="label">IAM + Vault</text><text x="838" y="352" class="small">Scoped instance identity · versioned secrets</text><text x="838" y="371" class="tiny">Not a personal API key; not per-container identity</text>
+<rect x="819" y="405" width="362" height="80" rx="12" class="node"/><text x="838" y="433" class="label">Always Free APM</text><text x="838" y="457" class="small">OpenTelemetry spans · trace-ID correlation</text><text x="838" y="476" class="tiny">Bounded export; no prompts, answers or keys</text>
+<path d="M365 419L391 393H788V442H817" class="line trace"/><text x="447" y="387" class="tiny">OTLP over HTTPS · sanitized spans</text>
+<rect x="819" y="510" width="362" height="80" rx="12" class="node"/><text x="838" y="538" class="label">Private Object Storage</text><text x="838" y="562" class="small">Encrypted backup objects + integrity manifest</text><text x="838" y="581" class="tiny">Unique names · no public links · bounded retention</text>
+<path d="M742 704H782V550H817" class="line recover"/><text x="807" y="613" class="tiny">GET back → decrypt → compare → restore drill</text>
+<rect x="819" y="637" width="362" height="62" rx="12" class="node"/><text x="838" y="664" class="label">OCI Monitoring → Alarms</text><text x="838" y="686" class="small">Health · backup freshness · labeled test signal</text>
+<path d="M742 746H795V670H817" class="line detect"/>
+<rect x="819" y="729" width="362" height="48" rx="12" class="node"/><text x="838" y="759" class="label">Notifications → confirmed operator</text><path d="M1000 699V727" class="line detect"/>
+<path d="M819 341H780V686H744" class="line" stroke="#91a5bf" stroke-dasharray="5 5"/>
+<rect x="38" y="831" width="1164" height="130" rx="14" class="node"/>
+<text x="60" y="863" class="label">REPRODUCE · GITHUB → REVIEWED TERRAFORM → OCI RESOURCE MANAGER</text>
+<text x="60" y="891" class="small">Plan → review exact additions → apply → inspect outputs → detect drift · protected state, no secrets in Git</text>
+<text x="60" y="918" class="small">Creates supporting bucket / alarm / topic / APM / identity resources. Does not recreate or resize the existing VM.</text>
+<text x="60" y="943" class="tiny">Evidence gates: restored data ≠ uploaded file · delivered alert ≠ configured rule · queryable trace ≠ export attempt</text>
+<path d="M1000 831V800" class="line reproduce" stroke-dasharray="7 5"/>
+<text x="38" y="988" class="tiny">Architecture is explanatory. Consult the release evidence for each integration's actual verified state. CPU-only: no HBM or remote KV-transfer claim.</text>
+</svg>

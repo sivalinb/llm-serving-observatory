@@ -1,0 +1,5 @@
+# Keep real identifiers and the confirmed email in a private .tfvars or Resource Manager variables.
+tenancy_id           = "ocid1.tenancy.oc1..REPLACE"
+existing_instance_id = "ocid1.instance.oc1.phx.REPLACE"
+bucket_suffix        = "learning-demo"
+notification_email   = "operator@example.com"

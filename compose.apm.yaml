@@ -1,0 +1,9 @@
+# Opt-in overlay after the dedicated Vault upload key has been fetched privately.
+# Use only with compose.shared.yaml. No collector or new public listener.
+services:
+  gateway:
+    environment:
+      OCI_APM_ENDPOINT: ${OCI_APM_ENDPOINT:?Use the provisioned Phoenix APM upload origin}
+      OCI_APM_KEY_FILE: /run/observatory/apm-upload-key
+    volumes:
+      - ${RELIABILITY_PRIVATE_DIR:?Set a private runtime directory}/apm-upload-key:/run/observatory/apm-upload-key:ro,z

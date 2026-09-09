@@ -1,0 +1,11 @@
+[Unit]
+Description=Daily encrypted Observatory backup and isolated restore check
+
+[Timer]
+OnCalendar=*-*-* 02:17:00 UTC
+RandomizedDelaySec=5min
+Persistent=true
+Unit=observatory-reliability@backup.service
+
+[Install]
+WantedBy=timers.target

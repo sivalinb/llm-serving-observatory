@@ -73,7 +73,7 @@ def test_academy_assets_links_quizzes_and_controller_wiring(tmp_path):
     assert source.count('class="lesson"') == 20
     assert source.count('class="exercise"') == 4
     assert "<strong>Not live:</strong>" in source
-    assert "Real AI chat is coming with OCI deployment." in source
+    assert "The OCI assistant is deployed privately" in source
     assert "not performance benchmarks" in source
 
 

@@ -12,7 +12,7 @@ This is a public **ChatGPT Sites** publication of the learning portfolio, not a 
 | Serving Academy `/learn/` | 20 modules, self-checks, four browser exercises and signal map | Static export can be hosted separately; not a FastAPI route |
 | TTFT, tokens, CPU/RAM, GPU/HBM concepts | Read-only explanations and diagrams | Explanations plus private analytical lab |
 | Four architecture diagrams | Public full-size SVGs | Public assets plus application views |
-| Documentation assistant | Explicitly marked coming with OCI | Search; real CPU streaming when configured |
+| Documentation assistant | Explicitly marked deployed privately; no public chat | Search; real CPU streaming when configured |
 | Invites, keys, history and quotas | Not packaged; no application data collected | Private identity and admission ledger |
 | Live metrics and traces | None; animation is not measured traffic | Private Prometheus/Grafana/Tempo |
 | Private experiment lab and detailed hardware planner | Not packaged; separate simplified academy exercises are public | Local or SSH-tunneled `/lab` |
@@ -23,7 +23,7 @@ flowchart TB
   Export --> Sites[Public ChatGPT Sites website]
   Sites --> Tour[Animated concepts + architecture diagrams]
   Sites --> Academy[20 modules + browser exercises + signal map]
-  Sites --> Notice[Live AI chat coming with OCI deployment]
+Sites --> Notice[OCI assistant deployed privately; no public chat]
   Repo -. separate future deployment .-> OCI[OCI Phoenix eligible A1 VM]
   OCI --> Edge[Public HTTPS + invited assistant]
   Edge --> CPU[Private llama.cpp CPU inference]
@@ -33,7 +33,7 @@ flowchart TB
 
 There is **no network connection from this portfolio to OCI or a model API**. We do not report browser animation timings as TTFT, invent a live token ledger, or expose operator dashboards to make the static publication look active. Platform-level hosting logs are separate from application telemetry; this export installs no analytics tracker and makes no model/API requests.
 
-For deployment onto an already-used OCI VM, the [shared-host pilot](oci-shared-host.md) is a smaller alternative to the **future full-stack/public design** above: assistant + CPU model, optional Prometheus, no lab API or trace backend, and no public edge. It was deployed privately on Phoenix ARM64 on September 8; [actual evidence](../reports/oci-private-pilot.md) is separate from the static academy. This private infrastructure deployment did not republish Sites, change the public export or turn it into a live chat service. Its existing pending-chat notice refers to public availability; there is no public OCI URL to substitute yet.
+For deployment onto an already-used OCI VM, the [shared-host pilot](oci-shared-host.md) is a smaller alternative to the **future full-stack/public design** above: assistant + CPU model, optional Prometheus, no lab API or trace backend, and no public edge. It was deployed privately on Phoenix ARM64 on September 8; [actual evidence](../reports/oci-private-pilot.md) is separate from the static academy. The current export distinguishes that deployed private pilot from this static public learning site. The new `/reliability/` page teaches the optional cloud extension; check its [release evidence](../reports/cloud-reliability-release.md) for activation and publication status. There is no public inference URL.
 
 ## Build and validate
 
