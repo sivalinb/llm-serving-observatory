@@ -25,6 +25,7 @@ jobs:
       - run: docker run --rm --entrypoint promtool -v "$PWD/observability:/etc/prometheus:ro" prom/prometheus:v3.2.1 check config /etc/prometheus/prometheus-shared.yaml
       - run: docker compose -f compose.shared.yaml --profile metrics config --quiet
       - run: RELIABILITY_PRIVATE_DIR=/tmp/oci-reliability-ci OCI_APM_ENDPOINT=https://test.apm-agt.us-phoenix-1.oci.oraclecloud.com docker compose -f compose.shared.yaml -f compose.reliability.yaml -f compose.apm.yaml --profile reliability config --quiet
+      - run: RELIABILITY_PRIVATE_DIR=/tmp/oci-reliability-ci docker compose -f infra/reliability/compose.worker.yaml config --quiet
       - run: docker build -f Dockerfile.reliability -t observatory-reliability:ci .
       - run: docker run --rm --read-only --cap-drop ALL --security-opt no-new-privileges --memory 192m --memory-swap 192m --cpus 0.1 observatory-reliability:ci --help
       - run: docker compose config --quiet

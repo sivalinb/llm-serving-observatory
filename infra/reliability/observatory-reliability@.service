@@ -5,13 +5,15 @@ Requires=docker.service
 
 [Service]
 Type=oneshot
-WorkingDirectory=/home/opc/llm-serving-observatory
+WorkingDirectory=/etc/observatory-reliability
 EnvironmentFile=/etc/observatory-reliability/runtime.env
-ExecStart=/usr/bin/docker compose --env-file /etc/observatory-reliability/runtime.env -f compose.shared.yaml -f compose.reliability.yaml --profile reliability run --rm --no-deps --pull never reliability --config /private/config.json %i
+ExecStart=/usr/bin/docker compose --env-file /etc/observatory-reliability/runtime.env -f /etc/observatory-reliability/compose.worker.yaml run --rm --no-deps --pull never reliability --config /private/config.json %i
 TimeoutStartSec=180
 TimeoutStopSec=15
 UMask=0077
-NoNewPrivileges=true
+# The root Docker client needs its normal SELinux domain transition on Oracle Linux.
+# NoNewPrivileges here blocks Docker-socket access; the WORKER retains no-new-privileges.
+# This service already has host-root Docker authority, not a container sandbox.
 ProtectHome=read-only
 ProtectSystem=strict
 PrivateTmp=true

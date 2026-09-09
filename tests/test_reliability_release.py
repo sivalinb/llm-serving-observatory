@@ -60,6 +60,13 @@ def test_root_timer_environment_is_not_inside_worker_writable_mount():
     unit = (ROOT / 'infra/reliability/observatory-reliability@.service').read_text()
     assert '.reliability/runtime.env' not in unit
     assert 'EnvironmentFile=/etc/observatory-reliability/runtime.env' in unit
+    assert 'WorkingDirectory=/etc/observatory-reliability' in unit
+    worker = (ROOT / 'infra/reliability/compose.worker.yaml').read_text()
+    assert 'external: true, name: observatory-shared_access' in worker
+    assert 'external: true, name: observatory-shared_assistant-data' in worker
+    assert 'build:' not in worker and 'ports:' not in worker and 'docker.sock' not in worker
+    assert 'security_opt: [no-new-privileges:true]' in worker
+    assert '\nNoNewPrivileges=true' not in unit  # Allows the host client's normal SELinux transition.
     compose = (ROOT / 'compose.reliability.yaml').read_text()
     assert '/config.json:/private/config.json:ro,z' in compose
     assert 'docker.sock' not in compose and 'ports:' not in compose

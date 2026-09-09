@@ -117,6 +117,8 @@ It requests 64 output tokens, records timing/token metadata without the question
 
 An opt-in [Cloud Reliability Lab](cloud-reliability.md) now supplies a bounded one-shot worker, dedicated managed OCI support stack and privacy-filtered APM overlay. Check [release evidence](../reports/cloud-reliability-release.md) for actual activation. The statements below describe the unchanged base shared profile, not automatically enabled cloud integrations.
 
+The current private pilot activated this optional overlay on September 9, 2026: encrypted restore, systemd probe/backup execution and a matching stored four-span APM trace were verified. The base-profile statements below remain useful when running without that overlay.
+
 **Dashboard rollout status: live on the private OCI pilot, September 8, 2026.** An initial safety hold led to an explicitly approved, targeted ClickHouse log-merge and collector-resilience repair. After a quiet stability check, only the observatory gateway was upgraded; the model and Prometheus were not restarted. [Actual checks, resource readings and incident chronology](../reports/observability-release.md).
 
 The native **`/observability`** page now displays a bounded metric catalog/charts, target health, alert states, gateway resources, per-request timelines and sanitized application events. Ordinary keys see personal metadata only; global data requires an explicit host CLI operator grant. It reuses the two existing data stores, adds no container and makes no model calls. Follow the [dashboard field guide](observability-dashboard.md) for access, architecture, retention, limits and absent instrumentation. Prometheus's own UI remains optional/private.

@@ -26,6 +26,8 @@ Documentation: [Learning path](docs/learning-path.md) · [Architecture](docs/arc
 
 ### Cloud Reliability Lab
 
+**OCI verified:** encrypted backup/isolated restore, scheduled probe/backup services, a real four-span APM trace and 17 infrastructure resources in sync. The safe alarm fired and recovered; recipient confirmation of both emails remains pending. The public page is explanatory; live operations remain private.
+
 The new `/reliability/` learning page connects the technology stack with a full-size architecture and four five-step, play/pause journeys: encrypted backup → isolated restore; health → alarm delivery; real request → sanitized APM trace; Git → reviewed Terraform. The opt-in worker is bounded to 0.1 CPU / 192 MiB, with separate dependencies and no web-app backup credentials. The dedicated Phoenix stack includes Object Storage, Vault, Monitoring/Notifications and an explicitly Always Free APM domain; it does not own or recreate the existing VM. **Check [release evidence](reports/cloud-reliability-release.md) for actual deployment gates: tested code is not proof of a delivered alert or stored cloud trace.** [Runbook and security boundaries](docs/cloud-reliability.md).
 
 ## New: ServingOps Cloud — real traffic on Phoenix Free Tier
