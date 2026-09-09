@@ -6,8 +6,8 @@ Requires=docker.service
 [Service]
 Type=oneshot
 WorkingDirectory=/home/opc/llm-serving-observatory
-EnvironmentFile=/home/opc/llm-serving-observatory/.reliability-runtime.env
-ExecStart=/usr/bin/docker compose --env-file /home/opc/llm-serving-observatory/.reliability-runtime.env -f compose.shared.yaml -f compose.reliability.yaml --profile reliability run --rm --no-deps --pull never reliability --config /private/config.json %i
+EnvironmentFile=/etc/observatory-reliability/runtime.env
+ExecStart=/usr/bin/docker compose --env-file /etc/observatory-reliability/runtime.env -f compose.shared.yaml -f compose.reliability.yaml --profile reliability run --rm --no-deps --pull never reliability --config /private/config.json %i
 TimeoutStartSec=180
 TimeoutStopSec=15
 UMask=0077
