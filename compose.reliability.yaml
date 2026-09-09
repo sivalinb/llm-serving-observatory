@@ -19,6 +19,7 @@ services:
     volumes:
       - assistant-data:/source:ro
       - ${RELIABILITY_PRIVATE_DIR:?Set a dedicated protected directory}:/private:rw,z
+      - ${RELIABILITY_PRIVATE_DIR:?Set a dedicated protected directory}/config.json:/private/config.json:ro,z
     logging:
       driver: json-file
       options: {max-size: 1m, max-file: '2'}

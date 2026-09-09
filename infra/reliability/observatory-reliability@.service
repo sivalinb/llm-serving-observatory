@@ -6,8 +6,8 @@ Requires=docker.service
 [Service]
 Type=oneshot
 WorkingDirectory=/home/opc/llm-serving-observatory
-EnvironmentFile=/home/opc/llm-serving-observatory/.reliability/runtime.env
-ExecStart=/usr/bin/docker compose --env-file /home/opc/llm-serving-observatory/.reliability/runtime.env -f compose.shared.yaml -f compose.reliability.yaml --profile reliability run --rm --no-deps --pull never reliability --config /private/config.json %i
+EnvironmentFile=/home/opc/llm-serving-observatory/.reliability-runtime.env
+ExecStart=/usr/bin/docker compose --env-file /home/opc/llm-serving-observatory/.reliability-runtime.env -f compose.shared.yaml -f compose.reliability.yaml --profile reliability run --rm --no-deps --pull never reliability --config /private/config.json %i
 TimeoutStartSec=180
 TimeoutStopSec=15
 UMask=0077
@@ -17,3 +17,4 @@ ProtectSystem=strict
 PrivateTmp=true
 # The client talks to Docker; container limits/hardening are in compose.reliability.yaml.
 # No SDK credentials or Docker socket are mounted in the worker container.
+# The root-owned environment file is OUTSIDE the worker's writable /private mount.

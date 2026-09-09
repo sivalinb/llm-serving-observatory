@@ -54,3 +54,12 @@ def test_public_architecture_is_complete_static_and_has_no_api_calls(tmp_path):
     assert 'no live telemetry' in page and 'no cloud actions' in page
     assert 'Cloud Reliability Lab' in (tmp_path / 'learn/index.html').read_text()
     assert '/reliability/' in (tmp_path / 'index.html').read_text()
+
+
+def test_root_timer_environment_is_not_inside_worker_writable_mount():
+    unit = (ROOT / 'infra/reliability/observatory-reliability@.service').read_text()
+    assert '.reliability/runtime.env' not in unit
+    assert 'EnvironmentFile=/home/opc/llm-serving-observatory/.reliability-runtime.env' in unit
+    compose = (ROOT / 'compose.reliability.yaml').read_text()
+    assert '/config.json:/private/config.json:ro,z' in compose
+    assert 'docker.sock' not in compose and 'ports:' not in compose
