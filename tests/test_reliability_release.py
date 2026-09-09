@@ -63,6 +63,10 @@ def test_root_timer_environment_is_not_inside_worker_writable_mount():
     compose = (ROOT / 'compose.reliability.yaml').read_text()
     assert '/config.json:/private/config.json:ro,z' in compose
     assert 'docker.sock' not in compose and 'ports:' not in compose
+    ignored = (ROOT / '.dockerignore').read_text().splitlines()
+    assert {'.reliability', '.reliability-runtime.env', '*.key', '*.obk', '*.pem'} <= set(ignored)
+    for file in ('Dockerfile', 'Dockerfile.reliability'):
+        assert 'FROM python:3.12-slim@sha256:' in (ROOT / file).read_text()
 
 
 def test_partial_recovery_preserves_exact_owned_ids_and_rejects_changes():
