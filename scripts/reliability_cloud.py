@@ -41,12 +41,18 @@ def cli(*args, payload=None):
     return json.loads(result.stdout) if result.stdout.strip() else {"data": []}
 
 
-def validate_plan(plan):
+def validate_plan(plan, existing=None):
     managed = [item for item in plan.get("resource_changes", []) if item.get("mode") == "managed"]
     if {item["address"] for item in managed} != ADDRESSES:
         raise ValueError("Plan differs from the dedicated resource allowlist")
-    if any(item["change"]["actions"] != ["create"] for item in managed):
-        raise ValueError("Initial apply must create only new resources; no changes or deletions")
+    for item in managed:
+        address, change = item["address"], item["change"]
+        if existing is not None and address in existing:
+            if (change["actions"] != ["no-op"] or change["before"].get("id") != existing[address]
+                    or change["after"].get("id") != existing[address]):
+                raise ValueError("Recovery must preserve every already-created resource unchanged")
+        elif change["actions"] != ["create"]:
+            raise ValueError("Only missing resources may be created; no changes or deletions")
     values = {item["address"]: item["change"]["after"] for item in managed}
     if values["oci_apm_apm_domain.lab"].get("is_free_tier") is not True:
         raise ValueError("APM must explicitly use Always Free")
@@ -58,6 +64,21 @@ def validate_plan(plan):
     if bucket.get("access_type") != "NoPublicAccess" or bucket.get("storage_tier") != "Standard":
         raise ValueError("Backup bucket must be private Standard storage")
     return [{"address": item["address"], "actions": item["change"]["actions"]} for item in managed]
+
+
+def state_ids(tf):
+    result = {}
+    for resource in tf.get("resources", []):
+        if resource.get("mode") != "managed":
+            continue
+        for instance in resource.get("instances", []):
+            address = resource["type"] + "." + resource["name"]
+            if "index_key" in instance:
+                address += "[" + json.dumps(instance["index_key"]) + "]"
+            if address not in ADDRESSES or instance.get("status") == "tainted":
+                raise ValueError("Unexpected or tainted resource requires manual investigation")
+            result[address] = instance["attributes"]["id"]
+    return result
 
 
 def read_private(path):
@@ -102,7 +123,7 @@ def bootstrap(support, directory):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--state", required=True, type=Path)
-    parser.add_argument("action", choices=("create-stack", "plan", "review", "apply-reviewed", "job", "outputs", "bootstrap", "drift"))
+    parser.add_argument("action", choices=("create-stack", "plan", "review", "review-resume", "apply-reviewed", "job", "outputs", "bootstrap", "drift"))
     parser.add_argument("--instance")
     parser.add_argument("--suffix")
     parser.add_argument("--email")
@@ -128,16 +149,34 @@ def main():
         state = {"stack_id": created["id"]}
         result = state
     elif args.action == "plan":
+        if state.get("job_id"):
+            prior = cli("resource-manager", "job", "get", "--job-id", state["job_id"])["data"]
+            if prior["lifecycle-state"] in {"ACCEPTED", "IN_PROGRESS", "CANCELING"}:
+                raise ValueError("Wait for the existing job before creating another plan")
+            if prior["operation"] == "APPLY" and prior["lifecycle-state"] == "FAILED":
+                state["recovery_apply_id"] = prior["id"]
+        state.pop("reviewed_sha256", None)
+        state.pop("reviewed_existing", None)
         job = cli("resource-manager", "job", "create-plan-job", "--stack-id", state["stack_id"])["data"]
         state["plan_id"] = state["job_id"] = job["id"]
         result = {"job_id": job["id"], "state": job["lifecycle-state"]}
-    elif args.action in {"review", "apply-reviewed"}:
+    elif args.action in {"review", "review-resume", "apply-reviewed"}:
         plan = cli("resource-manager", "job", "get-job-tf-plan", "--job-id", state["plan_id"],
                    "--tf-plan-format", "JSON", "--file", "-")
-        changes = validate_plan(plan)
+        existing = state.get("reviewed_existing") if args.action == "apply-reviewed" else None
+        if args.action == "review-resume":
+            failed = cli("resource-manager", "job", "get", "--job-id", state["recovery_apply_id"])["data"]
+            if failed["operation"] != "APPLY" or failed["lifecycle-state"] != "FAILED" or failed["stack-id"] != state["stack_id"]:
+                raise ValueError("Recovery must refer to this stack's failed apply")
+            tf = cli("resource-manager", "job", "get-job-tf-state", "--job-id", failed["id"], "--file", "-")
+            existing = state_ids(tf)
+            if not existing:
+                raise ValueError("No partial resources to reconcile; use the initial review")
+        changes = validate_plan(plan, existing)
         digest = hashlib.sha256(canonical(plan)).hexdigest()
-        if args.action == "review":
+        if args.action in {"review", "review-resume"}:
             state["reviewed_sha256"] = digest
+            state["reviewed_existing"] = existing
             result = {"changes": changes, "plan_sha256": digest, "apply_requires_separate_action": True}
         else:
             if state.get("reviewed_sha256") != digest:

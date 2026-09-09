@@ -17,6 +17,8 @@ Read-only OCI inventory confirmed Phoenix and a Free Tier trial account. The exi
 
 Resource Manager accepted the dedicated stack from source `bbeeac5998c764c583b5778cc224b054c72fc22b`. Its Terraform 1.5.x plan **succeeded** and passed the exact 17-resource create-only guard: no updates, replacements or deletions. The reviewed plan digest was `97873a4d2674bcca83b792b7c28a3eab43854435f193bf93bc48a3c3e54705e2`. The separate approved apply was submitted and remains in progress at this checkpoint. Runtime activation is still gated on its actual result and shared-host verification.
 
+Subsequent checkpoint: the first apply failed only at software-key creation because the new Vault management hostname did not yet resolve in the Resource Manager runner. Its state records **16 created resources**, including the Always Free APM domain, private bucket/lifecycle, Vault, IAM, topic/subscription and six alarms. A later Cloud Shell DNS lookup succeeded, and the subscription is **ACTIVE**. A bounded partial-recovery review path now verifies exact IDs and permits only the missing resource to be created; it cannot update/delete the completed resources. No second stack or paid fallback was created. A fresh recovery plan is the next gate, not a blind replay of the old plan.
+
 Operator approved the new dedicated stack/IAM scope, encrypted seven-day backup retention and publication of the existing public learning site. The notification address is retained privately, not in this report. These approvals do not count as delivered email or successful deployment.
 
 No new VM, paid-tier upgrade, public inference listener, database migration, unrelated workload restart, or live-database restore is authorized by this release.

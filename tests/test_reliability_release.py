@@ -63,3 +63,20 @@ def test_root_timer_environment_is_not_inside_worker_writable_mount():
     compose = (ROOT / 'compose.reliability.yaml').read_text()
     assert '/config.json:/private/config.json:ro,z' in compose
     assert 'docker.sock' not in compose and 'ports:' not in compose
+
+
+def test_partial_recovery_preserves_exact_owned_ids_and_rejects_changes():
+    plan = approved_plan()
+    address = 'oci_apm_apm_domain.lab'
+    item = next(x for x in plan['resource_changes'] if x['address'] == address)
+    item['change']['actions'] = ['no-op']
+    item['change']['before'] = {'id': 'owned-domain'}
+    item['change']['after']['id'] = 'owned-domain'
+    assert len(CLOUD['validate_plan'](plan, {address: 'owned-domain'})) == 17
+    with pytest.raises(ValueError):
+        CLOUD['validate_plan'](plan)
+    with pytest.raises(ValueError):
+        CLOUD['validate_plan'](plan, {address: 'other-domain'})
+    item['change']['actions'] = ['update']
+    with pytest.raises(ValueError):
+        CLOUD['validate_plan'](plan, {address: 'owned-domain'})
